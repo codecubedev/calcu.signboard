@@ -19,6 +19,11 @@ use App\Livewire\Data\SalesmanData;
 |
 */
 
+
+
+
+
+
 Route::get('/', function () {
     return view('auth.login');
 });
