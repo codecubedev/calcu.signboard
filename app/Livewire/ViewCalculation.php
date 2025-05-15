@@ -21,7 +21,7 @@ class ViewCalculation extends Component
     public $logoHeight, $logoWidth, $logoStickerHeightWidth, $logooracalHeightWidth, $acrylicCost, $pvcCost;
     public  $stickerCost, $lightingCost, $powerSupplyCost, $paintCost, $generalMaterialCost, $stickerArea, $addwhiteacryliccost, $lightingprice, $orcaleCost;
     public $logoLightingTypes;
-    public $logolightHeightWidth, $logoPowerSupply, $logoPowerSupplyQuantity = 1;
+    public $logolightHeightWidth=[], $logoPowerSupply, $logoPowerSupplyQuantity = 1;
     public $logoPcs = 1, $logoPaintHeightWidth, $logoStickerHeight, $logoStickerWidth, $logoLightingWidth, $logoLightingHeight;
     public $logoMaterials = [], $stickerMaterial = [], $generalMaterial = [];
     public $logoLightingType = [];
@@ -87,102 +87,8 @@ class ViewCalculation extends Component
     public $isCalculated = false;
 
     public $logoCostResults = [];
-    public function updatedMainText()
-    {
-        $this->maincharacterCount = strlen($this->mainText);
-    }
-    public $materialPrices = [
-        "acrylic3mm" => 0.15,
-        "acrylic5mm" => 0.35,
-        "acrylic10mm" => 0.55,
-        "acrylic15mm" => 0.85,
-        "acrylic20mm" => 1.15,
-        "acrylic25mm" => 1.85,
-        "whiteacrylic3mm" => 0.30,
-        "pvc3mm" => 0.11,
-        "pvc5mm" => 0.15,
-        "pvc10mm" => 0.24,
-        "pvc15mm" => 0.41,
-        "pvc20mm" => 0.48,
-        "pvc25mm" => 0.65
-    ];
 
-    public $stickerPrices = [
-        "whiteStickerMattLamm" => 8.0,
-        "greyBase" => 10.0,
-        "lightboxSticker" => 9.0,
-        "reverseSticker" => 9.0,
-        "dieCutStickerWhite" => 10.8,
-        "dieCutStickerBlack" => 10.8,
-        "dieCutStickerPrinted" => 10.8
-    ];
-
-    public $powerSupplyPrices = [
-        "120W" => 80,
-        "200W" => 100,
-        "400W" => 150
-    ];
-    public $lightingtype = [
-        "frontlit" => 80,
-        "backlit" => 100,
-        "sidelit" => 150,
-        "nolight" => 150
-
-    ];
-
-    public function mount()
-    {
-        // Initialize with one default logo cost form
-        $this->logoCost = [
-            [
-                'logoHeight' => 0,
-                'logoWidth' => 0,
-                'logoMaterials' => [],
-                'materialPrices' => [], // Initialize empty array here
-                'stickerMaterial' => [],
-                'stickerPrices' => [],
-                'logoStickerHeightWidth' => false,
-                'logolightHeightWidth' => false,
-                'logoPowerSupply' => 'None',
-                'logoPowerSupplyQuantity' => 1,
-                'powerSupplyPrices' => [],
-                'logoPaintHeightWidth' => false,
-                'logooracalHeightWidth' => false,
-                'generalMaterial' => [],
-                'lightingtype' => [],
-                'logoPcs' => 1,
-            ]
-        ];
-    }
-
-    public function addForm()
-    {
-        $this->logoCost[] = [
-            'logoText' => '',
-            'logoHeight' => '',
-            'logoWidth' => '',
-            'logoMaterials' => [],
-            'logoStickerHeightWidth' => false,
-            'stickerMaterial' => [],
-            'generalMaterial' => [],
-            'logoPaintHeightWidth' => false,
-            'logooracalHeightWidth' => false,
-            'logolightHeightWidth' => false,
-            'logoLightingType' => [],
-            'logoPowerSupply' => 'None',
-            'logoPowerSupplyQuantity' => 1,
-        ];
-    }
-
-    public function removeForm($index)
-    {
-        if (count($this->logoCost) > 1) {
-            array_splice($this->logoCost, $index, 1);
-        }
-    }
-
-
-    public function getGeneralMaterialCost($material, $height, $width, $pcs)
+public function getGeneralMaterialCost($material, $height, $width, $pcs)
     {
 
         switch ($material) {
@@ -260,6 +166,114 @@ class ViewCalculation extends Component
     }
 
 
+    public function updatedMainText()
+    {
+        $this->maincharacterCount = strlen($this->mainText);
+    }
+    public $materialPrices = [
+        "acrylic3mm" => 0.15,
+        "acrylic5mm" => 0.35,
+        "acrylic10mm" => 0.55,
+        "acrylic15mm" => 0.85,
+        "acrylic20mm" => 1.15,
+        "acrylic25mm" => 1.85,
+        "whiteacrylic3mm" => 0.30,
+        "pvc3mm" => 0.11,
+        "pvc5mm" => 0.15,
+        "pvc10mm" => 0.24,
+        "pvc15mm" => 0.41,
+        "pvc20mm" => 0.48,
+        "pvc25mm" => 0.65
+    ];
+
+    public $stickerPrices = [
+        "whiteStickerMattLamm" => 8.0,
+        "greyBase" => 10.0,
+        "lightboxSticker" => 9.0,
+        "reverseSticker" => 9.0,
+        "dieCutStickerWhite" => 10.8,
+        "dieCutStickerBlack" => 10.8,
+        "dieCutStickerPrinted" => 10.8
+    ];
+
+    public $powerSupplyPrices = [
+        "120W" => 80,
+        "200W" => 100,
+        "400W" => 150
+    ];
+    public $lightingtype = [
+        "frontlit" => 80,
+        "backlit" => 100,
+        "sidelit" => 150,
+        "nolight" => 150
+
+    ];
+
+   
+
+    public function mount()
+    {
+        $this->logoCost[] = [
+            'logoText' => '',
+            'characterCount' => 0,
+            'logoHeight' => '',
+            'logoWidth' => '',
+            'logoMaterials' => [],
+            'materialPrices' => [],
+            'stickerMaterial' => [],
+            'stickerPrices' => [],
+            'logoStickerHeightWidth' => false,
+            'logolightHeightWidth' => false,
+            'logoLightingType' => [],
+            'logoPowerSupply' => 'None',
+            'logoPowerSupplyQuantity' => 1,
+            'logoPaintHeightWidth' => false,
+            'logooracalHeightWidth' => false,
+            'generalMaterial' => [],
+            'logoPcs' => 1,
+        ];
+    }
+
+    public function updatedLogoCost($value, $key)
+    {
+        // Automatically update character count
+        [$index, $field] = explode('.', $key);
+        if ($field === 'logoText') {
+            $this->logoCost[$index]['characterCount'] = strlen($value);
+        }
+    }
+
+    public function addForm()
+    {
+        $this->logoCost[] = [
+            'logoText' => '',
+            'characterCount' => 0,
+            'logoHeight' => '',
+            'logoWidth' => '',
+            'logoMaterials' => [],
+            'stickerMaterial' => [],
+            'logoStickerHeightWidth' => false,
+            'logolightHeightWidth' => false,
+            'logoLightingType' => [],
+            'logoPowerSupply' => 'None',
+            'logoPowerSupplyQuantity' => 1,
+            'logoPaintHeightWidth' => false,
+            'logooracalHeightWidth' => false,
+            'generalMaterial' => [],
+            'logoPcs' => 1,
+        ];
+    }
+
+    public function removeForm($index)
+    {
+        unset($this->logoCost[$index]);
+        $this->logoCost = array_values($this->logoCost); // Reindex
+    }
+
+
+
+    
+
     public function calculateBaseCost()
     {
         $this->isCalculated = true;
@@ -312,6 +326,7 @@ class ViewCalculation extends Component
         $this->logoCostResults = [];
 
         foreach ($this->logoCost as $index => $form) {
+            // dd($form);
             $cost = $calculator->calculate([
                 'height' => $form['logoHeight'],
                 'width' => $form['logoWidth'],
