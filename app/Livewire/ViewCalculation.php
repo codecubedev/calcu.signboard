@@ -12,16 +12,20 @@ use App\Models\BusinessCalculation;
 use App\Models\OwnershipCalculation;
 use Illuminate\Support\Facades\Auth;
 use App\Services\LogoCostCalculation;
+use App\Services\MainLogoCostCalculation;
+use App\Services\AddLetteringCost;
+use App\Services\BusinessCost;
+use App\Services\ownerCostResults;
 
 class ViewCalculation extends Component
 {
     public $job_name, $date, $sales_man, $totalcost, $company_name, $customer_name, $customer_phone_no;
     public $logoText, $characterCount, $baseType, $baseMember, $baseHeight, $baseWidth, $baseCost = 0;
 
-    public $logoHeight, $logoWidth, $logoStickerHeightWidth, $logooracalHeightWidth, $acrylicCost, $pvcCost;
+    public $logoHeight, $logoWidth, $logoTotal = 0, $logoStickerHeightWidth, $logooracalHeightWidth, $acrylicCost, $pvcCost;
     public  $stickerCost, $lightingCost, $powerSupplyCost, $paintCost, $generalMaterialCost, $stickerArea, $addwhiteacryliccost, $lightingprice, $orcaleCost;
     public $logoLightingTypes;
-    public $logolightHeightWidth=[], $logoPowerSupply, $logoPowerSupplyQuantity = 1;
+    public $logolightHeightWidth = [], $logoPowerSupply, $logoPowerSupplyQuantity = 1;
     public $logoPcs = 1, $logoPaintHeightWidth, $logoStickerHeight, $logoStickerWidth, $logoLightingWidth, $logoLightingHeight;
     public $logoMaterials = [], $stickerMaterial = [], $generalMaterial = [];
     public $logoLightingType = [];
@@ -30,8 +34,9 @@ class ViewCalculation extends Component
     public $logoCost = [];
 
 
-    public $mainText = '', $mainHeight, $mainWidth, $mainStickerHeightWidth, $mainoracalHeightWidth, $mainacrylicCost, $mainpvcCost;
+    public $mainText = '', $mainHeight, $mainTotal = 0, $mainWidth, $mainStickerHeightWidth, $mainoracalHeightWidth, $mainacrylicCost, $mainpvcCost;
     public  $mainstickerCost, $mainlightingCost, $mainpowerSupplyCost, $mainpaintCost, $maingeneralMaterialCost, $mainlightingprice, $mainorcaleCost;
+    //main
 
     public $mainLightingTypes;
     public $mainlightHeightWidth, $mainPowerSupply, $mainPowerSupplyQuantity = 1;
@@ -39,12 +44,10 @@ class ViewCalculation extends Component
     public $mainMaterials = [], $mainstickerMaterial = [], $maingeneralMaterial = [];
     public $mainlogoLightingType = [];
     public $mainaluminium_channel_border = [];
+    public $mainCost = [];
 
-    public $mainCost = 0;
-
+    //add 
     public $addText, $addacrylicCost, $addpvcCost;
-
-
     public $addHeight, $addWidth, $addStickerHeightWidth, $addoracalHeightWidth;
     public  $addstickerCost, $addlightingCost, $addpowerSupplyCost, $addpaintCost, $addgeneralMaterialCost, $addlightingprice, $addorcaleCost;
 
@@ -54,9 +57,9 @@ class ViewCalculation extends Component
     public $addMaterials = [], $addstickerMaterial = [], $addgeneralMaterial = [];
     public $addlogoLightingType = [];
     public $addaluminium_channel_border = [];
+    public $addCost = [];
 
-    public $addCost = 0;
-
+    //bus
     public $busText, $busacrylicCost, $buspvcCost;
 
     public $busHeight, $busWidth, $busStickerHeightWidth, $busoracalHeightWidth;
@@ -68,8 +71,9 @@ class ViewCalculation extends Component
     public $busMaterials = [], $busstickerMaterial = [], $busgeneralMaterial = [];
     public $buslogoLightingType = [];
     public $busaluminium_channel_border = [];
+    public $busCost = [];
 
-    public $busCost = 0;
+    // owner
 
     public $ownText, $ownacrylicCost, $ownpvcCost;
     public  $ownstickerCost, $ownlightingCost, $ownpowerSupplyCost, $ownpaintCost, $owngeneralMaterialCost, $ownlightingprice, $ownorcaleCost;
@@ -82,13 +86,13 @@ class ViewCalculation extends Component
     public $ownlogoLightingType = [];
     public $ownaluminium_channel_border = [];
 
-    public $ownCost = 0;
+    public $ownCost = [];
 
     public $isCalculated = false;
 
-    public $logoCostResults = [];
+    public $logoCostResults = [], $mainCostResults = [], $addCostResults = [], $busCostResults = [], $ownerCostResults = [];
 
-public function getGeneralMaterialCost($material, $height, $width, $pcs)
+    public function getGeneralMaterialCost($material, $height, $width, $pcs)
     {
 
         switch ($material) {
@@ -209,7 +213,7 @@ public function getGeneralMaterialCost($material, $height, $width, $pcs)
 
     ];
 
-   
+
 
     public function mount()
     {
@@ -232,16 +236,88 @@ public function getGeneralMaterialCost($material, $height, $width, $pcs)
             'generalMaterial' => [],
             'logoPcs' => 1,
         ];
+        $this->mainCost[] = [
+            'mainText' => '',
+            'characterCount' => 0,
+            'mainHeight' => '',
+            'mainWidth' => '',
+            'mainMaterials' => [],
+            'mainStickerHeightWidth' => false,
+            'stickerMaterial' => [],
+            'generalMaterial' => [],
+            'mainPaintHeightWidth' => false,
+            'mainoracalHeightWidth' => false,
+            'mainlightHeightWidth' => false,
+            'mainLightingType' => [],
+            'mainPowerSupply' => 'None',
+            'mainPowerSupplyQuantity' => 0,
+            'mainPcs' => 1,
+        ];
+        $this->addCost[] = [
+            'addText' => '',
+            'characterCount' => 0,
+            'addHeight' => '',
+            'addWidth' => '',
+            'addMaterials' => [],
+            'addStickerHeightWidth' => false,
+            'stickerMaterial' => [],
+            'generalMaterial' => [],
+            'addPaintHeightWidth' => false,
+            'addoracalHeightWidth' => false,
+            'addlightHeightWidth' => false,
+            'addLightingType' => [],
+            'addPowerSupply' => 'None',
+            'mainPowerSupplyQuantity' => 0,
+            'mainPcs' => 1,
+        ];
+
+        $this->busCost[] = [
+            'busText' => '',
+            'characterCount' => 0,
+            'busHeight' => '',
+            'busWidth' => '',
+            'busMaterials' => [],
+            'busStickerHeightWidth' => false,
+            'stickerMaterial' => [],
+            'generalMaterial' => [],
+            'busPaintHeightWidth' => false,
+            'busoracalHeightWidth' => false,
+            'buslightHeightWidth' => false,
+            'busLightingType' => [],
+            'busPowerSupply' => 'None',
+            'mainPowerSupplyQuantity' => 0,
+            'mainPcs' => 1,
+        ];
+        $this->ownCost[] = [
+            'ownText' => '',
+            'characterCount' => 0,
+            'ownHeight' => '',
+            'ownWidth' => '',
+            'ownMaterials' => [],
+            'ownStickerHeightWidth' => false,
+            'stickerMaterial' => [],
+            'generalMaterial' => [],
+            'ownPaintHeightWidth' => false,
+            'ownoracalHeightWidth' => false,
+            'ownlightHeightWidth' => false,
+            'ownLightingType' => [],
+            'ownPowerSupply' => 'None',
+            'ownPowerSupplyQuantity' => 0,
+            'ownPcs' => 1,
+        ];
     }
 
     public function updatedLogoCost($value, $key)
     {
-        // Automatically update character count
+        // Extract index and field name from $key
         [$index, $field] = explode('.', $key);
+
+        // Update character count when logoText changes
         if ($field === 'logoText') {
             $this->logoCost[$index]['characterCount'] = strlen($value);
         }
     }
+
 
     public function addForm()
     {
@@ -253,16 +329,16 @@ public function getGeneralMaterialCost($material, $height, $width, $pcs)
             'logoMaterials' => [],
             'stickerMaterial' => [],
             'logoStickerHeightWidth' => false,
+            'generalMaterial' => [],
+            'logoPaintHeightWidth' => false,
+            'logooracalHeightWidth' => false,
             'logolightHeightWidth' => false,
             'logoLightingType' => [],
             'logoPowerSupply' => 'None',
             'logoPowerSupplyQuantity' => 1,
-            'logoPaintHeightWidth' => false,
-            'logooracalHeightWidth' => false,
-            'generalMaterial' => [],
-            'logoPcs' => 1,
         ];
     }
+
 
     public function removeForm($index)
     {
@@ -271,8 +347,166 @@ public function getGeneralMaterialCost($material, $height, $width, $pcs)
     }
 
 
+    public function mainaddForm()
+    {
+        $this->mainCost[] = [
+            'mainText' => '',
+            'characterCount' => 0,
+            'mainHeight' => '',
+            'mainWidth' => '',
+            'logoMaterials' => [],
+            'stickerMaterial' => [],
+            'mainStickerHeightWidth' => false,
+            'mainlightHeightWidth' => false,
+            'mainLightingType' => [],
+            'mainPowerSupply' => 'None',
+            'mainPowerSupplyQuantity' => 1,
+            'mainPaintHeightWidth' => false,
+            'mainoracalHeightWidth' => false,
+            'generalMaterial' => [],
+            'mainPcs' => 1,
+        ];
+    }
 
-    
+    public function updatedMainCost($value, $key)
+    {
+        // Matches "0.mainText", "1.mainText", etc.
+        if (preg_match('/^(\d+)\.mainText$/', $key, $matches)) {
+            $index = $matches[1];
+            $this->mainCost[$index]['characterCount'] = strlen($value);
+        }
+    }
+
+
+
+
+    public function mainremoveForm($index)
+    {
+        unset($this->mainCost[$index]);
+        $this->mainCost = array_values($this->mainCost); // Reindex
+    }
+
+
+    public function additionalForm()
+    {
+        $this->addCost[] = [
+            'addText' => '',
+            'characterCount' => 0,
+            'addHeight' => '',
+            'addWidth' => '',
+            'logoMaterials' => [],
+            'stickerMaterial' => [],
+            'addStickerHeightWidth' => false,
+            'addlightHeightWidth' => false,
+            'addLightingType' => [],
+            'addPowerSupply' => 'None',
+            'addPowerSupplyQuantity' => 1,
+            'addPaintHeightWidth' => false,
+            'addoracalHeightWidth' => false,
+            'generalMaterial' => [],
+            'addPcs' => 1,
+        ];
+    }
+
+    public function updatedaddCost($value, $name)
+    {
+        if (str_ends_with($name, 'logoText')) {
+            preg_match('/(\d+)/', $name, $matches);
+            $index = $matches[0] ?? null;
+            if (isset($index) && isset($this->addCost[$index]['logoText'])) {
+                $this->addCost[$index]['characterCount'] = strlen($this->addCost[$index]['logoText']);
+            }
+        }
+    }
+
+
+    public function addremoveForm($index)
+    {
+        unset($this->addCost[$index]);
+        $this->addCost = array_values($this->addCost); // Reindex
+    }
+
+
+    public function busForm()
+    {
+        $this->busCost[] = [
+            'busText' => '',
+            'characterCount' => 0,
+            'busHeight' => '',
+            'busWidth' => '',
+            'logoMaterials' => [],
+            'stickerMaterial' => [],
+            'busStickerHeightWidth' => false,
+            'buslightHeightWidth' => false,
+            'busLightingType' => [],
+            'busPowerSupply' => 'None',
+            'busPowerSupplyQuantity' => 1,
+            'busPaintHeightWidth' => false,
+            'busoracalHeightWidth' => false,
+            'generalMaterial' => [],
+            'busPcs' => 1,
+        ];
+    }
+
+    public function updatedbusCost($value, $name)
+    {
+        if (str_ends_with($name, 'logoText')) {
+            preg_match('/(\d+)/', $name, $matches);
+            $index = $matches[0] ?? null;
+            if (isset($index) && isset($this->busCost[$index]['logoText'])) {
+                $this->busCost[$index]['characterCount'] = strlen($this->busCost[$index]['logoText']);
+            }
+        }
+    }
+
+
+    public function busremoveForm($index)
+    {
+        unset($this->busCost[$index]);
+        $this->busCost = array_values($this->busCost); // Reindex
+    }
+
+
+    public function ownerForm()
+    {
+        $this->ownCost[] = [
+            'ownText' => '',
+            'characterCount' => 0,
+            'ownHeight' => '',
+            'ownWidth' => '',
+            'logoMaterials' => [],
+            'stickerMaterial' => [],
+            'ownStickerHeightWidth' => false,
+            'ownlightHeightWidth' => false,
+            'ownLightingType' => [],
+            'ownPowerSupply' => 'None',
+            'ownPowerSupplyQuantity' => 1,
+            'ownPaintHeightWidth' => false,
+            'ownoracalHeightWidth' => false,
+            'generalMaterial' => [],
+            'ownPcs' => 1,
+        ];
+    }
+
+    public function updatedownerCost($value, $name)
+    {
+        if (str_ends_with($name, 'logoText')) {
+            preg_match('/(\d+)/', $name, $matches);
+            $index = $matches[0] ?? null;
+            if (isset($index) && isset($this->ownCost[$index]['logoText'])) {
+                $this->ownCost[$index]['characterCount'] = strlen($this->ownCost[$index]['logoText']);
+            }
+        }
+    }
+
+
+    public function ownerremoveForm($index)
+    {
+        unset($this->ownCost[$index]);
+        $this->ownCost = array_values($this->ownCost); // Reindex
+    }
+
+
 
     public function calculateBaseCost()
     {
@@ -311,22 +545,16 @@ public function getGeneralMaterialCost($material, $height, $width, $pcs)
             $basePrice = $priceList[$this->baseType][$this->baseMember];
 
             $this->baseCost = ($this->baseHeight * $this->baseWidth) / 144 * $basePrice;
-            // dd($this->baseCost);
         }
 
-        $area = ($this->logoHeight ?? 0) * ($this->logoWidth ?? 0);
-
+        //logo cost
         $this->acrylicCost = 0;
         $this->pvcCost = 0;
-        $whiteacryliccost = 0;
-        // dd($this->materialPrices);
-        // logo cost
 
         $calculator = new LogoCostCalculation;
         $this->logoCostResults = [];
 
         foreach ($this->logoCost as $index => $form) {
-            // dd($form);
             $cost = $calculator->calculate([
                 'height' => $form['logoHeight'],
                 'width' => $form['logoWidth'],
@@ -349,321 +577,126 @@ public function getGeneralMaterialCost($material, $height, $width, $pcs)
             ]);
 
             $this->logoCostResults["Logo Cost " . ($index + 1)] = round($cost, 2);
+            $this->logoTotal = array_sum($this->logoCostResults);
         }
 
         // main cost
-        $mainarea = ($this->mainHeight ?? 0) * ($this->mainWidth ?? 0);
 
+        $maincalculator = new MainLogoCostCalculation;
+        $this->mainCostResults = [];
 
-        $mainacrylicCost = 0;
-        $mainpvcCost = 0;
-        $mainwhiteacryliccost = 0;
-        foreach ($this->mainMaterials as $material) {
-            if (isset($this->materialPrices[$material])) {
-                if (strpos($material, 'acrylic') !== false) {
+        foreach ($this->mainCost as $index => $form) {
+            $cost = $maincalculator->Maincalculate([
+                'height' => $form['mainHeight'] ?? 0,
+                'width' => $form['mainWidth'] ?? 0,
+                'materials' => $form['mainMaterials'] ?? [],
+                'materialPrices' => $this->materialPrices,
+                'stickers' => $form['stickerMaterial'] ?? [],
+                'stickerPrices' => $this->stickerPrices,
+                'useSticker' => $form['mainStickerHeightWidth'] ?? false, // ✅ Fixed key
+                'useLighting' => $form['mainlightHeightWidth'] ?? false,
+                'powerSupply' => $form['mainPowerSupply'] ?? 'None',
+                'powerSupplyQty' => $form['mainPowerSupplyQuantity'] ?? 0,
+                'powerSupplyPrices' => $this->powerSupplyPrices,
+                'usePaint' => $form['mainPaintHeightWidth'] ?? false,
+                'useOrcale' => $form['mainoracalHeightWidth'] ?? false,
+                'generalMaterials' => $form['generalMaterial'] ?? [],
+                'generalMaterialCostFunction' => [$this, 'getGeneralMaterialCost'],
+                'lightingTypes' => $form['mainLightingType'] ?? [],
+                'lightingTypePrices' => $this->lightingtype,
+                'pcs' => $form['logoPcs'] ?? 1,
+            ]);
 
-                    $this->mainacrylicCost += $mainarea * $this->materialPrices[$material];
-                } elseif (strpos($material, 'pvc') !== false) {
-                    $this->mainpvcCost += $mainarea * $this->materialPrices[$material];
-                }
-            }
-
-            if ($material === 'whiteacrylic3mm') {
-                $mainwhiteacryliccost += $mainarea * $this->materialPrices[$material];
-            }
-        }
-
-        if ($this->mainStickerHeightWidth === true) {
-            $mainstickerArea = $mainarea / 144;
-        } else {
-            $mainstickerArea = 0;
-        }
-        $this->mainstickerCost = 0;
-        foreach ($this->mainstickerMaterial as $sticker) {
-            if (isset($this->stickerPrices[$sticker])) {
-                $this->mainstickerCost += $mainstickerArea * $this->stickerPrices[$sticker];
-            }
-        }
-
-        if ($this->mainlightHeightWidth === true) {
-            $mainlightingArea = $mainarea;
-            $this->mainlightingCost = ($mainlightingArea / 144) * 27;
-        } else {
-            $this->mainlightingCost = 0;
-        }
-
-        $mainpowerSupplyCost = isset($this->powerSupplyPrices[$this->mainPowerSupply]) ? $this->powerSupplyPrices[$this->mainPowerSupply] * $this->mainPowerSupplyQuantity : 0;
-
-        $this->maingeneralMaterialCost = 0;
-        $this->mainlightingprice = 0;
-        $pcs = $this->mainPcs ?? 1;
-        if (!empty($this->maingeneralMaterial)) {
-            foreach ($this->maingeneralMaterial as $material) {
-                $this->maingeneralMaterialCost += $this->getmainGeneralMaterialCost($material, $this->mainHeight, $this->mainWidth, $this->maincharacterCount);
-            }
-        } elseif (!empty($this->mainLightingType)) {
-            $this->mainlightingprice = 0;
-
-            foreach ($this->mainLightingType as $lighting) {
-                if (isset($lightingtype[$lighting])) {
-                    $this->mainlightingprice += $lightingtype[$lighting];
-                }
-            }
+            $this->mainCostResults["Main Cost " . ($index + 1)] = round($cost, 2);
+            $this->mainTotal = array_sum($this->mainCostResults);
         }
 
 
-        // paint
-        if ($this->mainPaintHeightWidth === true) {
-            $mainpaintArea = $mainarea;
-            $this->mainpaintCost = ($mainpaintArea / 144) * 7.50;
-        } else {
-            $this->mainpaintCost = 0;
-        }
-        // orcale
-        if ($this->mainoracalHeightWidth === true) {
-            $mainorcaleArea = $mainarea;
-            $this->mainorcaleCost = ($mainorcaleArea / 144) * 10.8;
-        } else {
-            $this->mainorcaleCost = 0;
-        }
-        $this->mainCost = $this->mainacrylicCost + $this->mainpvcCost + $this->mainstickerCost + $this->mainlightingCost + $this->mainpowerSupplyCost + $this->mainpaintCost + $this->maingeneralMaterialCost + $this->mainlightingprice + $this->mainorcaleCost;
-        // dd($mainacrylicCost , $mainpvcCost , $mainstickerCost , $mainlightingCost , $mainpowerSupplyCost , $mainpaintCost , $maingeneralMaterialCost , $mainlightingprice ,$mainorcaleCost);
+        // // add
+        // $addcalculator = new AddLetteringCost;
+        // $this->addCostResults = [];
 
+        // foreach ($this->addCost as $index => $form) {
+        //     $cost = $addcalculator->addcalculate([
+        //         'height' => $form['addHeight'],
+        //         'width' => $form['addWidth'],
+        //         'materials' => $form['addMaterials'],
+        //         'materialPrices' => $this->materialPrices,
+        //         'stickers' => $form['stickerMaterial'],
+        //         'stickerPrices' => $this->stickerPrices,
+        //         'useSticker' => $form['addStickerHeightWidth'],
+        //         'useLighting' => $form['addlightHeightWidth'],
+        //         'powerSupply' => $form['addPowerSupply'],
+        //         'powerSupplyQty' => $form['addPowerSupplyQuantity'],
+        //         'powerSupplyPrices' => $this->powerSupplyPrices,
+        //         'usePaint' => $form['addPaintHeightWidth'],
+        //         'useOrcale' => $form['addoracalHeightWidth'],
+        //         'generalMaterials' => $form['generalMaterial'] ?? [],
+        //         'generalMaterialCostFunction' => [$this, 'getGeneralMaterialCost'],
+        //         'lightingTypes' => $form['lightingtype'] ?? [],
+        //         'lightingTypePrices' => $this->lightingtype,
+        //         'pcs' => $form['addPcs'] ?? 1,
+        //     ]);
 
-        // add cost
-        $addarea = ($this->addHeight ?? 0) * ($this->addWidth ?? 0);
+        //     $this->addCostResults["add Cost " . ($index + 1)] = round($cost, 2);
+        // }
 
-        $this->addacrylicCost = 0;
-        $this->addpvcCost = 0;
-        $this->addwhiteacryliccost = 0;
-        foreach ($this->addMaterials as $material) {
-            if (isset($this->materialPrices[$material])) {
-                if (strpos($material, 'acrylic') !== false) {
+        // // business
+        // $buscalculator = new BusinessCost;
+        // $this->busCostResults = [];
 
-                    $this->addacrylicCost += $addarea * $this->materialPrices[$material];
-                } elseif (strpos($material, 'pvc') !== false) {
-                    $this->addpvcCost += $addarea * $this->materialPrices[$material];
-                }
-            }
+        // foreach ($this->busCost as $index => $form) {
+        //     $cost = $buscalculator->buscalculate([
+        //         'height' => $form['busHeight'],
+        //         'width' => $form['busWidth'],
+        //         'materials' => $form['busMaterials'],
+        //         'materialPrices' => $this->materialPrices,
+        //         'stickers' => $form['stickerMaterial'],
+        //         'stickerPrices' => $this->stickerPrices,
+        //         'useSticker' => $form['busStickerHeightWidth'],
+        //         'useLighting' => $form['buslightHeightWidth'],
+        //         'powerSupply' => $form['busPowerSupply'],
+        //         'powerSupplyQty' => $form['busPowerSupplyQuantity'],
+        //         'powerSupplyPrices' => $this->powerSupplyPrices,
+        //         'usePaint' => $form['busPaintHeightWidth'],
+        //         'useOrcale' => $form['busoracalHeightWidth'],
+        //         'generalMaterials' => $form['generalMaterial'] ?? [],
+        //         'generalMaterialCostFunction' => [$this, 'getGeneralMaterialCost'],
+        //         'lightingTypes' => $form['lightingtype'] ?? [],
+        //         'lightingTypePrices' => $this->lightingtype,
+        //         'pcs' => $form['busPcs'] ?? 1,
+        //     ]);
 
-            if ($material === 'whiteacrylic3mm') {
-                $mainwhiteacryliccost += $mainarea * $this->materialPrices[$material];
-            }
-        }
+        //     $this->busCostResults["bus Cost " . ($index + 1)] = round($cost, 2);
+        // }
 
-        if ($this->addStickerHeightWidth === true) {
-            $addstickerArea = $addarea / 144;
-        } else {
-            $addstickerArea = 0;
-        }
-        $this->addstickerCost = 0;
-        foreach ($this->addstickerMaterial as $sticker) {
-            if (isset($this->stickerPrices[$sticker])) {
-                $this->addstickerCost += $addstickerArea * $this->stickerPrices[$sticker];
-            }
-        }
+        // $owncalculator = new ownerCostResults;
+        // $this->ownerCostResults = [];
 
-        if ($this->addlightHeightWidth === true) {
-            $addlightingArea = $addarea;
-            $this->addlightingCost = ($addlightingArea / 144) * 27;
-        } else {
-            $this->addlightingCost = 0;
-        }
+        // foreach ($this->ownCost as $index => $form) {
+        //     $cost = $owncalculator->owncalculate([
+        //         'height' => $form['ownHeight'],
+        //         'width' => $form['ownWidth'],
+        //         'materials' => $form['ownMaterials'],
+        //         'materialPrices' => $this->materialPrices,
+        //         'stickers' => $form['stickerMaterial'],
+        //         'stickerPrices' => $this->stickerPrices,
+        //         'useSticker' => $form['ownStickerHeightWidth'],
+        //         'useLighting' => $form['ownlightHeightWidth'],
+        //         'powerSupply' => $form['ownPowerSupply'],
+        //         'powerSupplyQty' => $form['ownPowerSupplyQuantity'],
+        //         'powerSupplyPrices' => $this->powerSupplyPrices,
+        //         'usePaint' => $form['ownPaintHeightWidth'],
+        //         'useOrcale' => $form['ownoracalHeightWidth'],
+        //         'generalMaterials' => $form['generalMaterial'] ?? [],
+        //         'generalMaterialCostFunction' => [$this, 'getGeneralMaterialCost'],
+        //         'lightingTypes' => $form['lightingtype'] ?? [],
+        //         'lightingTypePrices' => $this->lightingtype,
+        //         'pcs' => $form['ownPcs'] ?? 1,
+        //     ]);
 
-        $addpowerSupplyCost = isset($this->powerSupplyPrices[$this->addPowerSupply]) ? $this->powerSupplyPrices[$this->addPowerSupply] * $this->addPowerSupplyQuantity : 0;
-
-        $this->addgeneralMaterialCost = 0;
-        $addlightingprice = 0;
-        $pcs = $this->mainPcs ?? 1;
-        if (!empty($this->addgeneralMaterial)) {
-            foreach ($this->addgeneralMaterial as $material) {
-                $this->addgeneralMaterialCost += $this->getaddGeneralMaterialCost($material, $this->addHeight, $this->addWidth, $pcs);
-            }
-        } elseif (!empty($this->addLightingType)) {
-            $this->addlightingprice = 0;
-
-            foreach ($this->addLightingType as $lighting) {
-                if (isset($lightingtype[$lighting])) {
-                    $this->addlightingprice += $lightingtype[$lighting];
-                }
-            }
-        }
-
-
-        // paint
-        if ($this->addPaintHeightWidth === true) {
-            $addpaintArea = $addarea;
-            $this->addpaintCost = ($addpaintArea / 144) * 7.50;
-        } else {
-            $this->addpaintCost = 0;
-        }
-        // orcale
-        if ($this->addoracalHeightWidth === true) {
-            $addorcaleArea = $addarea;
-            $this->addorcaleCost = ($addorcaleArea / 144) * 10.8;
-        } else {
-            $this->addorcaleCost = 0;
-        }
-        $this->addCost = $this->addacrylicCost + $this->addpvcCost + $this->addstickerCost + $this->addlightingCost + $this->addpowerSupplyCost + $this->addpaintCost + $this->addgeneralMaterialCost + $this->addlightingprice + $this->addorcaleCost;
-        // dd( $addacrylicCost , $addpvcCost , $addstickerCost , $addlightingCost , $addpowerSupplyCost ,$addpaintCost , $addgeneralMaterialCost , $addlightingprice , $addorcaleCost);
-
-
-
-        // business cost
-        $busarea = ($this->busHeight ?? 0) * ($this->busWidth ?? 0);
-
-        $this->busacrylicCost = 0;
-        $this->buspvcCost = 0;
-        $buswhiteacryliccost = 0;
-        foreach ($this->busMaterials as $material) {
-            if (isset($this->materialPrices[$material])) {
-                if (strpos($material, 'acrylic') !== false) {
-
-                    $this->busacrylicCost += $busarea * $this->materialPrices[$material];
-                } elseif (strpos($material, 'pvc') !== false) {
-                    $this->buspvcCost += $busarea * $this->materialPrices[$material];
-                }
-            }
-
-            if ($material === 'whiteacrylic3mm') {
-                $buswhiteacryliccost += $busarea * $this->materialPrices[$material];
-            }
-        }
-
-        if ($this->busStickerHeightWidth === true) {
-            $busstickerArea = $busarea / 144;
-        } else {
-            $busstickerArea = 0;
-        }
-        $this->busstickerCost = 0;
-        foreach ($this->busstickerMaterial as $sticker) {
-            if (isset($this->stickerPrices[$sticker])) {
-                $this->busstickerCost += $busstickerArea * $this->stickerPrices[$sticker];
-            }
-        }
-
-        if ($this->buslightHeightWidth === true) {
-            $buslightingArea = $busarea;
-            $this->buslightingCost = ($buslightingArea / 144) * 27;
-        } else {
-            $this->buslightingCost = 0;
-        }
-
-        $buspowerSupplyCost = isset($this->powerSupplyPrices[$this->busPowerSupply]) ? $this->powerSupplyPrices[$this->busPowerSupply] * $this->busPowerSupplyQuantity : 0;
-
-        $busgeneralMaterialCost = 0;
-        $buslightingprice = 0;
-        $pcs = $this->mainPcs ?? 1;
-        if (!empty($this->busgeneralMaterial)) {
-            foreach ($this->busgeneralMaterial as $material) {
-                $this->busgeneralMaterialCost += $this->getbusGeneralMaterialCost($material, $this->busHeight, $this->busWidth, $pcs);
-                // dd($busgeneralMaterialCost );
-            }
-        } elseif (!empty($this->busLightingType)) {
-            $this->buslightingprice = 0;
-
-            foreach ($this->busLightingType as $lighting) {
-                if (isset($lightingtype[$lighting])) {
-                    $this->buslightingprice += $lightingtype[$lighting];
-                }
-            }
-        }
-
-
-        // paint
-        if ($this->busPaintHeightWidth === true) {
-            $buspaintArea = $busarea;
-            $this->buspaintCost = ($buspaintArea / 144) * 7.50;
-        } else {
-            $this->buspaintCost = 0;
-        }
-        // orcale
-        if ($this->busoracalHeightWidth === true) {
-            $busorcaleArea = $busarea;
-            $this->busorcaleCost = ($busorcaleArea / 144) * 10.8;
-        } else {
-            $this->busorcaleCost = 0;
-        }
-        // dd($busacrylicCost ,$buspvcCost , $busstickerCost , $buslightingCost , $buspowerSupplyCost , $buspaintCost , $busgeneralMaterialCost , $buslightingprice , $busorcaleCost);
-        $this->busCost = $this->busacrylicCost + $this->buspvcCost + $this->busstickerCost + $this->buslightingCost + $this->buspowerSupplyCost + $this->buspaintCost + $this->busgeneralMaterialCost + $this->buslightingprice + $this->busorcaleCost;
-
-        // owner cost
-        $ownarea = ($this->ownHeight ?? 0) * ($this->ownWidth ?? 0);
-
-        $this->ownacrylicCost = 0;
-        $this->ownpvcCost = 0;
-        $ownwhiteacryliccost = 0;
-        foreach ($this->ownMaterials as $material) {
-            if (isset($this->materialPrices[$material])) {
-                if (strpos($material, 'acrylic') !== false) {
-
-                    $this->ownacrylicCost += $ownarea * $this->materialPrices[$material];
-                } elseif (strpos($material, 'pvc') !== false) {
-                    $this->ownpvcCost +=  $ownarea * $this->materialPrices[$material];
-                }
-            }
-
-            if ($material === 'whiteacrylic3mm') {
-                $ownwhiteacryliccost += $ownarea * $this->materialPrices[$material];
-            }
-        }
-
-        if ($this->ownStickerHeightWidth === true) {
-            $ownstickerArea = $ownarea / 144;
-        } else {
-            $ownstickerArea = 0;
-        }
-        $ownstickerCost = 0;
-        foreach ($this->ownstickerMaterial as $sticker) {
-            if (isset($this->stickerPrices[$sticker])) {
-                $this->ownstickerCost += $ownstickerArea * $this->stickerPrices[$sticker];
-            }
-        }
-
-        if ($this->ownlightHeightWidth === true) {
-            $ownlightingArea = $ownarea;
-            $this->ownlightingCost = ($ownlightingArea / 144) * 27;
-        } else {
-            $this->ownlightingCost = 0;
-        }
-
-        $ownpowerSupplyCost = isset($this->powerSupplyPrices[$this->ownPowerSupply]) ? $this->powerSupplyPrices[$this->ownPowerSupply] * $this->ownPowerSupplyQuantity : 0;
-
-        $this->owngeneralMaterialCost = 0;
-        $this->ownlightingprice = 0;
-        $pcs = $this->mainPcs ?? 1;
-        if (!empty($this->owngeneralMaterial)) {
-            foreach ($this->owngeneralMaterial as $material) {
-                $this->owngeneralMaterialCost += $this->getownGeneralMaterialCost($material, $this->ownHeight, $this->ownWidth, $pcs);
-                // dd($busgeneralMaterialCost );
-            }
-        } elseif (!empty($this->ownLightingType)) {
-            $this->ownlightingprice = 0;
-
-            foreach ($this->ownLightingType as $lighting) {
-                if (isset($lightingtype[$lighting])) {
-                    $this->ownlightingprice += $lightingtype[$lighting];
-                }
-            }
-        }
-
-
-        // paint
-        if ($this->ownPaintHeightWidth === true) {
-            $ownpaintArea = $ownarea;
-            $this->ownpaintCost = ($ownpaintArea / 144) * 7.50;
-        } else {
-            $this->ownpaintCost = 0;
-        }
-        // orcale
-        if ($this->ownoracalHeightWidth === true) {
-            $ownorcaleArea = $ownarea;
-            $this->ownorcaleCost = ($ownorcaleArea / 144) * 10.8;
-        } else {
-            $this->ownorcaleCost = 0;
-        }
-        // dd($ownacrylicCost ,$ownpvcCost , $ownstickerCost , $ownlightingCost , $ownpowerSupplyCost , $ownpaintCost , $owngeneralMaterialCost , $ownlightingprice , $ownorcaleCost);
-        $this->ownCost = $this->ownacrylicCost + $this->ownpvcCost + $this->ownstickerCost + $this->ownlightingCost + $this->ownpowerSupplyCost + $this->ownpaintCost + $this->owngeneralMaterialCost + $this->ownlightingprice + $this->ownorcaleCost;
+        //     $this->ownCostResults["own Cost " . ($index + 1)] = round($cost, 2);
+        // }
     }
     public function saveDatabase()
     {
