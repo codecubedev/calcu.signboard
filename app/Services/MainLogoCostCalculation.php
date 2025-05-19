@@ -2,16 +2,17 @@
 
 namespace App\Services;
 
-class LogoCostCalculation
+class MainLogoCostCalculation
 {
-    public function calculate(array $data): float
+    public function Maincalculate(array $data): float
     {
-        // Force numerical values
         $height = (float) $data['height'];
         $width = (float) $data['width'];
         $pcs = (int) ($data['pcs'] ?? 1);
         $area = $height * $width;
+        
 
+        // Ensure materialPrices is an array
         $materialPrices = $data['materialPrices'] ?? [];
 
         $acrylicCost = 0;
@@ -20,16 +21,15 @@ class LogoCostCalculation
 
         foreach ($data['materials'] as $material) {
             if (isset($materialPrices[$material])) {
-                $price = (float) $materialPrices[$material];
                 if (strpos($material, 'acrylic') !== false) {
-                    $acrylicCost += $area * $price;
+                    $acrylicCost += $area * $materialPrices[$material];
                 } elseif (strpos($material, 'pvc') !== false) {
-                    $pvcCost += $area * $price;
+                    $pvcCost += $area * $materialPrices[$material];
                 }
             }
 
             if ($material === 'whiteacrylic3mm') {
-                $whiteAcrylicCost += $area * ((float) ($materialPrices['whiteacrylic3mm'] ?? 0));
+                $whiteAcrylicCost += $area * ($materialPrices['whiteacrylic3mm'] ?? 0);
             }
         }
 
@@ -37,16 +37,17 @@ class LogoCostCalculation
         $stickerArea = $data['useSticker'] ? $area / 144 : 0;
         $stickerCost = 0;
         foreach ($data['stickers'] as $sticker) {
-            $stickerCost += $stickerArea * ((float) ($data['stickerPrices'][$sticker] ?? 0));
+            if (isset($data['stickerPrices'][$sticker])) {
+                $stickerCost += $stickerArea * $data['stickerPrices'][$sticker];
+            }
         }
 
         // Lighting Cost
         $lightingCost = $data['useLighting'] ? ($area / 144) * 27 : 0;
 
         // Power Supply Cost
-        $powerSupplyPrice = (float) ($data['powerSupplyPrices'][$data['powerSupply']] ?? 0);
-        $powerSupplyQty = (int) $data['powerSupplyQty'];
-        $powerSupplyCost = $powerSupplyPrice * $powerSupplyQty;
+        $powerSupplyCost = $data['powerSupplyPrices'][$data['powerSupply']] ?? 0;
+        $powerSupplyCost *= $data['powerSupplyQty'];
 
         // Paint and Oracal Costs
         $paintCost = $data['usePaint'] ? ($area / 144) * 7.50 : 0;
@@ -59,9 +60,9 @@ class LogoCostCalculation
                 $generalMaterialCost += call_user_func(
                     $data['generalMaterialCostFunction'],
                     $material,
-                    $height,
-                    $width,
-                    $pcs
+                    $data['height'],
+                    $data['width'],
+                    $data['pcs']
                 );
             }
         }
@@ -69,10 +70,20 @@ class LogoCostCalculation
         // Lighting Type Cost
         $lightingTypeCost = 0;
         foreach ($data['lightingTypes'] as $lighting) {
-            $lightingTypeCost += (float) ($data['lightingTypePrices'][$lighting] ?? 0);
+            if (isset($data['lightingTypePrices'][$lighting])) {
+                $lightingTypeCost += $data['lightingTypePrices'][$lighting];
+            }
         }
 
         // Return total cost
-        return $acrylicCost + $pvcCost + $stickerCost + $lightingCost + $powerSupplyCost + $paintCost + $generalMaterialCost + $lightingTypeCost + $orcaleCost;
+        return $acrylicCost
+            + $pvcCost
+            + $stickerCost
+            + $lightingCost
+            + $powerSupplyCost
+            + $paintCost
+            + $generalMaterialCost
+            + $lightingTypeCost
+            + $orcaleCost;
     }
 }

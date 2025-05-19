@@ -1,176 +1,179 @@
- <div class="row">
-     <h2>Additional Lettering Text</h2>
-     <div class="col-6">
-         <div class="mb-3">
-             <label for="mainText">Additional Lettering Text</label>
-             <input type="text" class="form-control form-control-sm" id="addText" wire:model.live="addText"
-                 oninput="updateaddCharacterCount()">
-         </div>
-     </div>
-     <div class="col-6">
-         <div class="mb-3">
-             <label for="addCharacterCount">Character Count</label>
-             <input type="text" class="form-control form-control-sm" id="addCharacterCount"
-                 wire:model="characterCount" readonly>
-         </div>
-     </div>
-     <div class="col-6">
-         <div class="mb-3">
-             <label for="addHeight">Height (inches)</label>
-             <input type="number" class="form-control form-control-sm" id="addHeight" wire:model="addHeight">
-         </div>
-     </div>
-     <div class="col-6">
-         <div class="mb-3">
-             <label for="addWidth">Width (inches)</label>
-             <input type="number" class="form-control form-control-sm" id="addWidth" wire:model="addWidth">
-         </div>
+<div>
+    <h2>Additional Lettering Cost</h2>
 
-     </div>
+    <div class="mb-3 text-end">
+        <button wire:click="additionalForm" class="btn btn-primary">Add</button>
+    </div>
 
-     <div class="mb-3 border p-3 rounded">
-         <label>Additional Lettering Materials</label>
-         <div class="row">
-             <div class="col-md-4">
-                 <strong>Clear Acrylic</strong>
-                 @foreach ([3, 5, 10, 15, 20, 25] as $size)
-                     <div>
-                         <input type="checkbox" class="clear-acrylic form-check-input" wire:model="addMaterials"
-                             value="acrylic{{ $size }}mm">
-                         <label>Acrylic {{ $size }}MM</label>
-                     </div>
-                 @endforeach
-                 <b>White Acrylic</b>
-                 <div>
-                     <input type="checkbox" class="white-acrylic form-check-input" wire:model="addMaterials"
-                         value="whiteacrylic3mm">
-                     <label>Acrylic 3MM</label>
-                 </div>
-             </div>
+    @foreach ($addCost as $index => $form)
+        <div class="border p-3 mb-4 rounded">
+            <div class="d-flex justify-content-between">
+                <h4>Additional Cost {{ $index + 1 }}</h4>
+                <button class="btn btn-danger btn-sm" wire:click="addremoveForm({{ $index }})">Remove</button>
+            </div>
 
-             <div class="col-md-4">
-                 <strong>PVC</strong>
-                 @foreach ([3, 5, 10, 15, 20, 25] as $size)
-                     <div>
-                         <input type="checkbox" class="form-check-input" wire:model="addMaterials"
-                             value="pvc{{ $size }}mm">
-                         <label>PVC {{ $size }}MM</label>
-                     </div>
-                 @endforeach
-             </div>
-             <div class="col-md-4">
-                 <!-- Main Sticker Checkbox -->
-                 <input class="form-check-input" type="checkbox" wire:model="addStickerHeightWidth"
-                     id="addStickerCheckbox" onchange="toggleaddStickerOptions()">
-                 <label class="form-check-label"><strong>Sticker</strong></label>
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label>Additional Text</label>
+                    <input type="text" class="form-control form-control-sm" data-index="{{ $index }}"
+                        name="logoText">
+                </div>
+                <div class="col-6 mb-3">
+                    <label>Character Count</label>
+                    <input type="text" class="form-control form-control-sm" readonly
+                        id="char-count-{{ $index }}">
+                </div>
 
-                 @php
-                     $stickerMaterialsFirst = [
-                         'whiteStickerMattLamm' => 'White Sticker Matt Lamm',
-                         'greyBase' => 'Grey Base',
-                         'lightboxSticker' => 'Lightbox Sticker',
-                         'reverseSticker' => 'Reverse Sticker',
-                         'dieCutStickerWhite' => 'Die Cut Sticker White',
-                         'dieCutStickerBlack' => 'Die Cut Sticker Black',
-                         'dieCutStickerPrinted' => 'Die Cut Sticker Printed',
-                     ];
-                 @endphp
+                <div class="col-6 mb-3">
+                    <label>Additional Height (inches)</label>
+                    <input type="text" class="form-control form-control-sm"
+                        wire:model="addCost.{{ $index }}.addHeight">
+                </div>
+                <div class="col-6 mb-3">
+                    <label>Additional Width (inches)</label>
+                    <input type="text" class="form-control form-control-sm"
+                        wire:model="addCost.{{ $index }}.addWidth">
+                </div>
 
-                 @foreach ($stickerMaterialsFirst as $value => $label)
-                     <div class="form-check">
-                         <input class="form-check-input sticker-options" type="checkbox" wire:model="addstickerMaterial"
-                             value="{{ $value }}" disabled>
-                         <label class="form-check-label">{{ $label }}</label>
-                     </div>
-                 @endforeach
-             </div>
+                <div class="col-12">
+                    <h5>Materials</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <strong>Clear Acrylic</strong>
+                            @foreach ([3, 5, 10, 15, 20, 25] as $size)
+                                <div>
+                                    <input type="checkbox" class="form-check-input"
+                                        wire:model="addCost.{{ $index }}.addMaterials"
+                                        value="acrylic{{ $size }}mm">
+                                    <label>Acrylic {{ $size }}MM</label>
+                                </div>
+                            @endforeach
+                        </div>
 
-         </div>
-         <div class="row mt-3">
+                        <div class="col-md-4">
+                            <strong>PVC</strong>
+                            @foreach ([3, 5, 10, 15, 20, 25] as $size)
+                                <div>
+                                    <input type="checkbox" class="form-check-input"
+                                        wire:model="addCost.{{ $index }}.addMaterials"
+                                        value="pvc{{ $size }}mm">
+                                    <label>PVC {{ $size }}MM</label>
+                                </div>
+                            @endforeach
+                        </div>
 
-             <div class="col-md-4">
-                 <strong>General Material</strong>
-                 <div>
-                     <input type="checkbox" class="form-check-input" id="channel3d" wire:model="addgeneralMaterial"
-                         value="channel3d">
-                     <label for="channel3d">3D Channel</label>
-                 </div>
-                 <div>
-                     <input type="checkbox" class="form-check-input" id="aluminiumBoxUp" wire:model="addgeneralMaterial"
-                         value="aluminiumBoxUp">
-                     <label for="aluminiumBoxUp">Aluminium Box Up</label>
-                 </div>
-             </div>
+                        <div class="col-md-4" x-data="{ enabled: @entangle('addCost.' . $index . '.addStickerHeightWidth') }">
+                            <strong>Sticker</strong>
+                            <div>
+                                <input type="checkbox" class="form-check-input" x-model="enabled"
+                                    wire:model="addCost.{{ $index }}.addStickerHeightWidth">
+                                <label>Sticker</label>
+                            </div>
 
-             <div class="col-md-4">
-                 <strong>Others</strong>
+                            @php
+                                $stickers = [
+                                    'whiteStickerMattLamm' => 'White Sticker Matt Lamm',
+                                    'greyBase' => 'Grey Base',
+                                    'lightboxSticker' => 'Lightbox Sticker',
+                                    'reverseSticker' => 'Reverse Sticker',
+                                    'dieCutStickerWhite' => 'Die Cut Sticker White',
+                                    'dieCutStickerBlack' => 'Die Cut Sticker Black',
+                                    'dieCutStickerPrinted' => 'Die Cut Sticker Printed',
+                                ];
+                            @endphp
 
-                 <div class="form-check">
-                     <input class="form-check-input" type="checkbox" wire:model="addPaintHeightWidth">
-                     <label class="form-check-label">Paint</label>
-                 </div>
-                 <div class="form-check">
-                     <input class="form-check-input" type="checkbox" wire:model="addoracalHeightWidth">
-                     <label class="form-check-label">Oracal </label>
-                 </div>
-                 <div class="form-check">
-                     <input class="form-check-input" type="checkbox" wire:model.live="addlightHeightWidth">
-                     <label class="form-check-label">Lighting </label>
-                 </div>
-             </div>
+                            @foreach ($stickers as $val => $label)
+                                <div>
+                                    <input type="checkbox" class="form-check-input"
+                                        wire:model="addCost.{{ $index }}.stickerMaterial"
+                                        value="{{ $val }}" :disabled="!enabled">
+                                    <label>{{ $label }}</label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
 
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <strong>General Material</strong>
+                            <div>
+                                <input type="checkbox" class="form-check-input"
+                                    wire:model="addCost.{{ $index }}.generalMaterial" value="channel3d">
+                                <label>3D Channel</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" class="form-check-input"
+                                    wire:model="addCost.{{ $index }}.generalMaterial" value="aluminiumBoxUp">
+                                <label>Aluminium Box Up</label>
+                            </div>
+                        </div>
 
-         </div>
-         @if ($addlightHeightWidth)
-             <div class="row mt-3">
-                 <div class="col-4">
-                     <div class="mb-3">
-                         <label>Lighting Type</label>
-                         @php
-                             $lighting = [
-                                 'frontlit' => 'Frontlit',
-                                 'backlit' => 'Backlit',
-                                 'sidelit' => 'Sidelit',
-                                 'nolight' => 'No light',
-                             ];
-                         @endphp
+                        <div class="col-md-4">
+                            <strong>Others</strong>
+                            <div>
+                                <input type="checkbox" class="form-check-input"
+                                    wire:model="addCost.{{ $index }}.addPaintHeightWidth">
+                                <label>Paint</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" class="form-check-input"
+                                    wire:model="addCost.{{ $index }}.addoracalHeightWidth">
+                                <label>Oracal</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" class="form-check-input"
+                                    wire:model.defer="addCost.{{ $index }}.addlightHeightWidth"
+                                    wire:change="$refresh">
+                                <label>Lighting</label>
 
-                         @foreach ($lighting as $value => $label)
-                             <div class="form-check">
-                                 <input class="form-check-input" type="checkbox" wire:model="addLightingType"
-                                     value="{{ $value }}">
-                                 <label class="form-check-label">{{ $label }}</label>
-                             </div>
-                         @endforeach
+                            </div>
+                        </div>
+                    </div>
 
-                     </div>
-                 </div>
-                 <div class="col-4">
-                     <div class="mb-3">
-                         <label for="addPowerSupply">Power Supply</label>
-                         <select class="form-select" id="addPowerSupply" wire:model="addPowerSupply">
-                             <option value="None">None</option>
-                             <option value="120W">120W</option>
-                             <option value="200W">200W</option>
-                             <option value="400W">400W</option>
-                         </select>
-                     </div>
-                 </div>
-                 <div class="col-4">
-                     <div class="mb-3">
-                         <label for="addPowerSupplyQuantity">Power Supply
-                             Quantity</label>
-                         <input type="number" class="form-control form-control-sm" id="addPowerSupplyQuantity"
-                             wire:model="addPowerSupplyQuantity" min="1">
-                     </div>
-                 </div>
-             </div>
-         @endif
-     </div>
- </div>
+                    @if ($form['addlightHeightWidth'])
+                        <div class="row mt-3">
+                            <div class="col-4">
+                                <label>Lighting Type</label>
+                                @foreach (['frontlit', 'backlit', 'sidelit', 'nolight'] as $type)
+                                    <div>
+                                        <input type="checkbox" class="form-check-input"
+                                            wire:model="addCost.{{ $index }}.addLightingType"
+                                            value="{{ $type }}">
+                                        <label>{{ ucfirst($type) }}</label>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <div class="col-4">
+                                <label>Power Supply</label>
+                                <select class="form-select" wire:model="addCost.{{ $index }}.addPowerSupply">
+                                    <option value="None">None</option>
+                                    <option value="120W">120W</option>
+                                    <option value="200W">200W</option>
+                                    <option value="400W">400W</option>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <label>Power Supply Quantity</label>
+                                <input type="number" min="1" class="form-control form-control-sm"
+                                    wire:model="addCost.{{ $index }}.addPowerSupplyQuantity">
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    @endforeach
+</div>
 <script>
-    function updateaddCharacterCount() {
-        let textInput = document.getElementById("addText").value;
-        document.getElementById("addCharacterCount").value = textInput.length;
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.logo-text-input').forEach(function(input) {
+            input.addEventListener('input', function() {
+                const index = this.dataset.index;
+                const charCountInput = document.getElementById(`char-count-${index}`);
+                if (charCountInput) {
+                    charCountInput.value = this.value.length;
+                }
+            });
+        });
+    });
 </script>
