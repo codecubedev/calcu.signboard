@@ -13,34 +13,40 @@ return new class extends Migration
     {
         Schema::create('logo_calculations', function (Blueprint $table) {
             $table->id();
-            $table->string('calculation_id')->nullable();
-
+            $table->integer('calculation_id')->nullable();
+            $table->integer('logo_order')->nullable();
             $table->string('logo_text')->nullable();
-            $table->string('logo_height')->nullable();
-            $table->string('logo_width')->nullable();
-            $table->string('logo_materials')->nullable();
+            $table->decimal('logo_height', 8, 2)->nullable();
+            $table->decimal('logo_width', 8, 2)->nullable();
+
+            $table->text('logo_materials')->nullable();
             $table->string('logo_sticker_height_width')->nullable();
-            $table->string('logo_sticker_material')->nullable();
-            $table->string('logo_general_material')->nullable();
+            $table->text('logo_sticker_material')->nullable();
+            $table->text('logo_general_material')->nullable();
             $table->string('logo_paint_height_width')->nullable();
             $table->string('logo_oracal_height_width')->nullable();
             $table->string('logo_light_height_width')->nullable();
-            $table->string('logo_lighting_type')->nullable();
+            $table->text('logo_lighting_type')->nullable();
             $table->string('logo_power_supply')->nullable();
-            $table->string('logo_power_supply_quantity')->nullable();
-            $table->string('logo_acrylic_cost')->nullable();
-            $table->string('logo_pvc_cost')->nullable();
-            $table->string('logo_sticker_cost')->nullable();
-            $table->string('logo_lighting_Cost')->nullable();
-            $table->string('logo_power_supply_cost')->nullable();
-            $table->string('logo_paint_cost')->nullable();
-            $table->string('logo_general_material_cost')->nullable();
-            $table->string('logo_lighting_price')->nullable();
-            $table->string('logo_orcale_cost')->nullable();
-            $table->string('total_logo_cost')->nullable();
+            $table->integer('logo_power_supply_quantity')->nullable();
+
+            // Individual cost breakdowns
+            $table->decimal('logo_acrylic_cost', 10, 2)->nullable();
+            $table->decimal('logo_pvc_cost', 10, 2)->nullable();
+            $table->decimal('logo_sticker_cost', 10, 2)->nullable();
+            $table->decimal('logo_lighting_cost', 10, 2)->nullable();
+            $table->decimal('logo_power_supply_cost', 10, 2)->nullable();
+            $table->decimal('logo_paint_cost', 10, 2)->nullable();
+            $table->decimal('logo_general_material_cost', 10, 2)->nullable();
+            $table->decimal('logo_lighting_price', 10, 2)->nullable();
+            $table->decimal('logo_oracal_cost', 10, 2)->nullable();
+
+            $table->decimal('total_logo_cost', 12, 2)->nullable();
+
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.

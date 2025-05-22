@@ -13,32 +13,34 @@ return new class extends Migration
     {
         Schema::create('ownership_calculations', function (Blueprint $table) {
             $table->id();
-            $table->string('calculation_id')->nullable();
-
+            $table->integer('calculation_id')->nullable();
+            $table->integer('ownership_order')->nullable();
             $table->string('ownership_text')->nullable();
-            $table->string('ownership_height')->nullable();
-            $table->string('ownership_width')->nullable();
-            $table->string('ownership_materials')->nullable();
+            $table->decimal('ownership_height', 8, 2)->nullable();
+            $table->decimal('ownership_width', 8, 2)->nullable();
+            $table->text('ownership_materials')->nullable();
             $table->string('ownership_sticker_height_width')->nullable();
-            $table->string('ownership_sticker_material')->nullable();
-            $table->string('ownership_general_material')->nullable();
+            $table->text('ownership_sticker_material')->nullable();
+            $table->text('ownership_general_material')->nullable();
             $table->string('ownership_paint_height_width')->nullable();
             $table->string('ownership_oracal_height_width')->nullable();
             $table->string('ownership_light_height_width')->nullable();
-            $table->string('ownership_lighting_type')->nullable();
+            $table->text('ownership_lighting_type')->nullable();
             $table->string('ownership_power_supply')->nullable();
-            $table->string('ownership_power_supply_quantity')->nullable();
-            $table->string('ownership_acrylic_cost')->nullable();
-            $table->string('ownership_pvc_cost')->nullable();
-            $table->string('ownership_sticker_cost')->nullable();
-            $table->string('ownership_lighting_Cost')->nullable();
-            $table->string('ownership_power_supply_cost')->nullable();
-            $table->string('ownership_paint_cost')->nullable();
-            $table->string('ownership_general_material_cost')->nullable();
-            $table->string('ownership_lighting_price')->nullable();
-            $table->string('ownership_orcale_cost')->nullable();
-            $table->string('total_ownership_cost')->nullable();
+            $table->integer('ownership_power_supply_quantity')->nullable();
+            $table->decimal('ownership_acrylic_cost', 10, 2)->nullable();
+            $table->decimal('ownership_pvc_cost', 10, 2)->nullable();
+            $table->decimal('ownership_sticker_cost', 10, 2)->nullable();
+            $table->decimal('ownership_lighting_cost', 10, 2)->nullable();
+            $table->decimal('ownership_power_supply_cost', 10, 2)->nullable();
+            $table->decimal('ownership_paint_cost', 10, 2)->nullable();
+            $table->decimal('ownership_general_material_cost', 10, 2)->nullable();
+            $table->decimal('ownership_lighting_price', 10, 2)->nullable();
+            $table->decimal('ownership_oracal_cost', 10, 2)->nullable();
+
+            $table->decimal('total_ownership_cost', 12, 2)->nullable();
             $table->timestamps();
+
         });
     }
 

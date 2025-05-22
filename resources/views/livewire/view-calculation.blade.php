@@ -142,7 +142,7 @@
                     <div class="mb-3">
                         <h4>Base</h4>
                         <label class="form-label">Base Cost:</label>
-                        <div id="baseCostDisplay" class="alert alert-warning">{{ $baseCost ?? 0 }}</div>
+                        <div id="baseCostDisplay" class="alert alert-info">{{ $baseCost ?? 0 }}</div>
                     </div>
 
                     <div class="mb-3">
@@ -150,25 +150,62 @@
 
                         @foreach ($logoCostResults as $label => $cost)
                             <strong>{{ $label }}: </strong>
-                            <div class="alert alert-primary">{{ $cost ?? 0 }}</div>
+                            <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
                         @endforeach
 
                         <strong>Total Logo Cost:</strong>
                         <div class="alert alert-danger">{{ $logoTotal }}</div>
                     </div>
                     <div class="mb-3">
-                        <h4>Main</h4>
+                        <h4>Main Cost</h4>
 
                         @foreach ($mainCostResults as $label => $cost)
                             <strong>{{ $label }}: </strong>
-                            <div class="alert alert-success">{{ $cost ?? 0 }}</div>
+                            <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
                         @endforeach
 
                         <strong>Total Main Cost:</strong>
                         <div class="alert alert-primary">{{ $mainTotal }}</div>
                     </div>
+                    <div class="mb-3">
+                        <h4>Additional Cost </h4>
 
+                        @foreach ($addCostResults as $label => $cost)
+                            <strong>{{ $label }}: </strong>
+                            <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
+                        @endforeach
 
+                        <strong>Total Additional Cost:</strong>
+                        <div class="alert alert-warning">{{ $addTotal }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <h4>Type of Business</h4>
+
+                        @foreach ($busCostResults as $label => $cost)
+                            <strong>{{ $label }}: </strong>
+                            <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
+                        @endforeach
+
+                        <strong>Total Business Cost:</strong>
+                        <div class="alert alert-success">{{ $busTotal }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <h4>Ownership Sticker</h4>
+
+                        @foreach ($ownerCostResults as $label => $cost)
+                            <strong>{{ $label }}: </strong>
+                            <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
+                        @endforeach
+
+                        <strong>Total Ownership Sticker Cost:</strong>
+                        <div class="alert alert-danger">{{ $ownTotal }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <h4>Total Costs</h4>
+                        <label class="form-label">Total Cost:</label>
+                        <div id="totalCostDisplay" class="alert alert-success">
+                            {{ $logoTotal + $mainTotal + $addTotal +$busTotal+$ownTotal }}</div>
+                    </div>
 
                     {{-- <div class="mb-3">
                         <h4>Main</h4>
@@ -190,12 +227,7 @@
                         <strong>Ownership Sticker Cost: </strong>
                         <div class="alert alert-info">{{ $ownCost ?? 0 }}</div>
                     </div> --}}
-                    {{-- <div class="mb-3">
-                        <h4>Total Costs</h4>
-                        <label class="form-label">Total Cost:</label>
-                        <div id="totalCostDisplay" class="alert alert-success">
-                            {{ $baseCost + $busCost + $ownCost }}</div>
-                    </div> --}}
+
 
                 </div>
             </div>

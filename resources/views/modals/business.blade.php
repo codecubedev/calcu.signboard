@@ -14,23 +14,24 @@
 
             <div class="row">
                 <div class="col-6 mb-3">
-                    <label>Additional Text</label>
+                    <label>Business Text</label>
                     <input type="text" class="form-control form-control-sm"
-                        wire:model="busCost.{{ $index }}.addText">
+                        wire:model="busCost.{{ $index }}.busText">
+
                 </div>
                 <div class="col-6 mb-3">
                     <label>Character Count</label>
                     <input type="text" class="form-control form-control-sm" readonly
-                        wire:model="busCost.{{ $index }}.characterCount">
+                        value="{{ $busCost[$index]['characterCount'] ?? '' }}">
                 </div>
 
                 <div class="col-6 mb-3">
-                    <label>Additional Height (inches)</label>
+                    <label>Business Height (inches)</label>
                     <input type="text" class="form-control form-control-sm"
                         wire:model="busCost.{{ $index }}.busHeight">
                 </div>
                 <div class="col-6 mb-3">
-                    <label>Additional Width (inches)</label>
+                    <label>Business Width (inches)</label>
                     <input type="text" class="form-control form-control-sm"
                         wire:model="busCost.{{ $index }}.busWidth">
                 </div>

@@ -1,7 +1,7 @@
 <div>
     <div class="row">
         <h2>Edit Cost :</h2>
-        
+
         <div class="col-4">
             <div class="mb-3">
                 <label for="baseHeight" class="form-label fw-bold">Base Height (inches)</label>
@@ -22,77 +22,144 @@
         </div>
 
     </div>
-    <div class="row">
-        
-        <div class="col-4">
-            <div class="mb-3">
-                <label for="logoHeight" class="form-label fw-bold">Logo Height (inches)</label>
-                <input type="number" class="form-control form-control-sm" id="logoHeight" wire:model="editlogoHeight">
-            </div>
-        </div>
-        <div class="col-4">
-            <div class="mb-3">
-                <label for="logoWidth" class="form-label fw-bold">Logo Width (inches)</label>
-                <input type="number" class="form-control form-control-sm" id="logoWidth" wire:model="editlogoWidth">
+
+    @foreach ($editLogos as $index => $logo)
+        <div class="row">
+            <div class="col-12">
+                <h5 class="fw-bold">Logo {{ $index + 1 }}</h5>
             </div>
 
+            <div class="col-4">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Logo Height (inches)</label>
+                    <input type="number" class="form-control form-control-sm"
+                        wire:model="editLogos.{{ $index }}.height">
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Logo Width (inches)</label>
+                    <input type="number" class="form-control form-control-sm"
+                        wire:model="editLogos.{{ $index }}.width">
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Logo Cost</label>
+                    <input type="number" class="form-control form-control-sm"
+                        wire:model="editLogos.{{ $index }}.cost">
+                </div>
+            </div>
         </div>
-        <div class="col-4">
-            <div class="mb-3">
-                <label for="logoWidth" class="form-label fw-bold">Logo Cost</label>
-                <input type="number" class="form-control form-control-sm" id="logoWidth" wire:model="editlogocost">
+    @endforeach
+
+    @foreach ($editMains as $index => $main)
+        <div class="row">
+            <div class="col-12">
+                <h5 class="fw-bold">Main {{ $index + 1 }}</h5>
+            </div>
+            <div class="col-4">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Main Height (inches)</label>
+                    <input type="number" class="form-control form-control-sm"
+                        wire:model="editMains.{{ $index }}.height">
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Main Width (inches)</label>
+                    <input type="number" class="form-control form-control-sm"
+                        wire:model="editMains.{{ $index }}.width">
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Main Cost</label>
+                    <input type="number" class="form-control form-control-sm"
+                        wire:model="editMains.{{ $index }}.cost">
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+    @foreach ($editAdditionals as $index => $additional)
+        <div class="row">
+            <div class="col-12">
+                <h5 class="fw-bold">Additional {{ $index + 1 }}</h5>
             </div>
 
-        </div>
-    </div>
-    <div class="row">
-        
-        <div class="col-4">
-            <div class="mb-3">
-                <label for="logoHeight" class="form-label fw-bold">Main Height (inches)</label>
-                <input type="number" class="form-control form-control-sm" id="logoHeight" wire:model="editmainHeight">
-            </div>
-        </div>
-        <div class="col-4">
-            <div class="mb-3">
-                <label for="logoWidth" class="form-label fw-bold">Main Width (inches)</label>
-                <input type="number" class="form-control form-control-sm" id="logoWidth" wire:model="editmainWidth">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Additional Height (inches)</label>
+                    <input type="number" class="form-control form-control-sm"
+                        wire:model="editAdditionals.{{ $index }}.height">
+                </div>
             </div>
 
-        </div>
-        <div class="col-4">
-            <div class="mb-3">
-                <label for="logoWidth" class="form-label fw-bold">Main Cost</label>
-                <input type="number" class="form-control form-control-sm" id="logoWidth" wire:model="editmaincost">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Additional Width (inches)</label>
+                    <input type="number" class="form-control form-control-sm"
+                        wire:model="editAdditionals.{{ $index }}.width">
+                </div>
             </div>
 
-        </div>
-    </div>
-    <div class="row">
-        
-        <div class="col-4">
-            <div class="mb-3">
-                <label for="logoHeight" class="form-label fw-bold">Additional Height (inches)</label>
-                <input type="number" class="form-control form-control-sm" id="logoHeight" wire:model="editaddHeight">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Additional Cost</label>
+                    <input type="number" class="form-control form-control-sm"
+                        wire:model="editAdditionals.{{ $index }}.cost">
+                </div>
             </div>
         </div>
-        <div class="col-4">
-            <div class="mb-3">
-                <label for="logoWidth" class="form-label fw-bold">Additional Width (inches)</label>
-                <input type="number" class="form-control form-control-sm" id="logoWidth" wire:model="editaddWidth">
-            </div>
+    @endforeach
 
-        </div>
-        <div class="col-4">
-            <div class="mb-3">
-                <label for="logoWidth" class="form-label fw-bold">Additional Cost</label>
-                <input type="number" class="form-control form-control-sm" id="logoWidth" wire:model="editaddcost">
+    @foreach ($editBusinesses as $index => $business)
+        <div class="row">
+            <div class="col-12">
+                <h5 class="fw-bold">Business {{ $index + 1 }}</h5>
             </div>
-
+            <div class="col-6">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Business Name</label>
+                    <input type="text" class="form-control form-control-sm"
+                        wire:model="editBusinesses.{{ $index }}.name">
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Business Cost</label>
+                    <input type="number" class="form-control form-control-sm"
+                        wire:model="editBusinesses.{{ $index }}.cost">
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        
+    @endforeach
+    @foreach ($editOwners as $index => $owner)
+        <div class="row">
+            <div class="col-12">
+                <h5 class="fw-bold">Owner {{ $index + 1 }}</h5>
+            </div>
+            <div class="col-6">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Owner Name</label>
+                    <input type="text" class="form-control form-control-sm"
+                        wire:model="editOwners.{{ $index }}.name">
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Owner Cost</label>
+                    <input type="number" class="form-control form-control-sm"
+                        wire:model="editOwners.{{ $index }}.cost">
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+
+    {{-- <div class="row">
+
         <div class="col-4">
             <div class="mb-3">
                 <label for="logoHeight" class="form-label fw-bold">Business Cost </label>
@@ -109,17 +176,18 @@
         <div class="col-4">
             <div class="mb-3">
                 <label for="logoWidth" class="form-label fw-bold">Total Cost</label>
-                <input type="number" class="form-control form-control-sm" id="logoWidth" wire:model="edittotalcost">
+                <input type="number" class="form-control form-control-sm" id="logoWidth"
+                    wire:model="edittotalcost">
             </div>
 
         </div>
-    </div>
+    </div> --}}
     <div class="row justify-content-left">
         <div class="col-auto">
             <button type="button" wire:click="updateCalculation" class="btn btn-primary">Update</button>
         </div>
         <div class="col-auto">
-            <button type="button" wire:click="saveDatabase" class="btn btn-success" >Cancel</button>
+            <button type="button" wire:click="saveDatabase" class="btn btn-success">Cancel</button>
         </div>
     </div>
 </div>
