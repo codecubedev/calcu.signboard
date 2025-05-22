@@ -10,7 +10,7 @@ class BusinessCalculation extends Model
     use HasFactory;
     protected $fillable = [
        
-        'business_text', 'business_height', 'business_width', 'business_materials',
+        'business_text','business_order' , 'business_height', 'business_width', 'business_materials',
         'business_sticker_height_width', 'business_sticker_material', 'business_general_material',
         'business_paint_height_width', 'business_oracal_height_width', 'business_light_height_width',
         'business_lighting_type', 'business_power_supply', 'business_power_supply_quantity',

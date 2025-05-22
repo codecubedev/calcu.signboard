@@ -16,13 +16,15 @@
                 <div class="col-6 mb-3">
                     <label>Ownership Text</label>
                     <input type="text" class="form-control form-control-sm"
-                        wire:model="ownCost.{{ $index }}.addText">
+                        wire:model="ownCost.{{ $index }}.ownText">
                 </div>
+
                 <div class="col-6 mb-3">
                     <label>Character Count</label>
                     <input type="text" class="form-control form-control-sm" readonly
                         wire:model="ownCost.{{ $index }}.characterCount">
                 </div>
+
 
                 <div class="col-6 mb-3">
                     <label>Ownership Height (inches)</label>

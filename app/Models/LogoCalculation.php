@@ -9,7 +9,7 @@ class LogoCalculation extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'job_name', 'date', 'sales_man',
+        'job_name', 'date','logo_order' ,'sales_man',
         'base_type', 'base_member', 'base_height', 'base_width',
         'logo_text', 'logo_height', 'logo_width', 'logo_materials',
         'logo_sticker_height_width', 'logo_sticker_material', 'logo_general_material',

@@ -2,12 +2,14 @@
 
 namespace App\Services;
 
-class ownerCostResults
+class OwnerstickerCost
 {
     public function owncalculate(array $data): float
     {
-        $area = $data['height'] * $data['width'];
-
+        $height = (float) $data['height'];
+        $width = (float) $data['width'];
+        $pcs = (int) ($data['pcs'] ?? 1);
+        $area = $height * $width;
         // Ensure materialPrices is an array
         $materialPrices = $data['materialPrices'] ?? [];
 
@@ -69,5 +71,3 @@ class ownerCostResults
         return $acrylicCost + $pvcCost + $stickerCost + $lightingCost + $powerSupplyCost + $paintCost + $generalMaterialCost + $lightingTypeCost + $orcaleCost;
     }
 }
-
-

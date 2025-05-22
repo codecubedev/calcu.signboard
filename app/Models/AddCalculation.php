@@ -10,7 +10,7 @@ class AddCalculation extends Model
     use HasFactory;
     protected $fillable = [
        
-        'add_text', 'add_height', 'add_width', 'add_materials',
+        'add_text', 'add_height','add_order', 'add_width', 'add_materials',
         'add_sticker_height_width', 'add_sticker_material', 'add_general_material',
         'add_paint_height_width', 'add_oracal_height_width', 'add_light_height_width',
         'add_lighting_type', 'add_power_supply', 'add_power_supply_quantity',

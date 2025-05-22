@@ -13,31 +13,32 @@ return new class extends Migration
     {
         Schema::create('business_calculations', function (Blueprint $table) {
             $table->id();
-            $table->string('calculation_id')->nullable();
-
+            $table->integer('calculation_id')->nullable();
+            $table->integer('business_order')->nullable();
             $table->string('business_text')->nullable();
-            $table->string('business_height')->nullable();
-            $table->string('business_width')->nullable();
-            $table->string('business_materials')->nullable();
+            $table->decimal('business_height', 8, 2)->nullable();
+            $table->decimal('business_width', 8, 2)->nullable();
+            $table->text('business_materials')->nullable();
             $table->string('business_sticker_height_width')->nullable();
-            $table->string('business_sticker_material')->nullable();
-            $table->string('business_general_material')->nullable();
+            $table->text('business_sticker_material')->nullable();
+            $table->text('business_general_material')->nullable();
             $table->string('business_paint_height_width')->nullable();
             $table->string('business_oracal_height_width')->nullable();
             $table->string('business_light_height_width')->nullable();
-            $table->string('business_lighting_type')->nullable();
+            $table->text('business_lighting_type')->nullable();
             $table->string('business_power_supply')->nullable();
-            $table->string('business_power_supply_quantity')->nullable();
-            $table->string('business_acrylic_cost')->nullable();
-            $table->string('business_pvc_cost')->nullable();
-            $table->string('business_sticker_cost')->nullable();
-            $table->string('business_lighting_Cost')->nullable();
-            $table->string('business_power_supply_cost')->nullable();
-            $table->string('business_paint_cost')->nullable();
-            $table->string('business_general_material_cost')->nullable();
-            $table->string('business_lighting_price')->nullable();
-            $table->string('business_orcale_cost')->nullable();
-            $table->string('total_business_cost')->nullable();
+            $table->integer('business_power_supply_quantity')->nullable();
+            $table->decimal('business_acrylic_cost', 10, 2)->nullable();
+            $table->decimal('business_pvc_cost', 10, 2)->nullable();
+            $table->decimal('business_sticker_cost', 10, 2)->nullable();
+            $table->decimal('business_lighting_cost', 10, 2)->nullable();
+            $table->decimal('business_power_supply_cost', 10, 2)->nullable();
+            $table->decimal('business_paint_cost', 10, 2)->nullable();
+            $table->decimal('business_general_material_cost', 10, 2)->nullable();
+            $table->decimal('business_lighting_price', 10, 2)->nullable();
+            $table->decimal('business_oracal_cost', 10, 2)->nullable();
+
+            $table->decimal('total_business_cost', 12, 2)->nullable();
             $table->timestamps();
         });
     }

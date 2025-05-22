@@ -15,7 +15,7 @@ use App\Services\LogoCostCalculation;
 use App\Services\MainLogoCostCalculation;
 use App\Services\AddLetteringCost;
 use App\Services\BusinessCost;
-use App\Services\ownerCostResults;
+use App\Services\OwnerstickerCost;
 
 class ViewCalculation extends Component
 {
@@ -48,7 +48,7 @@ class ViewCalculation extends Component
 
     //add 
     public $addText, $addacrylicCost, $addpvcCost;
-    public $addHeight, $addWidth, $addStickerHeightWidth, $addoracalHeightWidth;
+    public $addHeight, $addWidth, $addTotal = 0,  $addStickerHeightWidth, $addoracalHeightWidth;
     public  $addstickerCost, $addlightingCost, $addpowerSupplyCost, $addpaintCost, $addgeneralMaterialCost, $addlightingprice, $addorcaleCost;
 
     public $addLightingTypes;
@@ -62,7 +62,7 @@ class ViewCalculation extends Component
     //bus
     public $busText, $busacrylicCost, $buspvcCost;
 
-    public $busHeight, $busWidth, $busStickerHeightWidth, $busoracalHeightWidth;
+    public $busHeight, $busWidth,  $busStickerHeightWidth,  $busTotal = 0, $busoracalHeightWidth;
     public  $busstickerCost, $buslightingCost, $buspowerSupplyCost, $buspaintCost, $busgeneralMaterialCost, $buslightingprice, $busorcaleCost;
 
     public $busLightingTypes;
@@ -76,7 +76,7 @@ class ViewCalculation extends Component
     // owner
 
     public $ownText, $ownacrylicCost, $ownpvcCost;
-    public  $ownstickerCost, $ownlightingCost, $ownpowerSupplyCost, $ownpaintCost, $owngeneralMaterialCost, $ownlightingprice, $ownorcaleCost;
+    public  $ownstickerCost, $ownlightingCost, $ownTotal = 0, $ownpowerSupplyCost, $ownpaintCost, $owngeneralMaterialCost, $ownlightingprice, $ownorcaleCost;
 
     public $ownHeight, $ownWidth, $ownStickerHeightWidth, $ownoracalHeightWidth;
     public $ownLightingTypes;
@@ -242,6 +242,8 @@ class ViewCalculation extends Component
             'mainHeight' => '',
             'mainWidth' => '',
             'mainMaterials' => [],
+            'materialPrices' => [],
+
             'mainStickerHeightWidth' => false,
             'stickerMaterial' => [],
             'generalMaterial' => [],
@@ -250,7 +252,7 @@ class ViewCalculation extends Component
             'mainlightHeightWidth' => false,
             'mainLightingType' => [],
             'mainPowerSupply' => 'None',
-            'mainPowerSupplyQuantity' => 0,
+            'mainPowerSupplyQuantity' => 1,
             'mainPcs' => 1,
         ];
         $this->addCost[] = [
@@ -267,7 +269,7 @@ class ViewCalculation extends Component
             'addlightHeightWidth' => false,
             'addLightingType' => [],
             'addPowerSupply' => 'None',
-            'mainPowerSupplyQuantity' => 0,
+            'addPowerSupplyQuantity' => 1,
             'mainPcs' => 1,
         ];
 
@@ -285,8 +287,8 @@ class ViewCalculation extends Component
             'buslightHeightWidth' => false,
             'busLightingType' => [],
             'busPowerSupply' => 'None',
-            'mainPowerSupplyQuantity' => 0,
-            'mainPcs' => 1,
+            'busPowerSupplyQuantity' => 1,
+            'busPcs' => 1,
         ];
         $this->ownCost[] = [
             'ownText' => '',
@@ -302,21 +304,20 @@ class ViewCalculation extends Component
             'ownlightHeightWidth' => false,
             'ownLightingType' => [],
             'ownPowerSupply' => 'None',
-            'ownPowerSupplyQuantity' => 0,
+            'ownPowerSupplyQuantity' => 1,
             'ownPcs' => 1,
         ];
     }
 
     public function updatedLogoCost($value, $key)
     {
-        // Extract index and field name from $key
-        [$index, $field] = explode('.', $key);
-
-        // Update character count when logoText changes
-        if ($field === 'logoText') {
+        // Matches "0.logoText", "1.logoText", etc.
+        if (preg_match('/^(\d+)\.logoText$/', $key, $matches)) {
+            $index = $matches[1];
             $this->logoCost[$index]['characterCount'] = strlen($value);
         }
     }
+
 
 
     public function addForm()
@@ -354,7 +355,7 @@ class ViewCalculation extends Component
             'characterCount' => 0,
             'mainHeight' => '',
             'mainWidth' => '',
-            'logoMaterials' => [],
+            'mainMaterials' => [],
             'stickerMaterial' => [],
             'mainStickerHeightWidth' => false,
             'mainlightHeightWidth' => false,
@@ -370,7 +371,6 @@ class ViewCalculation extends Component
 
     public function updatedMainCost($value, $key)
     {
-        // Matches "0.mainText", "1.mainText", etc.
         if (preg_match('/^(\d+)\.mainText$/', $key, $matches)) {
             $index = $matches[1];
             $this->mainCost[$index]['characterCount'] = strlen($value);
@@ -394,7 +394,7 @@ class ViewCalculation extends Component
             'characterCount' => 0,
             'addHeight' => '',
             'addWidth' => '',
-            'logoMaterials' => [],
+            'addMaterials' => [],
             'stickerMaterial' => [],
             'addStickerHeightWidth' => false,
             'addlightHeightWidth' => false,
@@ -408,22 +408,17 @@ class ViewCalculation extends Component
         ];
     }
 
-    public function updatedaddCost($value, $name)
+    public function updatedAddCost($value, $key)
     {
-        if (str_ends_with($name, 'logoText')) {
-            preg_match('/(\d+)/', $name, $matches);
-            $index = $matches[0] ?? null;
-            if (isset($index) && isset($this->addCost[$index]['logoText'])) {
-                $this->addCost[$index]['characterCount'] = strlen($this->addCost[$index]['logoText']);
-            }
+        if (preg_match('/^(\d+)\.addText$/', $key, $matches)) {
+            $index = $matches[1];
+            $this->addCost[$index]['characterCount'] = strlen($value);
         }
     }
-
-
     public function addremoveForm($index)
     {
         unset($this->addCost[$index]);
-        $this->addCost = array_values($this->addCost); // Reindex
+        $this->addCost = array_values($this->addCost);
     }
 
 
@@ -434,7 +429,7 @@ class ViewCalculation extends Component
             'characterCount' => 0,
             'busHeight' => '',
             'busWidth' => '',
-            'logoMaterials' => [],
+            'busMaterials' => [],
             'stickerMaterial' => [],
             'busStickerHeightWidth' => false,
             'buslightHeightWidth' => false,
@@ -448,22 +443,25 @@ class ViewCalculation extends Component
         ];
     }
 
-    public function updatedbusCost($value, $name)
+    public function updated($property, $value)
     {
-        if (str_ends_with($name, 'logoText')) {
-            preg_match('/(\d+)/', $name, $matches);
-            $index = $matches[0] ?? null;
-            if (isset($index) && isset($this->busCost[$index]['logoText'])) {
-                $this->busCost[$index]['characterCount'] = strlen($this->busCost[$index]['logoText']);
-            }
+        if (preg_match('/^mainCost\.(\d+)\.mainText$/', $property, $matches)) {
+            $index = $matches[1];
+            $this->mainCost[$index]['characterCount'] = strlen($value);
+        }
+
+        if (preg_match('/^ownCost\.(\d+)\.ownText$/', $property, $matches)) {
+            $index = $matches[1];
+            $this->ownCost[$index]['characterCount'] = strlen($value);
         }
     }
+
 
 
     public function busremoveForm($index)
     {
         unset($this->busCost[$index]);
-        $this->busCost = array_values($this->busCost); // Reindex
+        $this->busCost = array_values($this->busCost);
     }
 
 
@@ -474,7 +472,7 @@ class ViewCalculation extends Component
             'characterCount' => 0,
             'ownHeight' => '',
             'ownWidth' => '',
-            'logoMaterials' => [],
+            'ownMaterials' => [],
             'stickerMaterial' => [],
             'ownStickerHeightWidth' => false,
             'ownlightHeightWidth' => false,
@@ -488,35 +486,31 @@ class ViewCalculation extends Component
         ];
     }
 
-    public function updatedownerCost($value, $name)
+    public function updatedown($property, $value)
     {
-        if (str_ends_with($name, 'logoText')) {
-            preg_match('/(\d+)/', $name, $matches);
-            $index = $matches[0] ?? null;
-            if (isset($index) && isset($this->ownCost[$index]['logoText'])) {
-                $this->ownCost[$index]['characterCount'] = strlen($this->ownCost[$index]['logoText']);
-            }
+        if (preg_match('/^ownCost\.(\d+)\.ownText$/', $property, $matches)) {
+            $index = $matches[1];
+            $this->ownCost[$index]['characterCount'] = strlen($value);
         }
     }
+
 
 
     public function ownerremoveForm($index)
     {
         unset($this->ownCost[$index]);
-        $this->ownCost = array_values($this->ownCost); // Reindex
+        $this->ownCost = array_values($this->ownCost);
     }
-
-
-
+    // calculation
     public function calculateBaseCost()
     {
         $this->isCalculated = true;
 
-        // $this->validate([
-        //     'job_name' => 'required',
-        //     'date' => 'required',
-        //     // 'sales_man'=>'required',
-        // ]);
+        $this->validate([
+            'job_name' => 'required',
+            'date' => 'required',
+            // 'sales_man'=>'required',
+        ]);
 
         if (!$this->baseType || !$this->baseMember || !$this->baseHeight || !$this->baseWidth) {
             $this->baseCost = 0.00;
@@ -576,7 +570,7 @@ class ViewCalculation extends Component
                 'pcs' => $form['logoPcs'] ?? 1,
             ]);
 
-            $this->logoCostResults["Logo Cost " . ($index + 1)] = round($cost, 2);
+            $this->logoCostResults["LogoCost " . ($index + 1)] = round($cost, 2);
             $this->logoTotal = array_sum($this->logoCostResults);
         }
 
@@ -589,14 +583,14 @@ class ViewCalculation extends Component
             $cost = $maincalculator->Maincalculate([
                 'height' => $form['mainHeight'] ?? 0,
                 'width' => $form['mainWidth'] ?? 0,
-                'materials' => $form['mainMaterials'] ?? [],
+                'materials' => $form['mainMaterials'],
                 'materialPrices' => $this->materialPrices,
                 'stickers' => $form['stickerMaterial'] ?? [],
                 'stickerPrices' => $this->stickerPrices,
-                'useSticker' => $form['mainStickerHeightWidth'] ?? false, // ✅ Fixed key
+                'useSticker' => $form['mainStickerHeightWidth'] ?? false,
                 'useLighting' => $form['mainlightHeightWidth'] ?? false,
                 'powerSupply' => $form['mainPowerSupply'] ?? 'None',
-                'powerSupplyQty' => $form['mainPowerSupplyQuantity'] ?? 0,
+                'powerSupplyQty' => $form['mainPowerSupplyQuantity'],
                 'powerSupplyPrices' => $this->powerSupplyPrices,
                 'usePaint' => $form['mainPaintHeightWidth'] ?? false,
                 'useOrcale' => $form['mainoracalHeightWidth'] ?? false,
@@ -607,106 +601,119 @@ class ViewCalculation extends Component
                 'pcs' => $form['logoPcs'] ?? 1,
             ]);
 
-            $this->mainCostResults["Main Cost " . ($index + 1)] = round($cost, 2);
+            $this->mainCostResults["MainCost " . ($index + 1)] = round($cost, 2);
             $this->mainTotal = array_sum($this->mainCostResults);
         }
 
 
         // // add
-        // $addcalculator = new AddLetteringCost;
-        // $this->addCostResults = [];
+        $addcalculator = new AddLetteringCost;
+        $this->addCostResults = [];
 
-        // foreach ($this->addCost as $index => $form) {
-        //     $cost = $addcalculator->addcalculate([
-        //         'height' => $form['addHeight'],
-        //         'width' => $form['addWidth'],
-        //         'materials' => $form['addMaterials'],
-        //         'materialPrices' => $this->materialPrices,
-        //         'stickers' => $form['stickerMaterial'],
-        //         'stickerPrices' => $this->stickerPrices,
-        //         'useSticker' => $form['addStickerHeightWidth'],
-        //         'useLighting' => $form['addlightHeightWidth'],
-        //         'powerSupply' => $form['addPowerSupply'],
-        //         'powerSupplyQty' => $form['addPowerSupplyQuantity'],
-        //         'powerSupplyPrices' => $this->powerSupplyPrices,
-        //         'usePaint' => $form['addPaintHeightWidth'],
-        //         'useOrcale' => $form['addoracalHeightWidth'],
-        //         'generalMaterials' => $form['generalMaterial'] ?? [],
-        //         'generalMaterialCostFunction' => [$this, 'getGeneralMaterialCost'],
-        //         'lightingTypes' => $form['lightingtype'] ?? [],
-        //         'lightingTypePrices' => $this->lightingtype,
-        //         'pcs' => $form['addPcs'] ?? 1,
-        //     ]);
+        foreach ($this->addCost as $index => $form) {
+            $cost = $addcalculator->addcalculate([
+                'height' => $form['addHeight'] ?? 0,
+                'width' => $form['addWidth'] ?? 0,
+                'materials' => $form['addMaterials'] ?? [],
+                'materialPrices' => $this->materialPrices,
+                'stickers' => $form['stickerMaterial'] ?? [],
+                'stickerPrices' => $this->stickerPrices,
+                'useSticker' => $form['addStickerHeightWidth'] ?? false,
+                'useLighting' => $form['addlightHeightWidth'] ?? false,
+                'powerSupply' => $form['addPowerSupply'] ?? 'None',
+                'powerSupplyQty' => $form['addPowerSupplyQuantity'],
+                'powerSupplyPrices' => $this->powerSupplyPrices,
+                'usePaint' => $form['addPaintHeightWidth'] ?? false,
+                'useOrcale' => $form['addoracalHeightWidth'] ?? false,
+                'generalMaterials' => $form['generalMaterial'] ?? [],
+                'generalMaterialCostFunction' => [$this, 'getGeneralMaterialCost'],
+                'lightingTypes' => $form['lightingtype'] ?? [],
+                'lightingTypePrices' => $this->lightingtype,
+                'pcs' => $form['addPcs'] ?? 1,
+            ]);
 
-        //     $this->addCostResults["add Cost " . ($index + 1)] = round($cost, 2);
-        // }
+            $this->addCostResults["Addittional Cost " . ($index + 1)] = round($cost, 2);
+            $this->addTotal = array_sum($this->addCostResults);
+        }
+
 
         // // business
-        // $buscalculator = new BusinessCost;
-        // $this->busCostResults = [];
+        $buscalculator = new BusinessCost;
+        $this->busCostResults = [];
 
-        // foreach ($this->busCost as $index => $form) {
-        //     $cost = $buscalculator->buscalculate([
-        //         'height' => $form['busHeight'],
-        //         'width' => $form['busWidth'],
-        //         'materials' => $form['busMaterials'],
-        //         'materialPrices' => $this->materialPrices,
-        //         'stickers' => $form['stickerMaterial'],
-        //         'stickerPrices' => $this->stickerPrices,
-        //         'useSticker' => $form['busStickerHeightWidth'],
-        //         'useLighting' => $form['buslightHeightWidth'],
-        //         'powerSupply' => $form['busPowerSupply'],
-        //         'powerSupplyQty' => $form['busPowerSupplyQuantity'],
-        //         'powerSupplyPrices' => $this->powerSupplyPrices,
-        //         'usePaint' => $form['busPaintHeightWidth'],
-        //         'useOrcale' => $form['busoracalHeightWidth'],
-        //         'generalMaterials' => $form['generalMaterial'] ?? [],
-        //         'generalMaterialCostFunction' => [$this, 'getGeneralMaterialCost'],
-        //         'lightingTypes' => $form['lightingtype'] ?? [],
-        //         'lightingTypePrices' => $this->lightingtype,
-        //         'pcs' => $form['busPcs'] ?? 1,
-        //     ]);
+        foreach ($this->busCost as $index => $form) {
+            $cost = $buscalculator->buscalculate([
+                'height' => $form['busHeight'] ?? 0,
+                'width' => $form['busWidth'] ?? 0,
+                'materials' => $form['busMaterials'] ?? [],
+                'materialPrices' => $this->materialPrices,
+                'stickers' => $form['stickerMaterial'] ?? [],
+                'stickerPrices' => $this->stickerPrices,
+                'useSticker' => $form['busStickerHeightWidth'] ?? false,
+                'useLighting' => $form['buslightHeightWidth'] ?? false,
+                'powerSupply' => $form['busPowerSupply'] ?? 'None',
+                'powerSupplyQty' => $form['busPowerSupplyQuantity'],
+                'powerSupplyPrices' => $this->powerSupplyPrices,
+                'usePaint' => $form['busPaintHeightWidth'] ?? false,
+                'useOrcale' => $form['busoracalHeightWidth'] ?? false,
+                'generalMaterials' => $form['generalMaterial'] ?? [],
+                'generalMaterialCostFunction' => [$this, 'getGeneralMaterialCost'],
+                'lightingTypes' => $form['lightingtype'] ?? [],
+                'lightingTypePrices' => $this->lightingtype,
+                'pcs' => $form['busPcs'] ?? 1,
+            ]);
 
-        //     $this->busCostResults["bus Cost " . ($index + 1)] = round($cost, 2);
-        // }
+            $this->busCostResults["BusinessCost " . ($index + 1)] = round($cost, 2);
+            $this->busTotal = array_sum($this->busCostResults);
+        }
 
-        // $owncalculator = new ownerCostResults;
-        // $this->ownerCostResults = [];
 
-        // foreach ($this->ownCost as $index => $form) {
-        //     $cost = $owncalculator->owncalculate([
-        //         'height' => $form['ownHeight'],
-        //         'width' => $form['ownWidth'],
-        //         'materials' => $form['ownMaterials'],
-        //         'materialPrices' => $this->materialPrices,
-        //         'stickers' => $form['stickerMaterial'],
-        //         'stickerPrices' => $this->stickerPrices,
-        //         'useSticker' => $form['ownStickerHeightWidth'],
-        //         'useLighting' => $form['ownlightHeightWidth'],
-        //         'powerSupply' => $form['ownPowerSupply'],
-        //         'powerSupplyQty' => $form['ownPowerSupplyQuantity'],
-        //         'powerSupplyPrices' => $this->powerSupplyPrices,
-        //         'usePaint' => $form['ownPaintHeightWidth'],
-        //         'useOrcale' => $form['ownoracalHeightWidth'],
-        //         'generalMaterials' => $form['generalMaterial'] ?? [],
-        //         'generalMaterialCostFunction' => [$this, 'getGeneralMaterialCost'],
-        //         'lightingTypes' => $form['lightingtype'] ?? [],
-        //         'lightingTypePrices' => $this->lightingtype,
-        //         'pcs' => $form['ownPcs'] ?? 1,
-        //     ]);
+        $owncalculator = new OwnerstickerCost;
+        $this->ownerCostResults = [];
 
-        //     $this->ownCostResults["own Cost " . ($index + 1)] = round($cost, 2);
-        // }
+        foreach ($this->ownCost as $index => $form) {
+            $cost = $owncalculator->owncalculate([
+                'height' => $form['ownHeight'],
+                'width' => $form['ownWidth'],
+                'materials' => $form['ownMaterials'],
+                'materialPrices' => $this->materialPrices,
+                'stickers' => $form['stickerMaterial'],
+                'stickerPrices' => $this->stickerPrices,
+                'useSticker' => $form['ownStickerHeightWidth'],
+                'useLighting' => $form['ownlightHeightWidth'],
+                'powerSupply' => $form['ownPowerSupply'],
+                'powerSupplyQty' => $form['ownPowerSupplyQuantity'],
+                'powerSupplyPrices' => $this->powerSupplyPrices,
+                'usePaint' => $form['ownPaintHeightWidth'],
+                'useOrcale' => $form['ownoracalHeightWidth'],
+                'generalMaterials' => $form['generalMaterial'] ?? [],
+                'generalMaterialCostFunction' => [$this, 'getGeneralMaterialCost'],
+                'lightingTypes' => $form['lightingtype'] ?? [],
+                'lightingTypePrices' => $this->lightingtype,
+                'pcs' => $form['ownPcs'] ?? 1,
+            ]);
+            $this->ownerCostResults["OwnerCost " . ($index + 1)] = round($cost, 2);
+
+            $this->ownTotal = array_sum($this->ownerCostResults);
+        }
     }
+
     public function saveDatabase()
     {
         if (!$this->isCalculated) {
-            return;
+            // dd('hii');
         }
-        $this->totalcost =  $this->baseCost + $this->logoCost + $this->mainCost +  $this->addCost + $this->busCost + $this->ownCost;
+        $this->validate([
+            'job_name' => 'required|string|max:255',
+            'date' => 'required|date',
+            'customer_name' => 'required',
+            'company_name' => 'required',
+            'customer_phone_no' => 'required',
 
-        // dd($this->totalcost);
-        $calculation =  Calculation::create([
+        ]);
+
+
+        $calculation = Calculation::create([
             'job_name' => $this->job_name,
             'date' => $this->date,
             'sales_man' => Auth::user()->name,
@@ -714,19 +721,11 @@ class ViewCalculation extends Component
             'customer_name' => $this->customer_name,
             'company_name' => $this->company_name,
             'customer_phone_no' => $this->customer_phone_no,
-            'total_base_cost' => $this->baseCost,
-            'total_logo_cost' => $this->logoCost,
-            'total_main_cost' => $this->mainCost,
-            'total_add_cost' => $this->addCost,
-            'total_business_cost' => $this->busCost,
-            'total_ownership_cost' => $this->ownCost,
-            'total_cost' => $this->totalcost,
-
         ]);
+        // dd(Auth::user()->login_type);
 
-
+        // Save Base
         if ($this->baseType) {
-            // dd($calculation->id);
             BaseCalculation::create([
                 'calculation_id' => $calculation->id,
                 'base_type' => $this->baseType,
@@ -734,191 +733,174 @@ class ViewCalculation extends Component
                 'base_height' => $this->baseHeight,
                 'base_width' => $this->baseWidth,
                 'total_base_cost' => $this->baseCost,
-
             ]);
         }
-        if ($this->logoHeight) {
+
+        foreach ($this->logoCost as $index => $logo) {
             LogoCalculation::create([
                 'calculation_id' => $calculation->id,
-
-                'logo_text' => $this->logoText,
-                'logo_height' => $this->logoHeight,
-                'logo_width' => $this->logoWidth,
-                'logo_materials' => implode(',', $this->logoMaterials ?? []),
-                'logo_sticker_height_width' => $this->logoStickerHeightWidth ? 'yes' : null,
-                'logo_sticker_material' => implode(',', $this->stickerMaterial ?? []),
-                'logo_general_material' => implode(',', $this->generalMaterial ?? []),
-                'logo_paint_height_width' => $this->logoPaintHeightWidth ? 'yes' : null,
-                'logo_oracal_height_width' => $this->logooracalHeightWidth ? 'yes' : null,
-                'logo_light_height_width' => $this->logolightHeightWidth ? 'yes' : null,
-                'logo_lighting_type' => implode(',', $this->logoLightingType ?? []),
-                'logo_power_supply' => $this->logoPowerSupply,
-                'logo_power_supply_quantity' => $this->logoPowerSupplyQuantity,
-
-                'logo_acrylic_cost' => $this->acrylicCost,
-                'logo_pvc_cost' => $this->pvcCost,
-                'logo_sticker_cost' => $this->stickerCost,
-                'logo_lighting_Cost' => $this->lightingCost,
-                'logo_power_supply_cost' => $this->powerSupplyCost,
-                'logo_paint_cost' => $this->paintCost,
-                'logo_general_material_cost' => $this->generalMaterialCost,
-                'logo_lighting_price' => $this->lightingprice,
-                'logo_orcale_cost' => $this->orcaleCost,
-                'total_logo_cost' => $this->logoCost,
-
+                'logo_order' => $index + 1,
+                'logo_text' => $logo['logoText'] ?? '',
+                'logo_height' => $logo['logoHeight'] ?? 0,
+                'logo_width' => $logo['logoWidth'] ?? 0,
+                'logo_materials' => implode(',', $logo['logoMaterials'] ?? []),
+                'logo_sticker_height_width' => $logo['logoStickerHeightWidth'] ? 'yes' : null,
+                'logo_sticker_material' => implode(',', $logo['stickerMaterial'] ?? []),
+                'logo_general_material' => implode(',', $logo['generalMaterial'] ?? []),
+                'logo_paint_height_width' => $logo['logoPaintHeightWidth'] ? 'yes' : null,
+                'logo_oracal_height_width' => $logo['logooracalHeightWidth'] ? 'yes' : null,
+                'logo_light_height_width' => $logo['logolightHeightWidth'] ? 'yes' : null,
+                'logo_lighting_type' => implode(',', $logo['lightingtype'] ?? []),
+                'logo_power_supply' => $logo['logoPowerSupply'],
+                'logo_power_supply_quantity' => $logo['logoPowerSupplyQuantity'],
+                'logo_acrylic_cost' => $logo['logoAcrylicCost'] ?? 0,
+                'logo_pvc_cost' => $logo['logoPVCCost'] ?? 0,
+                'logo_sticker_cost' => $logo['logoStickerCost'] ?? 0,
+                'logo_lighting_cost' => $logo['logoLightingCost'] ?? 0,
+                'logo_power_supply_cost' => $logo['logoPowerSupplyCost'] ?? 0,
+                'logo_paint_cost' => $logo['logoPaintCost'] ?? 0,
+                'logo_general_material_cost' => $logo['logoGeneralMaterialCost'] ?? 0,
+                'logo_lighting_price' => $logo['logoLightingPrice'] ?? 0,
+                'logo_oracal_cost' => $logo['logoOracalCost'] ?? 0,
+                'total_logo_cost' => $this->logoCostResults["LogoCost " . ($index + 1)] ?? 0,
             ]);
         }
-        if ($this->mainHeight) {
+
+
+        // Save Main
+        foreach ($this->mainCost as $index => $main) {
             MainCalculation::create([
                 'calculation_id' => $calculation->id,
+                'main_order' => $index + 1,
+                'main_text' => $main['mainText'] ?? '',
+                'main_height' => $main['mainHeight'] ?? 0,
+                'main_width' => $main['mainWidth'] ?? 0,
+                'main_materials' => implode(',', $main['mainMaterials'] ?? []),
+                'main_sticker_height_width' => $main['mainStickerHeightWidth'] ? 'yes' : null,
+                'main_sticker_material' => implode(',', $main['stickerMaterial'] ?? []),
+                'main_general_material' => implode(',', $main['generalMaterial'] ?? []),
+                'main_paint_height_width' => $main['mainPaintHeightWidth'] ? 'yes' : null,
+                'main_oracal_height_width' => $main['mainoracalHeightWidth'] ? 'yes' : null,
+                'main_light_height_width' => $main['mainlightHeightWidth'] ? 'yes' : null,
+                'main_lighting_type' => implode(',', $main['mainLightingType'] ?? []),
+                'main_power_supply' => $main['mainPowerSupply'],
+                'main_power_supply_quantity' => $main['mainPowerSupplyQuantity'],
+                'main_acrylic_cost' => $main['mainAcrylicCost'] ?? 0,
+                'main_pvc_cost' => $main['mainPVCCost'] ?? 0,
+                'main_sticker_cost' => $main['mainStickerCost'] ?? 0,
+                'main_lighting_cost' => $main['mainLightingCost'] ?? 0,
+                'main_power_supply_cost' => $main['mainPowerSupplyCost'] ?? 0,
+                'main_paint_cost' => $main['mainPaintCost'] ?? 0,
+                'main_general_material_cost' => $main['mainGeneralMaterialCost'] ?? 0,
+                'main_lighting_price' => $main['mainLightingPrice'] ?? 0,
+                'main_oracal_cost' => $main['mainOracalCost'] ?? 0,
 
-                'main_text' => $this->mainText,
-                'main_height' => $this->mainHeight,
-                'main_width' => $this->mainWidth,
-                'main_materials' => implode(',', $this->mainMaterials ?? []),
-                'main_sticker_height_width' => $this->mainStickerHeightWidth ? 'yes' : null,
-                'main_sticker_material' => implode(',', $this->mainstickerMaterial ?? []),
-                'main_general_material' => implode(',', $this->maingeneralMaterial ?? []),
-                'main_paint_height_width' => $this->mainPaintHeightWidth ? 'yes' : null,
-                'main_oracal_height_width' => $this->mainoracalHeightWidth ? 'yes' : null,
-                'main_light_height_width' => $this->mainlightHeightWidth ? 'yes' : null,
-                'main_lighting_type' => implode(',', $this->mainLightingType ?? []),
-                'main_power_supply' => $this->mainPowerSupply,
-                'main_power_supply_quantity' => $this->mainPowerSupplyQuantity,
-                'main_acrylic_cost' => $this->mainacrylicCost,
-                'main_pvc_cost' => $this->mainpvcCost,
-                'main_sticker_cost' => $this->mainstickerCost,
-                'main_lighting_Cost' => $this->mainlightingCost,
-                'main_power_supply_cost' => $this->mainpowerSupplyCost,
-                'main_paint_cost' => $this->mainpaintCost,
-                'main_general_material_cost' => $this->maingeneralMaterialCost,
-                'main_lighting_price' => $this->mainlightingprice,
-                'main_orcale_cost' => $this->mainorcaleCost,
-                'total_main_cost' => $this->mainCost,
+                'total_main_cost' => $this->mainCostResults["MainCost " . ($index + 1)] ?? 0,
             ]);
         }
-        if ($this->addHeight) {
+
+        // Save Additional
+        foreach ($this->addCost as $index => $add) {
             AddCalculation::create([
                 'calculation_id' => $calculation->id,
+                'add_order' => $index + 1,
+                'add_text' => $add['addText'] ?? '',
+                'add_height' => $add['addHeight'] ?? 0,
+                'add_width' => $add['addWidth'] ?? 0,
+                'add_materials' => implode(',', $add['addMaterials'] ?? []),
+                'add_sticker_height_width' => $add['addStickerHeightWidth'] ? 'yes' : null,
+                'add_sticker_material' => implode(',', $add['stickerMaterial'] ?? []),
+                'add_general_material' => implode(',', $add['generalMaterial'] ?? []),
+                'add_paint_height_width' => $add['addPaintHeightWidth'] ? 'yes' : null,
+                'add_oracal_height_width' => $add['addoracalHeightWidth'] ? 'yes' : null,
+                'add_light_height_width' => $add['addlightHeightWidth'] ? 'yes' : null,
+                'add_lighting_type' => implode(',', $add['lightingtype'] ?? []),
+                'add_power_supply' => $add['addPowerSupply'],
+                'add_power_supply_quantity' => $add['addPowerSupplyQuantity'],
+                'add_acrylic_cost' => $add['addAcrylicCost'] ?? 0,
+                'add_pvc_cost' => $add['addPVCCost'] ?? 0,
+                'add_sticker_cost' => $add['addStickerCost'] ?? 0,
+                'add_lighting_cost' => $add['addLightingCost'] ?? 0,
+                'add_power_supply_cost' => $add['addPowerSupplyCost'] ?? 0,
+                'add_paint_cost' => $add['addPaintCost'] ?? 0,
+                'add_general_material_cost' => $add['addGeneralMaterialCost'] ?? 0,
+                'add_lighting_price' => $add['addLightingPrice'] ?? 0,
+                'add_oracal_cost' => $add['addOracalCost'] ?? 0,
 
-                'add_text' => $this->addText,
-                'add_height' => $this->addHeight,
-                'add_width' => $this->addWidth,
-                'add_materials' => implode(',', $this->addMaterials ?? []),
-                'add_sticker_height_width' => $this->addStickerHeightWidth ? 'yes' : null,
-                'add_sticker_material' => implode(',', $this->addstickerMaterial ?? []),
-                'add_general_material' => implode(',', $this->addgeneralMaterial ?? []),
-                'add_paint_height_width' => $this->addPaintHeightWidth ? 'yes' : null,
-                'add_oracal_height_width' => $this->addoracalHeightWidth ? 'yes' : null,
-                'add_light_height_width' => $this->addlightHeightWidth ? 'yes' : null,
-                'add_lighting_type' => implode(',', $this->addLightingType ?? []),
-                'add_power_supply' => $this->addPowerSupply,
-                'add_power_supply_quantity' => $this->addPowerSupplyQuantity,
-                'add_acrylic_cost' => $this->addacrylicCost,
-                'add_pvc_cost' => $this->addpvcCost,
-                'add_sticker_cost' => $this->addstickerCost,
-                'add_lighting_Cost' => $this->addlightingCost,
-                'add_power_supply_cost' => $this->addpowerSupplyCost,
-                'add_paint_cost' => $this->addpaintCost,
-                'add_general_material_cost' => $this->addgeneralMaterialCost,
-                'add_lighting_price' => $this->addlightingprice,
-                'add_orcale_cost' => $this->addorcaleCost,
-                'total_add_cost' => $this->addCost,
+                'total_add_cost' => $this->addCostResults["Addittional Cost " . ($index + 1)] ?? 0,
             ]);
         }
-        if ($this->busHeight) {
+
+        // Save Business
+        foreach ($this->busCost as $index => $bus) {
             BusinessCalculation::create([
                 'calculation_id' => $calculation->id,
+                'business_order' => $index + 1,
+                'business_text' => $bus['busText'] ?? '',
+                'business_height' => $bus['busHeight'] ?? 0,
+                'business_width' => $bus['busWidth'] ?? 0,
+                'business_materials' => implode(',', $bus['busMaterials'] ?? []),
+                'business_sticker_height_width' => $bus['busStickerHeightWidth'] ? 'yes' : null,
+                'business_sticker_material' => implode(',', $bus['stickerMaterial'] ?? []),
+                'business_general_material' => implode(',', $bus['generalMaterial'] ?? []),
+                'business_paint_height_width' => $bus['busPaintHeightWidth'] ? 'yes' : null,
+                'business_oracal_height_width' => $bus['busoracalHeightWidth'] ? 'yes' : null,
+                'business_light_height_width' => $bus['buslightHeightWidth'] ? 'yes' : null,
+                'business_lighting_type' => implode(',', $bus['lightingtype'] ?? []),
+                'business_power_supply' => $bus['busPowerSupply'],
+                'business_power_supply_quantity' => $bus['busPowerSupplyQuantity'],
 
-                'business_text' => $this->busText,
-                'business_height' => $this->busHeight,
-                'business_width' => $this->busWidth,
-                'business_materials' => implode(',', $this->busMaterials ?? []),
-                'business_sticker_height_width' => $this->busStickerHeightWidth ? 'yes' : null,
-                'business_sticker_material' => implode(',', $this->busstickerMaterial ?? []),
-                'business_general_material' => implode(',', $this->busgeneralMaterial ?? []),
-                'business_paint_height_width' => $this->busPaintHeightWidth ? 'yes' : null,
-                'business_oracal_height_width' => $this->busoracalHeightWidth ? 'yes' : null,
-                'business_light_height_width' => $this->buslightHeightWidth ? 'yes' : null,
-                'business_lighting_type' => implode(',', $this->busLightingType ?? []),
-                'business_power_supply' => $this->busPowerSupply,
-                'business_power_supply_quantity' => $this->busPowerSupplyQuantity,
-                'business_acrylic_cost' => $this->busacrylicCost,
-                'business_pvc_cost' => $this->buspvcCost,
-                'business_sticker_cost' => $this->busstickerCost,
-                'business_lighting_Cost' => $this->buslightingCost,
-                'business_power_supply_cost' => $this->buspowerSupplyCost,
-                'business_paint_cost' => $this->buspaintCost,
-                'business_general_material_cost' => $this->busgeneralMaterialCost,
-                'business_lighting_price' => $this->buslightingprice,
-                'business_orcale_cost' => $this->busorcaleCost,
-                'total_business_cost' => $this->busCost,
+                'business_acrylic_cost' => $bus['businessAcrylicCost'] ?? 0,
+                'business_pvc_cost' => $bus['businessPVCCost'] ?? 0,
+                'business_sticker_cost' => $bus['businessStickerCost'] ?? 0,
+                'business_lighting_cost' => $bus['businessLightingCost'] ?? 0,
+                'business_power_supply_cost' => $bus['businessPowerSupplyCost'] ?? 0,
+                'business_paint_cost' => $bus['businessPaintCost'] ?? 0,
+                'business_general_material_cost' => $bus['businessGeneralMaterialCost'] ?? 0,
+                'business_lighting_price' => $bus['businessLightingPrice'] ?? 0,
+                'business_oracal_cost' => $bus['businessOracalCost'] ?? 0,
+
+                'total_business_cost' => $this->busCostResults["BusinessCost " . ($index + 1)] ?? 0,
             ]);
         }
-        if ($this->busHeight) {
-            BusinessCalculation::create([
-                'calculation_id' => $calculation->id,
 
-                'business_text' => $this->busText,
-                'business_height' => $this->busHeight,
-                'business_width' => $this->busWidth,
-                'business_materials' => implode(',', $this->busMaterials ?? []),
-                'business_sticker_height_width' => $this->busStickerHeightWidth ? 'yes' : null,
-                'business_sticker_material' => implode(',', $this->busstickerMaterial ?? []),
-                'business_general_material' => implode(',', $this->busgeneralMaterial ?? []),
-                'business_paint_height_width' => $this->busPaintHeightWidth ? 'yes' : null,
-                'business_oracal_height_width' => $this->busoracalHeightWidth ? 'yes' : null,
-                'business_light_height_width' => $this->buslightHeightWidth ? 'yes' : null,
-                'business_lighting_type' => implode(',', $this->busLightingType ?? []),
-                'business_power_supply' => $this->busPowerSupply,
-                'business_power_supply_quantity' => $this->busPowerSupplyQuantity,
-                'business_acrylic_cost' => $this->busacrylicCost,
-                'business_pvc_cost' => $this->buspvcCost,
-                'business_sticker_cost' => $this->busstickerCost,
-                'business_lighting_Cost' => $this->buslightingCost,
-                'business_power_supply_cost' => $this->buspowerSupplyCost,
-                'business_paint_cost' => $this->buspaintCost,
-                'business_general_material_cost' => $this->busgeneralMaterialCost,
-                'business_lighting_price' => $this->buslightingprice,
-                'business_orcale_cost' => $this->busorcaleCost,
-                'total_business_cost' => $this->busCost,
-            ]);
-        }
-        if ($this->ownHeight) {
+        // Save Owner
+        foreach ($this->ownCost as $index => $own) {
             OwnershipCalculation::create([
                 'calculation_id' => $calculation->id,
-                'ownership_text' => $this->ownText,
-                'ownership_height' => $this->ownHeight,
-                'ownership_width' => $this->ownWidth,
-                'ownership_materials' => implode(',', $this->ownMaterials ?? []),
-                'ownership_sticker_height_width' => $this->ownStickerHeightWidth ? 'yes' : null,
-                'ownership_sticker_material' => implode(',', $this->ownstickerMaterial ?? []),
-                'ownership_general_material' => implode(',', $this->owngeneralMaterial ?? []),
-                'ownership_paint_height_width' => $this->ownPaintHeightWidth ? 'yes' : null,
-                'ownership_oracal_height_width' => $this->ownoracalHeightWidth ? 'yes' : null,
-                'ownership_light_height_width' => $this->ownlightHeightWidth ? 'yes' : null,
-                'ownership_lighting_type' => implode(',', $this->ownLightingType ?? []),
-                'ownership_power_supply' => $this->ownPowerSupply,
-                'ownership_power_supply_quantity' => $this->ownPowerSupplyQuantity,
-                'ownership_acrylic_cost' => $this->ownacrylicCost,
-                'ownership_pvc_cost' => $this->ownpvcCost,
-                'ownership_sticker_cost' => $this->ownstickerCost,
-                'ownership_lighting_Cost' => $this->ownlightingCost,
-                'ownership_power_supply_cost' => $this->ownpowerSupplyCost,
-                'ownership_paint_cost' => $this->ownpaintCost,
-                'ownership_general_material_cost' => $this->owngeneralMaterialCost,
-                'ownership_lighting_price' => $this->ownlightingprice,
-                'ownership_orcale_cost' => $this->ownorcaleCost,
-                'total_ownership_cost' => $this->ownCost,
+                'ownership_order' => $index + 1,
+                'ownership_text' => $own['ownText'] ?? '',
+                'ownership_height' => $own['ownHeight'] ?? 0,
+                'ownership_width' => $own['ownWidth'] ?? 0,
+                'ownership_materials' => implode(',', $own['ownMaterials'] ?? []),
+                'ownership_sticker_height_width' => $own['ownStickerHeightWidth'] ? 'yes' : null,
+                'ownership_sticker_material' => implode(',', $own['stickerMaterial'] ?? []),
+                'ownership_general_material' => implode(',', $own['generalMaterial'] ?? []),
+                'ownership_paint_height_width' => $own['ownPaintHeightWidth'] ? 'yes' : null,
+                'ownership_oracal_height_width' => $own['ownoracalHeightWidth'] ? 'yes' : null,
+                'ownership_light_height_width' => $own['ownlightHeightWidth'] ? 'yes' : null,
+                'ownership_lighting_type' => implode(',', $own['lightingtype'] ?? []),
+                'ownership_power_supply' => $own['ownPowerSupply'],
+                'ownership_power_supply_quantity' => $own['ownPowerSupplyQuantity'],
+                'ownership_acrylic_cost' => $own['ownerAcrylicCost'] ?? 0,
+                'ownership_pvc_cost' => $own['ownerPVCCost'] ?? 0,
+                'ownership_sticker_cost' => $own['ownerStickerCost'] ?? 0,
+                'ownership_lighting_cost' => $own['ownerLightingCost'] ?? 0,
+                'ownership_power_supply_cost' => $own['ownerPowerSupplyCost'] ?? 0,
+                'ownership_paint_cost' => $own['ownerPaintCost'] ?? 0,
+                'ownership_general_material_cost' => $own['ownerGeneralMaterialCost'] ?? 0,
+                'ownership_lighting_price' => $own['ownerLightingPrice'] ?? 0,
+                'ownership_oracal_cost' => $own['ownerOracalCost'] ?? 0,
+                'total_ownership_cost' => $this->ownerCostResults["OwnerCost " . ($index + 1)] ?? 0,
             ]);
         }
         if (Auth::user()->login_type == '1') {
-            dd('Save');
             return redirect('dashboard')->with('message', 'Calculation saved successfully.');
         } else {
             return redirect('salesman-data_calculation')->with('message', 'Calculation saved successfully.');
         }
     }
+
 
 
     public function render()

@@ -15,14 +15,15 @@
             <div class="row">
                 <div class="col-6 mb-3">
                     <label>Additional Text</label>
-                    <input type="text" class="form-control form-control-sm" data-index="{{ $index }}"
-                        name="logoText">
+                    <input type="text" class="form-control form-control-sm"
+                        wire:model.live="addCost.{{ $index }}.addText">
                 </div>
                 <div class="col-6 mb-3">
                     <label>Character Count</label>
                     <input type="text" class="form-control form-control-sm" readonly
-                        id="char-count-{{ $index }}">
+                        value="{{ $addCost[$index]['characterCount'] ?? '' }}">
                 </div>
+
 
                 <div class="col-6 mb-3">
                     <label>Additional Height (inches)</label>

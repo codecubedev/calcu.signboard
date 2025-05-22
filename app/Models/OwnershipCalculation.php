@@ -10,7 +10,7 @@ class OwnershipCalculation extends Model
     use HasFactory;
     protected $fillable = [
        
-        'ownership_text', 'ownership_height', 'ownership_width', 'ownership_materials',
+        'ownership_text','ownership_order', 'ownership_height', 'ownership_width', 'ownership_materials',
         'ownership_sticker_height_width', 'ownership_sticker_material', 'ownership_general_material',
         'ownership_paint_height_width', 'ownership_oracal_height_width', 'ownership_light_height_width',
         'ownership_lighting_type', 'ownership_power_supply', 'ownership_power_supply_quantity',
