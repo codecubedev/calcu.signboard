@@ -9,7 +9,7 @@
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Main Cost {{ $index + 1 }}</h5>
-                <button class="btn btn-sm btn-danger" wire:click="removeForm({{ $index }})">Remove</button>
+                <button class="btn btn-sm btn-danger" wire:click="mainremoveForm({{ $index }})">Remove</button>
             </div>
 
             <div class="card-body">
