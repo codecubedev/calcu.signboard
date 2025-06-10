@@ -119,14 +119,22 @@
             <div class="col-12">
                 <h5 class="fw-bold">Business {{ $index + 1 }}</h5>
             </div>
-            <div class="col-6">
+
+            <div class="col-4">
                 <div class="mb-3">
-                    <label class="form-label fw-bold">Business Name</label>
-                    <input type="text" class="form-control form-control-sm"
-                        wire:model="editBusinesses.{{ $index }}.name">
+                    <label class="form-label fw-bold">Business Height (inches)</label>
+                    <input type="number" class="form-control form-control-sm"
+                        wire:model="editBusinesses.{{ $index }}.height">
                 </div>
             </div>
-            <div class="col-6">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Business Width (inches)</label>
+                    <input type="number" class="form-control form-control-sm"
+                        wire:model="editBusinesses.{{ $index }}.width">
+                </div>
+            </div>
+            <div class="col-4">
                 <div class="mb-3">
                     <label class="form-label fw-bold">Business Cost</label>
                     <input type="number" class="form-control form-control-sm"
@@ -140,14 +148,22 @@
             <div class="col-12">
                 <h5 class="fw-bold">Owner {{ $index + 1 }}</h5>
             </div>
-            <div class="col-6">
+
+            <div class="col-4">
                 <div class="mb-3">
-                    <label class="form-label fw-bold">Owner Name</label>
-                    <input type="text" class="form-control form-control-sm"
-                        wire:model="editOwners.{{ $index }}.name">
+                    <label class="form-label fw-bold">Owner Height (inches)</label>
+                    <input type="number" class="form-control form-control-sm"
+                        wire:model="editOwners.{{ $index }}.height">
                 </div>
             </div>
-            <div class="col-6">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Owner Width (inches)</label>
+                    <input type="number" class="form-control form-control-sm"
+                        wire:model="editOwners.{{ $index }}.width">
+                </div>
+            </div>
+            <div class="col-4">
                 <div class="mb-3">
                     <label class="form-label fw-bold">Owner Cost</label>
                     <input type="number" class="form-control form-control-sm"
@@ -156,6 +172,7 @@
             </div>
         </div>
     @endforeach
+
 
 
     {{-- <div class="row">
@@ -187,7 +204,7 @@
             <button type="button" wire:click="updateCalculation" class="btn btn-primary">Update</button>
         </div>
         <div class="col-auto">
-            <button type="button" wire:click="saveDatabase" class="btn btn-success">Cancel</button>
+            <button type="button" class="btn btn-success">Cancel</button>
         </div>
     </div>
 </div>

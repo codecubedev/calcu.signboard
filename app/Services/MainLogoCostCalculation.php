@@ -10,7 +10,7 @@ class MainLogoCostCalculation
         $width = (float) $data['width'];
         $pcs = (int) ($data['pcs'] ?? 1);
         $area = $height * $width;
-        
+
 
         // Ensure materialPrices is an array
         $materialPrices = $data['materialPrices'] ?? [];
@@ -19,17 +19,26 @@ class MainLogoCostCalculation
         $pvcCost = 0;
         $whiteAcrylicCost = 0;
 
+        $blackAcrylicCost = 0;
+        $stainlessSteelCost = 0;
+
         foreach ($data['materials'] as $material) {
             if (isset($materialPrices[$material])) {
-                if (strpos($material, 'acrylic') !== false) {
-                    $acrylicCost += $area * $materialPrices[$material];
+                $price = (float) $materialPrices[$material];
+
+                if (strpos($material, 'acrylic') !== false && strpos($material, 'black') === false) {
+                    $acrylicCost += $area * $price;
+                } elseif (strpos($material, 'black_acrylic') !== false) {
+                    $blackAcrylicCost += $area * $price;
                 } elseif (strpos($material, 'pvc') !== false) {
-                    $pvcCost += $area * $materialPrices[$material];
+                    $pvcCost += $area * $price;
+                } elseif (strpos($material, 'mirror') !== false || strpos($material, 'hairline') !== false) {
+                    $stainlessSteelCost += $area * $price;
                 }
             }
 
             if ($material === 'whiteacrylic3mm') {
-                $whiteAcrylicCost += $area * ($materialPrices['whiteacrylic3mm'] ?? 0);
+                $whiteAcrylicCost += $area * ((float) ($materialPrices['whiteacrylic3mm'] ?? 0));
             }
         }
 
@@ -51,7 +60,7 @@ class MainLogoCostCalculation
 
         // Paint and Oracal Costs
         $paintCost = $data['usePaint'] ? ($area / 144) * 7.50 : 0;
-        $orcaleCost = $data['useOrcale'] ? ($area / 144) * 10.8 : 0;
+        $orcaleCost = $data['useOrcale'] ? ($area / 144) * 14.50 : 0;
 
         // General Material Cost
         $generalMaterialCost = 0;
@@ -75,15 +84,10 @@ class MainLogoCostCalculation
             }
         }
 
-        // Return total cost
-        return $acrylicCost
-            + $pvcCost
-            + $stickerCost
-            + $lightingCost
-            + $powerSupplyCost
-            + $paintCost
-            + $generalMaterialCost
-            + $lightingTypeCost
-            + $orcaleCost;
+        //   dd($blackAcrylicCost,$stainlessSteelCost,$generalMaterialCost);
+
+        return $acrylicCost + $blackAcrylicCost + $pvcCost + $whiteAcrylicCost + $stainlessSteelCost
+            + $stickerCost + $lightingCost + $powerSupplyCost + $paintCost + $generalMaterialCost
+            + $lightingTypeCost + $orcaleCost;
     }
 }
