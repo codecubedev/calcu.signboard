@@ -10,24 +10,31 @@ class OwnerstickerCost
         $width = (float) $data['width'];
         $pcs = (int) ($data['pcs'] ?? 1);
         $area = $height * $width;
-        // Ensure materialPrices is an array
         $materialPrices = $data['materialPrices'] ?? [];
 
         $acrylicCost = 0;
+        $blackAcrylicCost = 0;
         $pvcCost = 0;
         $whiteAcrylicCost = 0;
+        $stainlessSteelCost = 0;
 
         foreach ($data['materials'] as $material) {
-            if (isset($materialPrices[$material])) {
-                if (strpos($material, 'acrylic') !== false) {
-                    $acrylicCost += $area * $materialPrices[$material];
-                } elseif (strpos($material, 'pvc') !== false) {
-                    $pvcCost += $area * $materialPrices[$material];
-                }
-            }
+            
+            $price = $materialPrices[$material] ?? 0;
 
-            if ($material === 'whiteacrylic3mm') {
-                $whiteAcrylicCost += $area * ($materialPrices['whiteacrylic3mm'] ?? 0); // Default to 0 if not set
+            if (strpos($material, 'acrylic') !== false && strpos($material, 'black') === false) {
+                $acrylicCost += $area * $price;
+            } elseif (strpos($material, 'black_acrylic') !== false) {
+                $blackAcrylicCost += $area * $price;
+            } elseif (strpos($material, 'pvc') !== false) {
+                $pvcCost += $area * $price;
+            } elseif ($material === 'whiteacrylic3mm') {
+                $whiteAcrylicCost += $area * $price;
+            } elseif (
+                str_contains($material, 'mirror') || str_contains($material, 'hairline') ||
+                str_contains($material, 'gold')
+            ) {
+                $stainlessSteelCost += $area * $price;
             }
         }
 
@@ -44,30 +51,29 @@ class OwnerstickerCost
         $lightingCost = $data['useLighting'] ? ($area / 144) * 27 : 0;
 
         // Power Supply Cost
-        $powerSupplyCost = $data['powerSupplyPrices'][$data['powerSupply']] ?? 0;
-        $powerSupplyCost *= $data['powerSupplyQty'];
+        $powerSupplyCost = ($data['powerSupplyPrices'][$data['powerSupply']] ?? 0) * $data['powerSupplyQty'];
 
-        // Paint and Oracal Costs
+        // Paint and Oracal
         $paintCost = $data['usePaint'] ? ($area / 144) * 7.50 : 0;
-        $orcaleCost = $data['useOrcale'] ? ($area / 144) * 10.8 : 0;
+        $orcaleCost = $data['useOrcale'] ? ($area / 144) * 14.50 : 0;
 
         // General Material Cost
         $generalMaterialCost = 0;
         foreach ($data['generalMaterials'] as $material) {
             if (is_callable($data['generalMaterialCostFunction'])) {
-                $generalMaterialCost += call_user_func($data['generalMaterialCostFunction'], $material, $data['height'], $data['width'], $data['pcs']);
+                $generalMaterialCost += call_user_func($data['generalMaterialCostFunction'], $material, $height, $width, $pcs);
             }
         }
 
         // Lighting Type Cost
         $lightingTypeCost = 0;
         foreach ($data['lightingTypes'] as $lighting) {
-            if (isset($data['lightingTypePrices'][$lighting])) {
-                $lightingTypeCost += $data['lightingTypePrices'][$lighting];
-            }
+            $lightingTypeCost += $data['lightingTypePrices'][$lighting] ?? 0;
         }
+        //   dd($blackAcrylicCost,$stainlessSteelCost,$generalMaterialCost);
 
-        // Return total cost
-        return $acrylicCost + $pvcCost + $stickerCost + $lightingCost + $powerSupplyCost + $paintCost + $generalMaterialCost + $lightingTypeCost + $orcaleCost;
+        return $acrylicCost + $blackAcrylicCost + $pvcCost + $whiteAcrylicCost + $stainlessSteelCost
+            + $stickerCost + $lightingCost + $powerSupplyCost + $paintCost
+            + $generalMaterialCost + $lightingTypeCost + $orcaleCost;
     }
 }

@@ -92,33 +92,64 @@ class ViewCalculation extends Component
 
     public $logoCostResults = [], $mainCostResults = [], $addCostResults = [], $busCostResults = [], $ownerCostResults = [];
 
+    
     public function getGeneralMaterialCost($material, $height, $width, $pcs)
     {
-
         switch ($material) {
             case "aluminiumStrip":
                 return ($height * $width / 144) * 27;
+
             case "channel3d":
                 return $height * $width * 0.40;
+
             case "aluminiumBoxUp":
-                return ($height < 36 && $width < 36) ? ($height * $width * 0.38) : (500 * $pcs * 2.5);
+                return ($height < 36 && $width < 36)
+                    ? ($height * $width * 0.38)
+                    : (500 * $pcs * 2.5);
+
+            case "ironHollow20mm":
+                return 90.00;
+
+            case "ironHollow10mm":
+                return 45.00;
+
+            case "spotlightWithBracket":
+                return 350.00;
+
+            case "dimmer":
+                return 100.00;
+
             default:
                 return 0;
         }
     }
+
     public function getmainGeneralMaterialCost($material, $height, $width, $pcs)
     {
 
         switch ($material) {
             case "aluminiumStrip":
                 return ($height * $width / 144) * 27;
+
             case "channel3d":
-                // return $height * $width * 0.40;
-                return $height * $width * 4.0;
+                return $height * $width * 0.40;
 
             case "aluminiumBoxUp":
-                // return ($height < 36 && $width < 36) ? ($height * $width * 0.38) : (500 * $pcs * 2.5);
-                return ($height *  $pcs * 5.5);
+                return ($height < 36 && $width < 36)
+                    ? ($height * $width * 0.38)
+                    : (500 * $pcs * 2.5);
+
+            case "ironHollow20mm":
+                return 90.00;
+
+            case "ironHollow10mm":
+                return 45.00;
+
+            case "spotlightWithBracket":
+                return 350.00;
+
+            case "dimmer":
+                return 100.00;
 
             default:
                 return 0;
@@ -131,10 +162,27 @@ class ViewCalculation extends Component
         switch ($material) {
             case "aluminiumStrip":
                 return ($height * $width / 144) * 27;
+
             case "channel3d":
                 return $height * $width * 0.40;
+
             case "aluminiumBoxUp":
-                return ($height < 36 && $width < 36) ? ($height * $width * 0.38) : (500 * $pcs * 2.5);
+                return ($height < 36 && $width < 36)
+                    ? ($height * $width * 0.38)
+                    : (500 * $pcs * 2.5);
+
+            case "ironHollow20mm":
+                return 90.00;
+
+            case "ironHollow10mm":
+                return 45.00;
+
+            case "spotlightWithBracket":
+                return 350.00;
+
+            case "dimmer":
+                return 100.00;
+
             default:
                 return 0;
         }
@@ -145,10 +193,27 @@ class ViewCalculation extends Component
         switch ($material) {
             case "aluminiumStrip":
                 return ($height * $width / 144) * 27;
+
             case "channel3d":
                 return $height * $width * 0.40;
+
             case "aluminiumBoxUp":
-                return ($height < 36 && $width < 36) ? ($height * $width * 0.38) : (500 * $pcs * 2.5);
+                return ($height < 36 && $width < 36)
+                    ? ($height * $width * 0.38)
+                    : (500 * $pcs * 2.5);
+
+            case "ironHollow20mm":
+                return 90.00;
+
+            case "ironHollow10mm":
+                return 45.00;
+
+            case "spotlightWithBracket":
+                return 350.00;
+
+            case "dimmer":
+                return 100.00;
+
             default:
                 return 0;
         }
@@ -160,10 +225,27 @@ class ViewCalculation extends Component
         switch ($material) {
             case "aluminiumStrip":
                 return ($height * $width / 144) * 27;
+
             case "channel3d":
                 return $height * $width * 0.40;
+
             case "aluminiumBoxUp":
-                return ($height < 36 && $width < 36) ? ($height * $width * 0.38) : (500 * $pcs * 2.5);
+                return ($height < 36 && $width < 36)
+                    ? ($height * $width * 0.38)
+                    : (500 * $pcs * 2.5);
+
+            case "ironHollow20mm":
+                return 90.00;
+
+            case "ironHollow10mm":
+                return 45.00;
+
+            case "spotlightWithBracket":
+                return 350.00;
+
+            case "dimmer":
+                return 100.00;
+
             default:
                 return 0;
         }
@@ -176,19 +258,49 @@ class ViewCalculation extends Component
     }
     public $materialPrices = [
         "acrylic3mm" => 0.15,
-        "acrylic5mm" => 0.35,
+        "acrylic5mm" => 0.33,
         "acrylic10mm" => 0.55,
         "acrylic15mm" => 0.85,
         "acrylic20mm" => 1.15,
         "acrylic25mm" => 1.85,
+        "black_acrylic3mm" => 0.20,
+        "black_acrylic5mm" => 0.40,
+        "black_acrylic10mm" => 0.60,
+        "black_acrylic15mm" => 0.90,
+        "black_acrylic20mm" => 1.20,
+        "black_acrylic25mm" => 1.90,
+        'mirror_frontlit' => 0.85,
+        'mirror_backlit' => 0.75,
+        'mirror_boxup' => 0.60,
+        'hairline_frontlit' => 0.85,
+        'hairline_backlit' => 0.75,
+        'hairline_boxup' => 0.60,
+
+        'gold_mirror_frontlit' => 1.00,
+        'gold_mirror_backlit' => 0.85,
+        'gold_mirror_boxup' => 0.75,
+        'gold_hairline_frontlit' => 1.00,
+        'gold_hairline_backlit' => 0.85,
+        'gold_hairline_boxup' => 0.75,
+
         "whiteacrylic3mm" => 0.30,
-        "pvc3mm" => 0.11,
-        "pvc5mm" => 0.15,
-        "pvc10mm" => 0.24,
-        "pvc15mm" => 0.41,
-        "pvc20mm" => 0.48,
-        "pvc25mm" => 0.65
+        "pvc3mm" => 0.05,
+        "pvc5mm" => 0.10,
+        "pvc10mm" => 0.15,
+        "pvc15mm" => 0.20,
+        "pvc20mm" => 0.25,
+        "pvc25mm" => 0.35
     ];
+    public $chnaelmaterialPrices = [
+        'mirror_frontlit' => 0.75,
+        'mirror_backlit' => 0.65,
+        'mirror_boxup' => 0.50,
+        'gold_mirror_frontlit' => 0.85,
+        'gold_mirror_backlit' => 0.75,
+        'gold_mirror_boxup' => 0.65,
+
+    ];
+
 
     public $stickerPrices = [
         "whiteStickerMattLamm" => 8.0,
@@ -206,10 +318,10 @@ class ViewCalculation extends Component
         "400W" => 150
     ];
     public $lightingtype = [
-        "frontlit" => 80,
-        "backlit" => 100,
-        "sidelit" => 150,
-        "nolight" => 150
+        "frontlit" => 0.55,
+        "backlit" => 0.45,
+        "sidelit" => 1.3,
+        "nolight" => 0.38
 
     ];
 
@@ -501,6 +613,7 @@ class ViewCalculation extends Component
         unset($this->ownCost[$index]);
         $this->ownCost = array_values($this->ownCost);
     }
+    
     // calculation
     public function calculateBaseCost()
     {
@@ -526,13 +639,7 @@ class ViewCalculation extends Component
             "Lightbox" => ["Agent" => 25.00, "User" => 27.50],
             "Double Sided Lightbox" => ["Agent" => 65.00, "User" => 70.00]
         ];
-        $lightingtype = [
-            "frontlit" => 80,
-            "backlit" => 100,
-            "sidelit" => 150,
-            "nolight" => 150
-
-        ];
+      
 
 
         if (isset($priceList[$this->baseType]) || isset($priceList[$this->baseType][$this->baseMember])) {
