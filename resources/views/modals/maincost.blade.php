@@ -126,7 +126,49 @@
                                 </div>
                             @endforeach
                         </div>
+                        <div class="col-md-3">
+                            <h6>Neon</h6>
+                            @foreach ([
+        '5mm clear arcylic' => '5mm Clear Acrylic',
+        '10mm clear arcylic' => '10mm Clear Acrylic',
+    ] as $key => $label)
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input"
+                                        wire:model="mainCost.{{ $index }}.mainMaterials"
+                                        value="{{ $key }}">
+                                    <label class="form-check-label">{{ $label }}</label>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="col-md-3" x-data="{ enabled: @entangle('ownCost.' . $index . '.ownStickerHeightWidth') }">
+                            <strong>Sticker</strong>
+                            <div>
+                                <input type="checkbox" class="form-check-input" x-model="enabled"
+                                    wire:model="mainCost.{{ $index }}.mainStickerHeightWidth">
+                                <label>Sticker</label>
+                            </div>
 
+                            @php
+                                $stickers = [
+                                    'whiteStickerMattLamm' => 'White Sticker Matt Lamm',
+                                    'greyBase' => 'Grey Base',
+                                    'lightboxSticker' => 'Lightbox Sticker',
+                                    'reverseSticker' => 'Reverse Sticker',
+                                    'dieCutStickerWhite' => 'Die Cut Sticker White',
+                                    'dieCutStickerBlack' => 'Die Cut Sticker Black',
+                                    'dieCutStickerPrinted' => 'Die Cut Sticker Printed',
+                                ];
+                            @endphp
+
+                            @foreach ($stickers as $val => $label)
+                                <div>
+                                    <input type="checkbox" class="form-check-input"
+                                        wire:model="mainCost.{{ $index }}.stickerMaterial"
+                                        value="{{ $val }}" :disabled="!enabled">
+                                    <label>{{ $label }}</label>
+                                </div>
+                            @endforeach
+                        </div>
                         <!-- General Materials -->
                         <div class="col-md-3">
                             <strong>General Material</strong>
@@ -172,7 +214,7 @@
                 <hr>
 
                 <!-- Lighting Options -->
-                  @if ($form['mainlightHeightWidth'])
+                @if ($form['mainlightHeightWidth'])
                     <div class="row">
                         <div class="col-md-4">
                             <h6>Lighting Type</h6>
@@ -180,6 +222,7 @@
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input"
                                         wire:model="mainCost.{{ $index }}.mainLightingType"
+                                        wire:click="maincheckpowersupply({{ $index }})"
                                         value="{{ $type }}">
                                     <label class="form-check-label">{{ ucfirst($type) }}</label>
                                 </div>
@@ -189,16 +232,19 @@
                             <label class="form-label">Power Supply</label>
                             <select class="form-select form-select-sm"
                                 wire:model="mainCost.{{ $index }}.mainPowerSupply">
-                                <option value="None">None</option>
-                                <option value="120W">120W</option>
-                                <option value="200W">200W</option>
+                                {{-- <option value="None">None</option> --}}
+                                {{-- <option value="120W">120W</option>
+                                <option value="200W">200W</option> --}}
                                 <option value="400W">400W</option>
                             </select>
                         </div>
+                       
                         <div class="col-md-4">
                             <label class="form-label">Power Supply Quantity</label>
-                            <input type="number" min="1" class="form-control form-control-sm"
-                                wire:model="mainCost.{{ $index }}.mainPowerSupplyQuantity">
+                            <input type="number" min="0" class="form-control form-control-sm"
+                                wire:model="mainCost.{{ $index }}.mainPowerSupplyQuantity"  readonly
+                                style="font-weight: bold; background-color: #f0f0f0; color: #000;">
+
                         </div>
                     </div>
                 @endif

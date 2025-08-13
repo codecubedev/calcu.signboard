@@ -15,10 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('job_name')->nullable();
             $table->string('date')->nullable();
-            $table->string('sales_man')->nullable();
+            $table->string('salesperson')->nullable();
             $table->string('login_type')->nullable();
             $table->string('customer_name')->nullable();
             $table->string('customer_phone_no')->nullable();
+            $table->string('qt_inv_umber')->nullable();
+            $table->string('remark')->nullable();
+            $table->string('image')->nullable();
             $table->string('company_name')->nullable();
             $table->string('total_base_cost')->nullable();
             $table->string('total_logo_cost')->nullable();

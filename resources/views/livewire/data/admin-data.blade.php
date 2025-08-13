@@ -16,13 +16,17 @@
 
             <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
                 <div class="widget-content widget-content-area br-8">
-                   
+
                     <table id="zero-config" class="table dt-table-hover" style="width:100%">
                         <thead>
                             <tr>
                                 <th>S.no</th>
                                 <th>Job Name</th>
                                 <th>Date</th>
+                                <th>Image</th>
+                                <th>Sales Person</th>
+                                <th>QT / Inv Number</th>
+                                <th>Remark</th>
                                 <th>Logo Cost</th>
                                 <th>Main Cost</th>
                                 <th>Additional Cost</th>
@@ -37,6 +41,14 @@
                                     <td>{{ $loop->index + 1 }}</td>
                                     <td>{{ $item->job_name }}</td>
                                     <td>{{ $item->date }}</td>
+                                    <td>
+                                        <img src="{{ asset('storage/' . $item->image) }}" alt="" width="100">
+                                    </td>
+
+                                    <td>{{ $item->salesperson }}</td>
+                                    <td>{{ $item->qt_inv_umber }}</td>
+                                    <td>{{ $item->remark }}</td>
+
                                     <td>{{ $item->total_logo_cost }}</td>
                                     <td>{{ $item->total_main_cost }}</td>
                                     <td>{{ $item->total_add_cost }}</td>
