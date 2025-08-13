@@ -567,6 +567,9 @@ class ViewCalculation extends Component
             $this->logoCost[$index]['characterCount'] = strlen($value);
         }
     }
+
+
+    // LOGO COST 
     public function toggleAcrylicInput($index, $size)
     {
         $selected = $this->logoCost[$index]['logoMaterials'] ?? [];
@@ -577,6 +580,9 @@ class ViewCalculation extends Component
             $this->logoCost[$index]['showAcrylicInput'] = null;
         }
     }
+
+
+
     public function toggleBlackAcrylicInput($index, $size)
     {
         $selected = $this->logoCost[$index]['logoMaterials'] ?? [];
@@ -591,6 +597,7 @@ class ViewCalculation extends Component
             unset($this->logoCost[$index]['blackAcrylicInputs']);
         }
     }
+
     public function togglePVCInput($index, $size)
     {
         $selected = $this->logoCost[$index]['logoMaterials'] ?? [];
@@ -705,7 +712,7 @@ class ViewCalculation extends Component
                 $this->logoCost[$index]['showInputs'] ?? [],
                 [$materialKey]
             );
-            unset($this->logoCost[$index]['stickermaterialInputs']);
+            unset($this->logoCost[$index]['stickermaterialInputs'][$materialKey]);
         }
     }
     public function toggleGeneralMaterialInput($index, $materialKey)
@@ -736,7 +743,7 @@ class ViewCalculation extends Component
                 $this->logoCost[$index]['showGeneralInputs'] ?? [],
                 [$materialKey]
             );
-            unset($this->logoCost[$index]['logoPaintInputs']);
+            unset($this->logoCost[$index]['logoPaintInputs'][$materialKey]);
         }
     }
 
@@ -757,15 +764,22 @@ class ViewCalculation extends Component
                 $this->logoCost[$index]['showGeneralInputs'] ?? [],
                 [$materialKey]
             );
-            unset($this->logoCost[$index]['logoOracalInputs']);
+            unset($this->logoCost[$index]['logoOracalInputs'][$materialKey]);
         }
     }
 
+
     public function toggleLightingInput($index, $lightingType)
     {
-        $selectedTypes = (array) ($this->logoCost[$index]['logoLightingType'] ?? []);
+        $selectedTypes = $this->logoCost[$index]['logoLightingType'] ?? [];
+        if (!is_array($selectedTypes)) {
+            $selectedTypes = [];
+        }
 
-        if (!isset($this->logoCost[$index]['showLightingInputs'])) {
+        if (
+            !isset($this->logoCost[$index]['showLightingInputs']) ||
+            !is_array($this->logoCost[$index]['showLightingInputs'])
+        ) {
             $this->logoCost[$index]['showLightingInputs'] = [];
         }
 
@@ -774,13 +788,14 @@ class ViewCalculation extends Component
                 $this->logoCost[$index]['showLightingInputs'][] = $lightingType;
             }
         } else {
-            $this->logoCost[$index]['showLightingInputs'] = array_diff(
-                $this->logoCost[$index]['showLightingInputs'],
-                [$lightingType]
+            $this->logoCost[$index]['showLightingInputs'] = array_values(
+                array_diff($this->logoCost[$index]['showLightingInputs'], [$lightingType])
             );
             unset($this->logoCost[$index]['logoLightingInputs'][$lightingType]);
         }
     }
+
+
 
 
     public function addForm()
@@ -1009,6 +1024,7 @@ class ViewCalculation extends Component
         $this->logoCostResults = [];
 
         foreach ($this->logoCost as $index => $form) {
+
             $cost = $calculator->calculate([
                 'height' => $form['logoHeight'],
                 'width' => $form['logoWidth'],
@@ -1033,19 +1049,18 @@ class ViewCalculation extends Component
                 'blackAcrylicInputs' => $form['blackAcrylicInputs'] ?? [],
                 'pvcInputs' => $form['pvcInputs'] ?? [],
                 'stainlessteelsilverInputs' => $form['stainlessteelsilverInputs'] ?? [],
-                'stainlessteelgoldInputs' => $form['stainlessteelgoldInputs'] ?? [],
-                'logoPaintInputs' => $form['logoPaintInputs'] ?? [],
-                'logoOracalInputs' => $form['logoOracalInputs'] ?? [],
-                'generalMaterialInput' => $form['generalMaterialInput'] ?? [],
-                'stickermaterialInputs' => $form['stickermaterialInputs'] ?? [],
-                'logoLightingDetails' => $form['logoLightingDetails'] ?? [],
+                'stainlessteelgoldInputs ' => $form['stainlessteelgoldInputs '] ?? [],
+                'logoPaintInputs ' => $form['logoPaintInputs '] ?? [],
+                'generalMaterialInputs ' => $form['generalMaterialInputs '] ?? [],
+
+
 
             ]);
+
 
             $this->logoCostResults["LogoCost " . ($index + 1)] = round($cost, 2);
             $this->logoTotal = array_sum($this->logoCostResults);
         }
-
 
         // main cost
 
