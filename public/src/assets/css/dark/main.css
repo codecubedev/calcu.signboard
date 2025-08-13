@@ -515,11 +515,11 @@ body.dark .custom-control-input:disabled ~ .custom-control-label {
   color: #d3d3d3;
   cursor: no-drop;
 }
-body.dark .form-control:disabled:not(.flatpickr-input), body.dark .form-control[readonly]:not(.flatpickr-input) {
+/* body.dark .form-control:disabled:not(.flatpickr-input), body.dark .form-control[readonly]:not(.flatpickr-input) {
   background-color: #3b3f5c;
   cursor: no-drop;
   color: #d3d3d3;
-}
+} */
 body.dark .custom-control-input:disabled ~ .form-check-input, body.dark .custom-control-input[disabled] ~ .form-check-input {
   background-color: #3b3f5c;
   cursor: no-drop;

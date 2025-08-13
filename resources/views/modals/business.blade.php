@@ -82,13 +82,13 @@
                         <div class="col-md-3">
                             <h6>Stainless Steel (Silver)</h6>
                             @foreach ([
-        'mirror_frontlit' => 'Mirror Frontlit',
-        'mirror_backlit' => 'Mirror Backlit',
-        'mirror_boxup' => 'Mirror BoxUp',
-        'hairline_frontlit' => 'Hairline Frontlit',
-        'hairline_backlit' => 'Hairline Backlit',
-        'hairline_boxup' => 'Hairline BoxUp',
-    ] as $key => $label)
+                                'mirror_frontlit' => 'Mirror Frontlit',
+                                'mirror_backlit' => 'Mirror Backlit',
+                                'mirror_boxup' => 'Mirror BoxUp',
+                                'hairline_frontlit' => 'Hairline Frontlit',
+                                'hairline_backlit' => 'Hairline Backlit',
+                                'hairline_boxup' => 'Hairline BoxUp',
+                            ] as $key => $label)
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input"
                                         wire:model="busCost.{{ $index }}.busMaterials"
@@ -100,16 +100,30 @@
                         <div class="col-md-3">
                             <h6>Stainless Steel (Gold)</h6>
                             @foreach ([
-        'gold_mirror_frontlit' => 'Mirror Frontlit',
-        'gold_mirror_backlit' => 'Mirror Backlit',
-        'gold_mirror_boxup' => 'Mirror BoxUp',
-        'gold_hairline_frontlit' => 'Hairline Frontlit',
-        'gold_hairline_backlit' => 'Hairline Backlit',
-        'gold_hairline_boxup' => 'Hairline BoxUp',
-    ] as $key => $label)
+                                'gold_mirror_frontlit' => 'Mirror Frontlit',
+                                'gold_mirror_backlit' => 'Mirror Backlit',
+                                'gold_mirror_boxup' => 'Mirror BoxUp',
+                                'gold_hairline_frontlit' => 'Hairline Frontlit',
+                                'gold_hairline_backlit' => 'Hairline Backlit',
+                                'gold_hairline_boxup' => 'Hairline BoxUp',
+                            ] as $key => $label)
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input"
                                         wire:model="busCost.{{ $index }}.busMaterials"
+                                        value="{{ $key }}">
+                                    <label class="form-check-label">{{ $label }}</label>
+                                </div>
+                            @endforeach
+                        </div>
+                          <div class="col-md-3">
+                            <h6>Neon</h6>
+                            @foreach ([
+                                '5mm clear arcylic' => '5mm Clear Acrylic',
+                                '10mm clear arcylic' => '10mm Clear Acrylic',
+                            ] as $key => $label)
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input"
+                                        wire:model="buscost.{{ $index }}.busMaterials"
                                         value="{{ $key }}">
                                     <label class="form-check-label">{{ $label }}</label>
                                 </div>
@@ -219,6 +233,7 @@
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input"
                                             wire:model="busCost.{{ $index }}.busLightingType"
+                                            wire:click="buscheckpowersupply({{ $index }})"
                                             value="{{ $type }}">
                                         <label class="form-check-label">{{ ucfirst($type) }}</label>
                                     </div>
@@ -228,17 +243,18 @@
                                 <label class="form-label">Power Supply</label>
                                 <select class="form-select form-select-sm"
                                     wire:model="busCost.{{ $index }}.busPowerSupply">
-                                    <option value="None">None</option>
+                                    {{-- <option value="None">None</option>
                                     <option value="120W">120W</option>
-                                    <option value="200W">200W</option>
+                                    <option value="200W">200W</option> --}}
                                     <option value="400W">400W</option>
                                 </select>
                             </div>
 
                             <div class="col-md-4">
                                 <label class="form-label">Power Supply Quantity</label>
-                                <input type="number" min="1" class="form-control form-control-sm"
-                                    wire:model="busCost.{{ $index }}.busPowerSupplyQuantity">
+                                <input type="number" min="0" class="form-control form-control-sm"
+                                    wire:model="busCost.{{ $index }}.busPowerSupplyQuantity" readonly
+                                style="font-weight: bold; background-color: #f0f0f0; color: #000;">
                             </div>
                         </div>
                     @endif

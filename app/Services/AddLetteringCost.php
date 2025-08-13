@@ -10,7 +10,7 @@ class AddLetteringCost
         $width = (float) $data['width'];
         $pcs = (int) ($data['pcs'] ?? 1);
         $area = $height * $width;
-        // Ensure materialPrices is an array
+
         $materialPrices = $data['materialPrices'] ?? [];
 
         $acrylicCost = 0;
@@ -18,11 +18,13 @@ class AddLetteringCost
         $whiteAcrylicCost = 0;
         $blackAcrylicCost = 0;
         $stainlessSteelCost = 0;
+        $neonCost = 0; // <-- New variable for neon
+
         foreach ($data['materials'] as $material) {
             if (isset($materialPrices[$material])) {
                 $price = (float) $materialPrices[$material];
 
-                if (strpos($material, 'acrylic') !== false && strpos($material, 'black') === false) {
+                if (strpos($material, 'acrylic') !== false && strpos($material, 'black') === false && strpos($material, 'neon') === false) {
                     $acrylicCost += $area * $price;
                 } elseif (strpos($material, 'black_acrylic') !== false) {
                     $blackAcrylicCost += $area * $price;
@@ -30,6 +32,8 @@ class AddLetteringCost
                     $pvcCost += $area * $price;
                 } elseif (strpos($material, 'mirror') !== false || strpos($material, 'hairline') !== false) {
                     $stainlessSteelCost += $area * $price;
+                } elseif (strpos($material, 'neon') !== false || str_contains($material, 'clear arcylic')) {
+                    $neonCost += $area * $price;
                 }
             }
 
@@ -74,10 +78,8 @@ class AddLetteringCost
             }
         }
 
-        // dd($blackAcrylicCost,$stainlessSteelCost,$generalMaterialCost);
-
         return $acrylicCost + $blackAcrylicCost + $pvcCost + $whiteAcrylicCost + $stainlessSteelCost
-            + $stickerCost + $lightingCost + $powerSupplyCost + $paintCost + $generalMaterialCost
+            + $neonCost + $stickerCost + $lightingCost + $powerSupplyCost + $paintCost + $generalMaterialCost
             + $lightingTypeCost + $orcaleCost;
     }
 }

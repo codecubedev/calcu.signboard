@@ -539,7 +539,7 @@ input[type=search]::-ms-reveal {
 }
 
 .form-control:disabled:not(.flatpickr-input), .form-control[readonly]:not(.flatpickr-input) {
-  background-color: #f1f2f3;
+  /* fbackground-color: #f1f2f3; */
   cursor: no-drop;
   color: #d3d3d3;
 }
