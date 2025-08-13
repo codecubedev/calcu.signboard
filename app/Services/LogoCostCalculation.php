@@ -126,6 +126,28 @@ class LogoCostCalculation
 
 
 
+        $printprice = !empty($data['logoPaintInputs']) ? (float) $data['logoPaintInputs'] : 7.50;
+        // dd($data['logoPaintInputs']);
+        $paintCost = !empty($data['usePaint']) ? $area * $printprice : 0;
+
+
+        $oracalCost = $data['useOrcale'] ? $area * 14.50 : 0;
+
+
+
+        // GENERAL MATERIAL COST
+        // $generalMaterialCost = 0;
+        // foreach ($data['generalMaterials'] as $material) {
+        //     if (is_callable($data['generalMaterialCostFunction'])) {
+        //         $generalMaterialCost += call_user_func(
+        //             $data['generalMaterialCostFunction'],
+        //             $material,
+        //             $height,
+        //             $width,
+        //             $pcs
+        //         );
+        //     }
+        // }
         $generalMaterialCost = 0;
 
         foreach ($data['generalMaterials'] as $material) {
