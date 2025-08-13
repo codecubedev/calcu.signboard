@@ -5,16 +5,17 @@
             <h2 class="text-center mb-4" style="color:brown;">Signboard Cost Calculator</h2>
             {{-- bader --}}
             <div class="row">
-                <div class="col-6">
+                <div class="col-4">
                     <div class="mb-3">
                         <label>Job Name</label>
-                        <input type="text" class="form-control form-control-sm" wire:model="job_name">
+                        <input type="text" class="form-control form-control-sm" wire:model="job_name"
+                            placeholder="Job Name">
                     </div>
                     @error('job_name')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
-                <div class="col-6">
+                <div class="col-4">
                     <div class="mb-3">
                         <label>Date</label>
                         <input type="date" class="form-control form-control-sm" wire:model="date">
@@ -23,11 +24,24 @@
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
+                <div class="col-4">
+                    <div class="mb-3">
+                        <label>Salesperson </label>
+                        <select class="form-select form-select-sm" wire:model='salesperson '>
+                            <option>Select</option>
+                            <option value=""></option>
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    @error('salesperson')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
 
 
             </div>
             <div class="row">
-            
+
                 <div class="col-4">
                     <div class="mb-3">
                         <label>Company Name</label>
@@ -54,6 +68,49 @@
 
                     </div>
                     @error('customer_phone_no')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+
+            </div>
+            <div class="row">
+
+                <div class="col-4">
+                    <div class="mb-3">
+                        <label>QT/Inv Number</label>
+                        <input type="text" class="form-control form-control-sm" wire:model="qt_inv_umber">
+                    </div>
+                    @error('qt_inv_umber')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+
+
+                <div class="col-4">
+                    <div class="mb-3">
+                        <label for="baseHeight">Image</label>
+                        <input type="file" class="form-control form-control-sm" wire:model="image">
+                    </div>
+
+                    @error('image')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+
+                    {{-- Preview after choosing --}}
+                    @if ($image)
+                        <div class="mt-2">
+                            <img src="{{ $image->temporaryUrl() }}" alt="Preview" class="img-fluid rounded border"
+                                style="max-height: 150px;">
+                        </div>
+                    @endif
+                </div>
+
+                <div class="col-4">
+                    <div class="mb-3">
+                        <label>Remark</label>
+                        <textarea wire:model="remark" rows="2" class="form-control"></textarea>
+                    </div>
+                    @error('remark')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
@@ -205,7 +262,7 @@
                         <h4>Total Costs</h4>
                         <label class="form-label">Total Cost:</label>
                         <div id="totalCostDisplay" class="alert alert-success">
-                            {{ $logoTotal + $mainTotal + $addTotal +$busTotal+$ownTotal }}</div>
+                            {{ $logoTotal + $mainTotal + $addTotal + $busTotal + $ownTotal }}</div>
                     </div>
 
                     {{-- <div class="mb-3">

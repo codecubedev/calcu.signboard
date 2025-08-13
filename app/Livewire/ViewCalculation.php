@@ -16,22 +16,29 @@ use App\Services\MainLogoCostCalculation;
 use App\Services\AddLetteringCost;
 use App\Services\BusinessCost;
 use App\Services\OwnerstickerCost;
+use Livewire\WithFileUploads;
 
 class ViewCalculation extends Component
 {
+    use WithFileUploads;
+
     public $job_name, $date, $sales_man, $totalcost, $company_name, $customer_name, $customer_phone_no;
     public $logoText, $characterCount, $baseType, $baseMember, $baseHeight, $baseWidth, $baseCost = 0;
 
-    public $logoHeight, $logoWidth, $logoTotal = 0, $logoStickerHeightWidth, $logooracalHeightWidth, $acrylicCost, $pvcCost;
+    public $logoHeight, $logoWidth, $logoTotal = 0, $logoStickerHeightWidth,  $logooracalHeightWidth, $acrylicCost, $pvcCost;
     public  $stickerCost, $lightingCost, $powerSupplyCost, $paintCost, $generalMaterialCost, $stickerArea, $addwhiteacryliccost, $lightingprice, $orcaleCost;
     public $logoLightingTypes;
-    public $logolightHeightWidth = [], $logoPowerSupply, $logoPowerSupplyQuantity = 1;
+    public $logolightHeightWidth = [], $logoPowerSupply, $logoPowerSupplyQuantity = 0;
     public $logoPcs = 1, $logoPaintHeightWidth, $logoStickerHeight, $logoStickerWidth, $logoLightingWidth, $logoLightingHeight;
     public $logoMaterials = [], $stickerMaterial = [], $generalMaterial = [];
     public $logoLightingType = [];
     public $aluminium_channel_border = [];
 
+    public $qt_inv_umber, $salesperson, $image, $remark;
+
     public $logoCost = [];
+
+    public $clearacrylic;
 
 
     public $mainText = '', $mainHeight, $mainTotal = 0, $mainWidth, $mainStickerHeightWidth, $mainoracalHeightWidth, $mainacrylicCost, $mainpvcCost;
@@ -39,7 +46,7 @@ class ViewCalculation extends Component
     //main
 
     public $mainLightingTypes;
-    public $mainlightHeightWidth, $mainPowerSupply, $mainPowerSupplyQuantity = 1;
+    public $mainlightHeightWidth, $mainPowerSupply, $mainPowerSupplyQuantity = 0;
     public $mainPcs = 1, $mainPaintHeightWidth, $mainStickerHeight, $mainStickerWidth, $mainLightingWidth, $mainLightingHeight;
     public $mainMaterials = [], $mainstickerMaterial = [], $maingeneralMaterial = [];
     public $mainlogoLightingType = [];
@@ -52,7 +59,7 @@ class ViewCalculation extends Component
     public  $addstickerCost, $addlightingCost, $addpowerSupplyCost, $addpaintCost, $addgeneralMaterialCost, $addlightingprice, $addorcaleCost;
 
     public $addLightingTypes;
-    public $addlightHeightWidth, $addPowerSupply, $addPowerSupplyQuantity = 1;
+    public $addlightHeightWidth, $addPowerSupply, $addPowerSupplyQuantity = 0;
     public $addPcs = 1, $maincharacterCount, $addPaintHeightWidth, $addStickerHeight, $addStickerWidth, $addLightingWidth, $addLightingHeight;
     public $addMaterials = [], $addstickerMaterial = [], $addgeneralMaterial = [];
     public $addlogoLightingType = [];
@@ -66,7 +73,7 @@ class ViewCalculation extends Component
     public  $busstickerCost, $buslightingCost, $buspowerSupplyCost, $buspaintCost, $busgeneralMaterialCost, $buslightingprice, $busorcaleCost;
 
     public $busLightingTypes;
-    public $buslightHeightWidth, $busPowerSupply, $busPowerSupplyQuantity = 1;
+    public $buslightHeightWidth, $busPowerSupply, $busPowerSupplyQuantity = 0;
     public $busPcs = 1, $busPaintHeightWidth, $busStickerHeight, $busStickerWidth, $busLightingWidth, $busLightingHeight;
     public $busMaterials = [], $busstickerMaterial = [], $busgeneralMaterial = [];
     public $buslogoLightingType = [];
@@ -80,7 +87,7 @@ class ViewCalculation extends Component
 
     public $ownHeight, $ownWidth, $ownStickerHeightWidth, $ownoracalHeightWidth;
     public $ownLightingTypes;
-    public $ownlightHeightWidth, $ownPowerSupply, $ownPowerSupplyQuantity = 1;
+    public $ownlightHeightWidth, $ownPowerSupply, $ownPowerSupplyQuantity = 0;
     public $ownPcs = 1, $ownPaintHeightWidth, $ownStickerHeight, $ownStickerWidth, $ownLightingWidth, $ownLightingHeight;
     public $ownMaterials = [], $ownstickerMaterial = [], $owngeneralMaterial = [];
     public $ownlogoLightingType = [];
@@ -92,7 +99,10 @@ class ViewCalculation extends Component
 
     public $logoCostResults = [], $mainCostResults = [], $addCostResults = [], $busCostResults = [], $ownerCostResults = [];
 
-    
+
+
+
+
     public function getGeneralMaterialCost($material, $height, $width, $pcs)
     {
         switch ($material) {
@@ -325,28 +335,157 @@ class ViewCalculation extends Component
 
     ];
 
+    public function checkpowersupply($index)
+    {
+        $form = $this->logoCost[$index];
+
+        $height = (float) $form['logoHeight'];
+        $width = (float) $form['logoWidth'];
+        $area = ($height * $width) / 144;
+
+        $lightingTypes = $form['logoLightingType'] ?? [];
+
+
+        if (in_array('frontlit', $lightingTypes)) {
+            $totalWatt = $area * 27;
+            $powerUnitLimit = 350;
+
+            $unitCount = max((int) ceil($totalWatt / $powerUnitLimit), 1);
+
+            $this->logoCost[$index]['logoPowerSupplyQuantity'] = $unitCount;
+            $this->logoCost[$index]['logoPowerSupply'] = '400W';
+
+            $this->logoCost[$index]['powerSupplyCalculationInfo'] =
+                round($totalWatt, 2) . 'W ÷ 350W = ' . $unitCount . ' units (truncated)';
+        }
+    }
+
+    public function maincheckpowersupply($index)
+    {
+        $form = $this->mainCost[$index];
+
+        $height = (float) $form['mainHeight'];
+        $width = (float) $form['mainWidth'];
+        $area = ($height * $width) / 144;
+
+        $lightingTypes = $form['mainLightingType'] ?? [];
+
+
+        if (in_array('frontlit', $lightingTypes)) {
+            $totalWatt = $area * 27;
+            $powerUnitLimit = 350;
+
+            $unitCount = max((int) ceil($totalWatt / $powerUnitLimit), 1);
+
+
+            $this->mainCost[$index]['mainPowerSupplyQuantity'] = $unitCount;
+            $this->mainCost[$index]['mainPowerSupply'] = '400W';
+
+            $this->mainCost[$index]['powerSupplyCalculationInfo'] =
+                round($totalWatt, 2) . 'W ÷ 350W = ' . $unitCount . ' units (truncated)';
+        }
+    }
+
+
+    public function addcheckpowersupply($index)
+    {
+        $form = $this->addCost[$index];
+
+        $height = (float) $form['addHeight'];
+        $width = (float) $form['addWidth'];
+        $area = round(($height * $width) / 144, 2);
+
+        $lightingTypes = $form['addLightingType'] ?? [];
+
+        if (in_array('frontlit', $lightingTypes)) {
+            $totalWatt = $area * 27;
+            $powerUnitLimit = 350;
+
+            $unitCount = max((int) ceil($totalWatt / $powerUnitLimit), 1);
+
+
+            $this->addCost[$index]['addPowerSupplyQuantity'] = $unitCount;
+            $this->addCost[$index]['addPowerSupply'] = '400W';
+
+            $this->addCost[$index]['powerSupplyCalculationInfo'] =
+                round($totalWatt, 2) . 'W ÷ 350W = ' . $unitCount . ' units (truncated)';
+        }
+    }
+
+    public function buscheckpowersupply($index)
+    {
+        $form = $this->busCost[$index];
+
+        $height = (float) $form['busHeight'];
+        $width = (float) $form['busWidth'];
+        $area = round(($height * $width) / 144, 2);
+
+        $lightingTypes = $form['busLightingType'] ?? [];
+
+        if (in_array('frontlit', $lightingTypes)) {
+            $totalWatt = $area * 27;
+            $powerUnitLimit = 350;
+
+            $unitCount = max((int) ceil($totalWatt / $powerUnitLimit), 1);
+
+
+            $this->busCost[$index]['busPowerSupplyQuantity'] = $unitCount;
+            $this->busCost[$index]['busPowerSupply'] = '400W';
+
+            $this->busCost[$index]['powerSupplyCalculationInfo'] =
+                round($totalWatt, 2) . 'W ÷ 350W = ' . $unitCount . ' units (truncated)';
+        }
+    }
+
+    public function owncheckpowersupply($index)
+    {
+        $form = $this->ownCost[$index];
+
+        $height = (float) $form['ownHeight'];
+        $width = (float) $form['ownWidth'];
+        $area = round(($height * $width) / 144, 2);
+
+        $lightingTypes = $form['ownLightingType'] ?? [];
+
+        if (in_array('frontlit', $lightingTypes)) {
+            $totalWatt = $area * 27;
+            $powerUnitLimit = 350;
+
+            $unitCount = max((int) ceil($totalWatt / $powerUnitLimit), 1);
+
+            $this->ownCost[$index]['ownPowerSupplyQuantity'] = $unitCount;
+            $this->ownCost[$index]['ownPowerSupply'] = '400W';
+
+            $this->ownCost[$index]['powerSupplyCalculationInfo'] =
+                round($totalWatt, 2) . 'W ÷ ' . $powerUnitLimit . 'W = ' . $unitCount . ' unit(s)';
+        }
+    }
+
+
+
 
 
     public function mount()
     {
-        $this->logoCost[] = [
-            'logoText' => '',
-            'characterCount' => 0,
-            'logoHeight' => '',
-            'logoWidth' => '',
-            'logoMaterials' => [],
-            'materialPrices' => [],
-            'stickerMaterial' => [],
-            'stickerPrices' => [],
-            'logoStickerHeightWidth' => false,
-            'logolightHeightWidth' => false,
-            'logoLightingType' => [],
-            'logoPowerSupply' => 'None',
-            'logoPowerSupplyQuantity' => 1,
-            'logoPaintHeightWidth' => false,
-            'logooracalHeightWidth' => false,
-            'generalMaterial' => [],
-            'logoPcs' => 1,
+        $this->logoCost = [
+            [
+                'logoHeight' => null,
+                'logoWidth' => null,
+                'logoMaterials' => [],
+                'NeonmaterialInputs' => [],
+
+                'stickerMaterial' => [],
+                'logoStickerHeightWidth' => false,
+                'logolightHeightWidth' => false,
+                'logoPowerSupply' => null,
+                'logoPowerSupplyQuantity' => 0,
+                'logoPaintHeightWidth' => false,
+                'logooracalHeightWidth' => false,
+                'generalMaterial' => [],
+                'lightingtype' => [],
+                'logoPcs' => 1,
+
+            ]
         ];
         $this->mainCost[] = [
             'mainText' => '',
@@ -363,8 +502,8 @@ class ViewCalculation extends Component
             'mainoracalHeightWidth' => false,
             'mainlightHeightWidth' => false,
             'mainLightingType' => [],
-            'mainPowerSupply' => 'None',
-            'mainPowerSupplyQuantity' => 1,
+            'mainPowerSupply' => '400W',
+            'mainPowerSupplyQuantity' => 0,
             'mainPcs' => 1,
         ];
         $this->addCost[] = [
@@ -380,8 +519,8 @@ class ViewCalculation extends Component
             'addoracalHeightWidth' => false,
             'addlightHeightWidth' => false,
             'addLightingType' => [],
-            'addPowerSupply' => 'None',
-            'addPowerSupplyQuantity' => 1,
+            'addPowerSupply' => '400W',
+            'addPowerSupplyQuantity' => 0,
             'mainPcs' => 1,
         ];
 
@@ -398,7 +537,7 @@ class ViewCalculation extends Component
             'busoracalHeightWidth' => false,
             'buslightHeightWidth' => false,
             'busLightingType' => [],
-            'busPowerSupply' => 'None',
+            'busPowerSupply' => '400W',
             'busPowerSupplyQuantity' => 1,
             'busPcs' => 1,
         ];
@@ -415,18 +554,1239 @@ class ViewCalculation extends Component
             'ownoracalHeightWidth' => false,
             'ownlightHeightWidth' => false,
             'ownLightingType' => [],
-            'ownPowerSupply' => 'None',
-            'ownPowerSupplyQuantity' => 1,
+            'ownPowerSupply' => '400W',
+            'ownPowerSupplyQuantity' => 0,
             'ownPcs' => 1,
         ];
     }
 
     public function updatedLogoCost($value, $key)
     {
-        // Matches "0.logoText", "1.logoText", etc.
         if (preg_match('/^(\d+)\.logoText$/', $key, $matches)) {
             $index = $matches[1];
             $this->logoCost[$index]['characterCount'] = strlen($value);
+        }
+    }
+
+
+    // LOGO COST 
+    public function toggleAcrylicInput($index, $size)
+    {
+        $selected = $this->logoCost[$index]['logoMaterials'] ?? [];
+
+        if (in_array("acrylic{$size}mm", $selected)) {
+            $this->logoCost[$index]['showAcrylicInput'] = $size;
+        } else {
+            $this->logoCost[$index]['showAcrylicInput'] = null;
+        }
+    }
+
+
+
+    public function toggleBlackAcrylicInput($index, $size)
+    {
+        $selected = $this->logoCost[$index]['logoMaterials'] ?? [];
+
+        if (in_array("black_acrylic{$size}mm", $selected)) {
+            $this->logoCost[$index]['showBlackAcrylicInput'][] = $size;
+        } else {
+            $this->logoCost[$index]['showBlackAcrylicInput'] = array_diff(
+                $this->logoCost[$index]['showBlackAcrylicInput'] ?? [],
+                [$size]
+            );
+            unset($this->logoCost[$index]['blackAcrylicInputs']);
+        }
+    }
+
+    public function togglePVCInput($index, $size)
+    {
+        $selected = $this->logoCost[$index]['logoMaterials'] ?? [];
+
+        if (in_array("pvc{$size}mm", $selected)) {
+            if (!isset($this->logoCost[$index]['showPVCInput'])) {
+                $this->logoCost[$index]['showPVCInput'] = [];
+            }
+            if (!in_array($size, $this->logoCost[$index]['showPVCInput'])) {
+                $this->logoCost[$index]['showPVCInput'][] = $size;
+            }
+        } else {
+            $this->logoCost[$index]['showPVCInput'] = array_diff(
+                $this->logoCost[$index]['showPVCInput'] ?? [],
+                [$size]
+            );
+            unset($this->logoCost[$index]['pvcInputs']);
+        }
+    }
+    public function toggleStainlessSteelInput($index, $key)
+    {
+        if (
+            isset($this->logoCost[$index]['logoMaterials']) &&
+            in_array($key, $this->logoCost[$index]['logoMaterials'])
+        ) {
+
+            // Add the key to showInputs so input box appears
+            $this->logoCost[$index]['showInputs'][] = $key;
+            $this->logoCost[$index]['showInputs'] = array_unique($this->logoCost[$index]['showInputs']);
+        } else {
+            // Remove the key so input box disappears
+            if (!empty($this->logoCost[$index]['showInputs'])) {
+                $this->logoCost[$index]['showInputs'] = array_filter(
+                    $this->logoCost[$index]['showInputs'],
+                    fn($k) => $k !== $key
+                );
+                $this->logoCost[$index]['showInputs'] = array_values($this->logoCost[$index]['showInputs']);
+            }
+        }
+    }
+    public function toggleStainlessgoldInput($index, $key)
+    {
+        if (
+            isset($this->logoCost[$index]['logoMaterials']) &&
+            in_array($key, $this->logoCost[$index]['logoMaterials'])
+        ) {
+
+            // Add the key to showInputs so input box appears
+            $this->logoCost[$index]['showInputs'][] = $key;
+            $this->logoCost[$index]['showInputs'] = array_unique($this->logoCost[$index]['showInputs']);
+        } else {
+            // Remove the key so input box disappears
+            if (!empty($this->logoCost[$index]['showInputs'])) {
+                $this->logoCost[$index]['showInputs'] = array_filter(
+                    $this->logoCost[$index]['showInputs'],
+                    fn($k) => $k !== $key
+                );
+                $this->logoCost[$index]['showInputs'] = array_values($this->logoCost[$index]['showInputs']);
+            }
+        }
+    }
+
+
+    public function toggleneonMaterialInput($index, $materialKey)
+    {
+        $selectedLists = [
+            'logoMaterials',
+            'stickerMaterial',
+            'generalMaterial',
+            'others'
+        ];
+
+        $selected = null;
+        foreach ($selectedLists as $list) {
+            if (!empty($this->logoCost[$index][$list]) && in_array($materialKey, $this->logoCost[$index][$list])) {
+                $selected = $this->logoCost[$index][$list];
+                break;
+            }
+        }
+
+        if ($selected && in_array($materialKey, $selected)) {
+            if (!isset($this->logoCost[$index]['showInputs'])) {
+                $this->logoCost[$index]['showInputs'] = [];
+            }
+            if (!in_array($materialKey, $this->logoCost[$index]['showInputs'])) {
+                $this->logoCost[$index]['showInputs'][] = $materialKey;
+            }
+        } else {
+            $this->logoCost[$index]['showInputs'] = array_diff(
+                $this->logoCost[$index]['showInputs'] ?? [],
+                [$materialKey]
+            );
+            unset($this->logoCost[$index]['materialInputs'][$materialKey]);
+        }
+    }
+    public function togglestickerInput($index, $materialKey)
+    {
+        $selected = array_merge(
+            $this->logoCost[$index]['logoMaterials'] ?? [],
+            $this->logoCost[$index]['stickerMaterial'] ?? []
+        );
+
+        if (in_array($materialKey, $selected)) {
+            if (!isset($this->logoCost[$index]['showInputs'])) {
+                $this->logoCost[$index]['showInputs'] = [];
+            }
+            if (!in_array($materialKey, $this->logoCost[$index]['showInputs'])) {
+                $this->logoCost[$index]['showInputs'][] = $materialKey;
+            }
+        } else {
+            $this->logoCost[$index]['showInputs'] = array_diff(
+                $this->logoCost[$index]['showInputs'] ?? [],
+                [$materialKey]
+            );
+            unset($this->logoCost[$index]['stickermaterialInputs'][$materialKey]);
+        }
+    }
+    public function toggleGeneralMaterialInput($index, $materialKey)
+    {
+        $selected = $this->logoCost[$index]['generalMaterial'] ?? [];
+
+        if (in_array($materialKey, $selected)) {
+            if (!isset($this->logoCost[$index]['showGeneralInputs'])) {
+                $this->logoCost[$index]['showGeneralInputs'] = [];
+            }
+            if (!in_array($materialKey, $this->logoCost[$index]['showGeneralInputs'])) {
+                $this->logoCost[$index]['showGeneralInputs'][] = $materialKey;
+            }
+        } else {
+            $this->logoCost[$index]['showGeneralInputs'] = array_diff(
+                $this->logoCost[$index]['showGeneralInputs'] ?? [],
+                [$materialKey]
+            );
+            unset($this->logoCost[$index]['generalMaterialInputs'][$materialKey]);
+        }
+    }
+    public function togglepaintMaterialInput($index, $materialKey)
+    {
+        if (!empty($this->logoCost[$index]['logoPaintHeightWidth'])) {
+            $this->logoCost[$index]['showGeneralInputs'][] = $materialKey;
+        } else {
+            $this->logoCost[$index]['showGeneralInputs'] = array_diff(
+                $this->logoCost[$index]['showGeneralInputs'] ?? [],
+                [$materialKey]
+            );
+            unset($this->logoCost[$index]['logoPaintInputs'][$materialKey]);
+        }
+    }
+
+
+    public function toggleorcalMaterialInput($index, $materialKey)
+    {
+        $isChecked = !empty($this->logoCost[$index]['logooracalHeightWidth']);
+
+        if ($isChecked) {
+            if (!isset($this->logoCost[$index]['showGeneralInputs'])) {
+                $this->logoCost[$index]['showGeneralInputs'] = [];
+            }
+            if (!in_array($materialKey, $this->logoCost[$index]['showGeneralInputs'])) {
+                $this->logoCost[$index]['showGeneralInputs'][] = $materialKey;
+            }
+        } else {
+            $this->logoCost[$index]['showGeneralInputs'] = array_diff(
+                $this->logoCost[$index]['showGeneralInputs'] ?? [],
+                [$materialKey]
+            );
+            unset($this->logoCost[$index]['logoOracalInputs'][$materialKey]);
+        }
+    }
+
+    public function toggleLightingInput($index, $lightingType)
+    {
+        $selectedTypes = $this->logoCost[$index]['logoLightingType'] ?? [];
+        if (!is_array($selectedTypes)) {
+            $selectedTypes = [];
+        }
+
+        if (
+            !isset($this->logoCost[$index]['showLightingInputs']) ||
+            !is_array($this->logoCost[$index]['showLightingInputs'])
+        ) {
+            $this->logoCost[$index]['showLightingInputs'] = [];
+        }
+
+        if (in_array($lightingType, $selectedTypes)) {
+            if (!in_array($lightingType, $this->logoCost[$index]['showLightingInputs'])) {
+                $this->logoCost[$index]['showLightingInputs'][] = $lightingType;
+            }
+        } else {
+            $this->logoCost[$index]['showLightingInputs'] = array_values(
+                array_diff($this->logoCost[$index]['showLightingInputs'], [$lightingType])
+            );
+            unset($this->logoCost[$index]['logoLightingInputs'][$lightingType]);
+        }
+    }
+
+
+
+
+    // Main Cost
+
+    public function toggleMainAcrylicInput($index, $size)
+    {
+        $selected = $this->mainCost[$index]['mainMaterials'] ?? [];
+
+        if (in_array("acrylic{$size}mm", $selected)) {
+            $this->mainCost[$index]['showAcrylicInput'] = $size;
+        } else {
+            $this->mainCost[$index]['showAcrylicInput'] = null;
+        }
+    }
+
+
+    public function toggleMainBlackAcrylicInput($index, $size)
+    {
+        $selected = $this->mainCost[$index]['mainMaterials'] ?? [];
+
+        if (in_array("black_acrylic{$size}mm", $selected)) {
+            $this->mainCost[$index]['showBlackAcrylicInput'][] = $size;
+        } else {
+            $this->mainCost[$index]['showBlackAcrylicInput'] = array_diff(
+                $this->mainCost[$index]['showBlackAcrylicInput'] ?? [],
+                [$size]
+            );
+            unset($this->mainCost[$index]['blackAcrylicInputs']);
+        }
+    }
+
+    public function toggleMainPVCInput($index, $size)
+    {
+        $selected = $this->mainCost[$index]['mainMaterials'] ?? [];
+
+        if (in_array("pvc{$size}mm", $selected)) {
+            if (!isset($this->mainCost[$index]['showPVCInput'])) {
+                $this->mainCost[$index]['showPVCInput'] = [];
+            }
+            if (!in_array($size, $this->mainCost[$index]['showPVCInput'])) {
+                $this->mainCost[$index]['showPVCInput'][] = $size;
+            }
+        } else {
+            $this->mainCost[$index]['showPVCInput'] = array_diff(
+                $this->mainCost[$index]['showPVCInput'] ?? [],
+                [$size]
+            );
+            unset($this->mainCost[$index]['pvcInputs']);
+        }
+    }
+
+    public function toggleMainStainlessSteelInput($index, $key)
+    {
+        if (
+            isset($this->mainCost[$index]['mainMaterials']) &&
+            in_array($key, $this->mainCost[$index]['mainMaterials'])
+        ) {
+
+            // Add the key to showInputs so input box appears
+            $this->mainCost[$index]['showInputs'][] = $key;
+            $this->mainCost[$index]['showInputs'] = array_unique($this->mainCost[$index]['showInputs']);
+        } else {
+            // Remove the key so input box disappears
+            if (!empty($this->mainCost[$index]['showInputs'])) {
+                $this->mainCost[$index]['showInputs'] = array_filter(
+                    $this->mainCost[$index]['showInputs'],
+                    fn($k) => $k !== $key
+                );
+                $this->mainCost[$index]['showInputs'] = array_values($this->mainCost[$index]['showInputs']);
+            }
+        }
+    }
+
+    public function toggleMainStainlessgoldInput($index, $key)
+    {
+        if (
+            isset($this->mainCost[$index]['mainMaterials']) &&
+            in_array($key, $this->mainCost[$index]['mainMaterials'])
+        ) {
+
+            // Add the key to showInputs so input box appears
+            $this->mainCost[$index]['showInputs'][] = $key;
+            $this->mainCost[$index]['showInputs'] = array_unique($this->mainCost[$index]['showInputs']);
+        } else {
+            // Remove the key so input box disappears
+            if (!empty($this->mainCost[$index]['showInputs'])) {
+                $this->mainCost[$index]['showInputs'] = array_filter(
+                    $this->mainCost[$index]['showInputs'],
+                    fn($k) => $k !== $key
+                );
+                $this->mainCost[$index]['showInputs'] = array_values($this->mainCost[$index]['showInputs']);
+            }
+        }
+    }
+
+    public function toggleMainNeonMaterialInput($index, $materialKey)
+    {
+        $selectedLists = [
+            'mainMaterials',
+            'stickerMaterial',
+            'generalMaterial',
+            'others'
+        ];
+
+        $selected = null;
+        foreach ($selectedLists as $list) {
+            if (!empty($this->mainCost[$index][$list]) && in_array($materialKey, $this->mainCost[$index][$list])) {
+                $selected = $this->mainCost[$index][$list];
+                break;
+            }
+        }
+
+        if ($selected && in_array($materialKey, $selected)) {
+            if (!isset($this->mainCost[$index]['showInputs'])) {
+                $this->mainCost[$index]['showInputs'] = [];
+            }
+            if (!in_array($materialKey, $this->mainCost[$index]['showInputs'])) {
+                $this->mainCost[$index]['showInputs'][] = $materialKey;
+            }
+        } else {
+            $this->mainCost[$index]['showInputs'] = array_diff(
+                $this->mainCost[$index]['showInputs'] ?? [],
+                [$materialKey]
+            );
+            unset($this->mainCost[$index]['materialInputs'][$materialKey]);
+        }
+    }
+
+
+
+    public function toggleMainstickerInput($index, $materialKey)
+    {
+        $selected = array_merge(
+            $this->mainCost[$index]['mainMaterials'] ?? [],
+            $this->mainCost[$index]['stickerMaterial'] ?? []
+        );
+
+        if (in_array($materialKey, $selected)) {
+            if (!isset($this->mainCost[$index]['showInputs'])) {
+                $this->mainCost[$index]['showInputs'] = [];
+            }
+            if (!in_array($materialKey, $this->mainCost[$index]['showInputs'])) {
+                $this->mainCost[$index]['showInputs'][] = $materialKey;
+            }
+        } else {
+            $this->mainCost[$index]['showInputs'] = array_diff(
+                $this->mainCost[$index]['showInputs'] ?? [],
+                [$materialKey]
+            );
+            unset($this->mainCost[$index]['stickermaterialInputs'][$materialKey]);
+        }
+    }
+
+
+
+    public function toggleMainGeneralMaterialInput($index, $materialKey)
+    {
+        $selected = $this->mainCost[$index]['generalMaterial'] ?? [];
+
+        if (in_array($materialKey, $selected)) {
+            if (!isset($this->mainCost[$index]['showGeneralInputs'])) {
+                $this->mainCost[$index]['showGeneralInputs'] = [];
+            }
+            if (!in_array($materialKey, $this->mainCost[$index]['showGeneralInputs'])) {
+                $this->mainCost[$index]['showGeneralInputs'][] = $materialKey;
+            }
+        } else {
+            $this->mainCost[$index]['showGeneralInputs'] = array_diff(
+                $this->mainCost[$index]['showGeneralInputs'] ?? [],
+                [$materialKey]
+            );
+            unset($this->mainCost[$index]['generalMaterialInputs'][$materialKey]);
+        }
+    }
+
+
+
+    public function toggleMainpaintMaterialInput($index, $materialKey)
+    {
+        if (!empty($this->mainCost[$index]['mainPaintHeightWidth'])) {
+            $this->mainCost[$index]['showGeneralInputs'][] = $materialKey;
+        } else {
+            $this->mainCost[$index]['showGeneralInputs'] = array_diff(
+                $this->mainCost[$index]['showGeneralInputs'] ?? [],
+                [$materialKey]
+            );
+            unset($this->mainCost[$index]['MainPaintInputs']);
+        }
+    }
+
+
+
+
+    public function toggleMainOrcalMaterialInput($index, $materialKey)
+    {
+        $isChecked = !empty($this->mainCost[$index]['mainoracalHeightWidth']);
+
+        if ($isChecked) {
+            if (!isset($this->mainCost[$index]['showGeneralInputs'])) {
+                $this->mainCost[$index]['showGeneralInputs'] = [];
+            }
+            if (!in_array($materialKey, $this->mainCost[$index]['showGeneralInputs'])) {
+                $this->mainCost[$index]['showGeneralInputs'][] = $materialKey;
+            }
+        } else {
+            $this->mainCost[$index]['showGeneralInputs'] = array_diff(
+                $this->mainCost[$index]['showGeneralInputs'] ?? [],
+                [$materialKey]
+            );
+
+            if (isset($this->mainCost[$index]['mainOracalInputs'][$materialKey])) {
+                unset($this->mainCost[$index]['mainOracalInputs'][$materialKey]);
+            }
+        }
+    }
+
+
+    public function toggleMainLightingInput($index, $lightingType)
+    {
+        $selectedTypes = $this->mainCost[$index]['mainLightingType'] ?? [];
+
+        if (in_array($lightingType, $selectedTypes)) {
+            if (!isset($this->mainCost[$index]['showLightingInputs'])) {
+                $this->mainCost[$index]['showLightingInputs'] = [];
+            }
+            if (!in_array($lightingType, $this->mainCost[$index]['showLightingInputs'])) {
+                $this->mainCost[$index]['showLightingInputs'][] = $lightingType;
+            }
+        } else {
+            $this->mainCost[$index]['showLightingInputs'] = array_diff(
+                $this->mainCost[$index]['showLightingInputs'] ?? [],
+                [$lightingType]
+            );
+            unset($this->mainCost[$index]['mainLightingInputs'][$lightingType]);
+        }
+    }
+
+    // Addional Cost
+
+
+    public function toggleAddAcrylicInput($index, $size)
+    {
+        $selected = $this->addCost[$index]['addMaterials'] ?? [];
+
+        if (in_array("acrylic{$size}mm", $selected)) {
+            $this->addCost[$index]['showAcrylicInput'] = $size;
+        } else {
+            $this->addCost[$index]['showAcrylicInput'] = null;
+        }
+    }
+
+
+    public function toggleAddBlackAcrylicInput($index, $size)
+    {
+        $selected = $this->addCost[$index]['addMaterials'] ?? [];
+
+        if (in_array("black_acrylic{$size}mm", $selected)) {
+            $this->addCost[$index]['showBlackAcrylicInput'][] = $size;
+        } else {
+            $this->addCost[$index]['showBlackAcrylicInput'] = array_diff(
+                $this->addCost[$index]['showBlackAcrylicInput'] ?? [],
+                [$size]
+            );
+            unset($this->addCost[$index]['blackAcrylicInputs']);
+        }
+    }
+
+    public function toggleAddPVCInput($index, $size)
+    {
+        $selected = $this->addCost[$index]['addMaterials'] ?? [];
+
+        if (in_array("pvc{$size}mm", $selected)) {
+            if (!isset($this->addCost[$index]['showPVCInput'])) {
+                $this->addCost[$index]['showPVCInput'] = [];
+            }
+            if (!in_array($size, $this->addCost[$index]['showPVCInput'])) {
+                $this->addCost[$index]['showPVCInput'][] = $size;
+            }
+        } else {
+            $this->addCost[$index]['showPVCInput'] = array_diff(
+                $this->addCost[$index]['showPVCInput'] ?? [],
+                [$size]
+            );
+            unset($this->addCost[$index]['pvcInputs']);
+        }
+    }
+
+
+    public function toggleAddStainlessSteelInput($index, $key)
+    {
+        // Make sure the 'showInputs' array exists
+        if (!isset($this->addCost[$index]['showInputs']) || !is_array($this->addCost[$index]['showInputs'])) {
+            $this->addCost[$index]['showInputs'] = [];
+        }
+
+        if (
+            isset($this->addCost[$index]['addMaterials']) &&
+            in_array($key, $this->addCost[$index]['addMaterials'])
+        ) {
+            // Add the key if it's not already there
+            if (!in_array($key, $this->addCost[$index]['showInputs'])) {
+                $this->addCost[$index]['showInputs'][] = $key;
+            }
+        } else {
+            // Remove the key
+            $this->addCost[$index]['showInputs'] = array_filter(
+                $this->addCost[$index]['showInputs'],
+                fn($k) => $k !== $key
+            );
+            $this->addCost[$index]['showInputs'] = array_values($this->addCost[$index]['showInputs']);
+        }
+    }
+
+
+
+
+    public function toggleAddStainlessgoldInput($index, $key)
+    {
+        if (
+            isset($this->addCost[$index]['addMaterials']) &&
+            in_array($key, $this->addCost[$index]['addMaterials'])
+        ) {
+
+            // Add the key to showInputs so input box appears
+            $this->addCost[$index]['showInputs'][] = $key;
+            $this->addCost[$index]['showInputs'] = array_unique($this->addCost[$index]['showInputs']);
+        } else {
+            // Remove the key so input box disappears
+            if (!empty($this->addCost[$index]['showInputs'])) {
+                $this->addCost[$index]['showInputs'] = array_filter(
+                    $this->addCost[$index]['showInputs'],
+                    fn($k) => $k !== $key
+                );
+                $this->addCost[$index]['showInputs'] = array_values($this->addCost[$index]['showInputs']);
+            }
+        }
+    }
+
+
+    public function toggleAddNeonInput($index, $materialKey)
+    {
+        $selectedLists = [
+            'addMaterials',
+            'stickerMaterial',
+            'generalMaterial',
+            'others'
+        ];
+
+        $selected = null;
+        foreach ($selectedLists as $list) {
+            if (!empty($this->addCost[$index][$list]) && in_array($materialKey, $this->addCost[$index][$list])) {
+                $selected = $this->addCost[$index][$list];
+                break;
+            }
+        }
+
+        if ($selected && in_array($materialKey, $selected)) {
+            if (!isset($this->addCost[$index]['showInputs'])) {
+                $this->addCost[$index]['showInputs'] = [];
+            }
+            if (!in_array($materialKey, $this->addCost[$index]['showInputs'])) {
+                $this->addCost[$index]['showInputs'][] = $materialKey;
+            }
+        } else {
+            $this->addCost[$index]['showInputs'] = array_diff(
+                $this->addCost[$index]['showInputs'] ?? [],
+                [$materialKey]
+            );
+            unset($this->addCost[$index]['materialInputs'][$materialKey]);
+        }
+    }
+
+
+
+
+    public function toggleAddStickerInput($index, $materialKey)
+    {
+        $selected = array_merge(
+            $this->addCost[$index]['addMaterials'] ?? [],
+            $this->addCost[$index]['stickerMaterial'] ?? []
+        );
+
+        if (in_array($materialKey, $selected)) {
+            if (!isset($this->addCost[$index]['showInputs'])) {
+                $this->addCost[$index]['showInputs'] = [];
+            }
+            if (!in_array($materialKey, $this->addCost[$index]['showInputs'])) {
+                $this->addCost[$index]['showInputs'][] = $materialKey;
+            }
+        } else {
+            $this->addCost[$index]['showInputs'] = array_diff(
+                $this->addCost[$index]['showInputs'] ?? [],
+                [$materialKey]
+            );
+            unset($this->addCost[$index]['stickermaterialInputs'][$materialKey]);
+        }
+    }
+
+
+
+
+    public function toggleAddGeneralMaterialInput($index, $materialKey)
+    {
+        $selected = $this->addCost[$index]['generalMaterial'] ?? [];
+
+        if (in_array($materialKey, $selected)) {
+            if (!isset($this->addCost[$index]['showGeneralInputs'])) {
+                $this->addCost[$index]['showGeneralInputs'] = [];
+            }
+            if (!in_array($materialKey, $this->addCost[$index]['showGeneralInputs'])) {
+                $this->addCost[$index]['showGeneralInputs'][] = $materialKey;
+            }
+        } else {
+            $this->addCost[$index]['showGeneralInputs'] = array_diff(
+                $this->addCost[$index]['showGeneralInputs'] ?? [],
+                [$materialKey]
+            );
+            unset($this->addCost[$index]['generalMaterialInputs'][$materialKey]);
+        }
+    }
+
+
+
+    public function toggleAddPaintInput($index, $materialKey)
+    {
+        if (!isset($this->addCost[$index]['showGeneralInputs'])) {
+            $this->addCost[$index]['showGeneralInputs'] = [];
+        }
+
+        if (!empty($this->addCost[$index]['addPaintHeightWidth'])) {
+            if (!in_array($materialKey, $this->addCost[$index]['showGeneralInputs'])) {
+                $this->addCost[$index]['showGeneralInputs'][] = $materialKey;
+            }
+        } else {
+            $this->addCost[$index]['showGeneralInputs'] = array_diff(
+                $this->addCost[$index]['showGeneralInputs'],
+                [$materialKey]
+            );
+            unset($this->addCost[$index]['addPaintInputs']);
+        }
+    }
+
+
+
+
+    public function toggleAddOrcalMaterialInput($index, $materialKey)
+    {
+        if (!isset($this->addCost[$index]['showGeneralInputs'])) {
+            $this->addCost[$index]['showGeneralInputs'] = [];
+        }
+        if (!isset($this->addCost[$index]['addOracalInputs'])) {
+            $this->addCost[$index]['addOracalInputs'] = [];
+        }
+
+        $isChecked = !empty($this->addCost[$index]['addOracalHeightWidth'][$materialKey] ?? false);
+
+        if ($isChecked) {
+            if (!in_array($materialKey, $this->addCost[$index]['showGeneralInputs'])) {
+                $this->addCost[$index]['showGeneralInputs'][] = $materialKey;
+            }
+        } else {
+            $this->addCost[$index]['showGeneralInputs'] = array_values(array_diff(
+                $this->addCost[$index]['showGeneralInputs'],
+                [$materialKey]
+            ));
+            unset($this->addCost[$index]['addOracalInputs'][$materialKey]);
+        }
+    }
+
+
+    public function toggleAddLightingInput($index, $lightingType)
+    {
+        $selectedTypes = $this->addCost[$index]['addLightingType'] ?? [];
+
+        if (in_array($lightingType, $selectedTypes)) {
+            if (!isset($this->addCost[$index]['showLightingInputs'])) {
+                $this->addCost[$index]['showLightingInputs'] = [];
+            }
+            if (!in_array($lightingType, $this->addCost[$index]['showLightingInputs'])) {
+                $this->addCost[$index]['showLightingInputs'][] = $lightingType;
+            }
+        } else {
+            $this->addCost[$index]['showLightingInputs'] = array_diff(
+                $this->addCost[$index]['showLightingInputs'] ?? [],
+                [$lightingType]
+            );
+            unset($this->addCost[$index]['addLightingInputs'][$lightingType]);
+        }
+    }
+
+
+    // Businness Cost
+
+
+    public function toggleBusAcrylicInput($index, $size)
+    {
+        $selected = $this->busCost[$index]['busMaterials'] ?? [];
+
+        if (in_array("acrylic{$size}mm", $selected)) {
+            $this->busCost[$index]['showAcrylicInput'] = $size;
+        } else {
+            $this->busCost[$index]['showAcrylicInput'] = null;
+        }
+    }
+
+
+    public function toggleBusBlackAcrylicInput($index, $size)
+    {
+        $selected = $this->busCost[$index]['busMaterials'] ?? [];
+
+        if (in_array("black_acrylic{$size}mm", $selected)) {
+            $this->busCost[$index]['showBlackAcrylicInput'][] = $size;
+        } else {
+            $this->busCost[$index]['showBlackAcrylicInput'] = array_diff(
+                $this->busCost[$index]['showBlackAcrylicInput'] ?? [],
+                [$size]
+            );
+            unset($this->busCost[$index]['blackAcrylicInputs']);
+        }
+    }
+
+    public function toggleBusPVCInput($index, $size)
+    {
+        $selected = $this->busCost[$index]['busMaterials'] ?? [];
+
+        if (in_array("pvc{$size}mm", $selected)) {
+            if (!isset($this->busCost[$index]['showPVCInput'])) {
+                $this->busCost[$index]['showPVCInput'] = [];
+            }
+            if (!in_array($size, $this->busCost[$index]['showPVCInput'])) {
+                $this->busCost[$index]['showPVCInput'][] = $size;
+            }
+        } else {
+            $this->busCost[$index]['showPVCInput'] = array_diff(
+                $this->busCost[$index]['showPVCInput'] ?? [],
+                [$size]
+            );
+            unset($this->busCost[$index]['pvcInputs']);
+        }
+    }
+
+
+    public function toggleBusStainlessSteelInput($index, $key)
+    {
+        // Make sure the 'showInputs' array exists
+        if (!isset($this->busCost[$index]['showInputs']) || !is_array($this->busCost[$index]['showInputs'])) {
+            $this->busCost[$index]['showInputs'] = [];
+        }
+
+        if (
+            isset($this->busCost[$index]['busMaterials']) &&
+            in_array($key, $this->busCost[$index]['busMaterials'])
+        ) {
+            // Add the key if it's not already there
+            if (!in_array($key, $this->busCost[$index]['showInputs'])) {
+                $this->busCost[$index]['showInputs'][] = $key;
+            }
+        } else {
+            // Remove the key
+            $this->busCost[$index]['showInputs'] = array_filter(
+                $this->busCost[$index]['showInputs'],
+                fn($k) => $k !== $key
+            );
+            $this->busCost[$index]['showInputs'] = array_values($this->busCost[$index]['showInputs']);
+        }
+    }
+
+
+
+
+    public function toggleBusStainlessgoldInput($index, $key)
+    {
+        if (
+            isset($this->busCost[$index]['busMaterials']) &&
+            in_array($key, $this->busCost[$index]['busMaterials'])
+        ) {
+
+            // Add the key to showInputs so input box appears
+            $this->busCost[$index]['showInputs'][] = $key;
+            $this->busCost[$index]['showInputs'] = array_unique($this->busCost[$index]['showInputs']);
+        } else {
+            // Remove the key so input box disappears
+            if (!empty($this->busCost[$index]['showInputs'])) {
+                $this->busCost[$index]['showInputs'] = array_filter(
+                    $this->busCost[$index]['showInputs'],
+                    fn($k) => $k !== $key
+                );
+                $this->busCost[$index]['showInputs'] = array_values($this->busCost[$index]['showInputs']);
+            }
+        }
+    }
+
+
+    public function toggleBusNeonInput($index, $materialKey)
+    {
+        $selectedLists = [
+            'busMaterials',
+            'stickerMaterial',
+            'generalMaterial',
+            'others'
+        ];
+
+        $selected = null;
+        foreach ($selectedLists as $list) {
+            if (!empty($this->busCost[$index][$list]) && in_array($materialKey, $this->busCost[$index][$list])) {
+                $selected = $this->busCost[$index][$list];
+                break;
+            }
+        }
+
+        if ($selected && in_array($materialKey, $selected)) {
+            if (!isset($this->busCost[$index]['showInputs'])) {
+                $this->busCost[$index]['showInputs'] = [];
+            }
+            if (!in_array($materialKey, $this->busCost[$index]['showInputs'])) {
+                $this->busCost[$index]['showInputs'][] = $materialKey;
+            }
+        } else {
+            $this->busCost[$index]['showInputs'] = array_diff(
+                $this->busCost[$index]['showInputs'] ?? [],
+                [$materialKey]
+            );
+            unset($this->busCost[$index]['NeonmaterialInputs'][$materialKey]);
+        }
+    }
+
+
+
+    public function toggleBusStickerInput($index, $materialKey)
+    {
+        $selected = array_merge(
+            $this->busCost[$index]['addMaterials'] ?? [],
+            $this->busCost[$index]['stickerMaterial'] ?? []
+        );
+
+        if (in_array($materialKey, $selected)) {
+            if (!isset($this->busCost[$index]['showInputs'])) {
+                $this->busCost[$index]['showInputs'] = [];
+            }
+            if (!in_array($materialKey, $this->busCost[$index]['showInputs'])) {
+                $this->busCost[$index]['showInputs'][] = $materialKey;
+            }
+        } else {
+            $this->busCost[$index]['showInputs'] = array_diff(
+                $this->busCost[$index]['showInputs'] ?? [],
+                [$materialKey]
+            );
+            unset($this->addCost[$index]['stickermaterialInputs'][$materialKey]);
+        }
+    }
+
+    public function toggleBusGeneralMaterialInput($index, $materialKey)
+    {
+        $selected = $this->busCost[$index]['generalMaterial'] ?? [];
+
+        if (in_array($materialKey, $selected)) {
+            if (!isset($this->busCost[$index]['showGeneralInputs'])) {
+                $this->busCost[$index]['showGeneralInputs'] = [];
+            }
+            if (!in_array($materialKey, $this->busCost[$index]['showGeneralInputs'])) {
+                $this->busCost[$index]['showGeneralInputs'][] = $materialKey;
+            }
+        } else {
+            $this->busCost[$index]['showGeneralInputs'] = array_diff(
+                $this->busCost[$index]['showGeneralInputs'] ?? [],
+                [$materialKey]
+            );
+            unset($this->busCost[$index]['generalMaterialInputs'][$materialKey]);
+        }
+    }
+
+
+
+    public function toggleBusPaintInput($index, $materialKey)
+    {
+        if (!isset($this->busCost[$index]['showGeneralInputs'])) {
+            $this->busCost[$index]['showGeneralInputs'] = [];
+        }
+
+        if (!empty($this->busCost[$index]['busPaintHeightWidth'])) {
+            if (!in_array($materialKey, $this->busCost[$index]['showGeneralInputs'])) {
+                $this->busCost[$index]['showGeneralInputs'][] = $materialKey;
+            }
+        } else {
+            $this->busCost[$index]['showGeneralInputs'] = array_diff(
+                $this->busCost[$index]['showGeneralInputs'],
+                [$materialKey]
+            );
+            unset($this->busCost[$index]['busPaintInputs']);
+        }
+    }
+
+
+
+
+    public function toggleBusOracalMaterialInput($index, $materialKey)
+    {
+        if (!isset($this->busCost[$index]['showGeneralInputs'])) {
+            $this->busCost[$index]['showGeneralInputs'] = [];
+        }
+        if (!isset($this->busCost[$index]['busOracalInputs'])) {
+            $this->busCost[$index]['busOracalInputs'] = [];
+        }
+
+        $isChecked = in_array($materialKey, (array)($this->busCost[$index]['busOracalHeightWidth'] ?? []));
+
+        if ($isChecked) {
+            if (!in_array($materialKey, $this->busCost[$index]['showGeneralInputs'])) {
+                $this->busCost[$index]['showGeneralInputs'][] = $materialKey;
+            }
+        } else {
+            $this->busCost[$index]['showGeneralInputs'] = array_values(array_diff(
+                $this->busCost[$index]['showGeneralInputs'],
+                [$materialKey]
+            ));
+            unset($this->busCost[$index]['busOracalInputs'][$materialKey]);
+        }
+    }
+
+
+
+
+    public function toggleBusLightingInput($index, $lightingType)
+    {
+        $selectedTypes = (array)($this->busCost[$index]['busLightingType'] ?? []);
+
+        if (in_array($lightingType, $selectedTypes)) {
+            if (!isset($this->busCost[$index]['showLightingInputs'])) {
+                $this->busCost[$index]['showLightingInputs'] = [];
+            }
+            if (!in_array($lightingType, $this->busCost[$index]['showLightingInputs'])) {
+                $this->busCost[$index]['showLightingInputs'][] = $lightingType;
+            }
+        } else {
+            $this->busCost[$index]['showLightingInputs'] = array_diff(
+                $this->busCost[$index]['showLightingInputs'] ?? [],
+                [$lightingType]
+            );
+            unset($this->busCost[$index]['busLightingInputs'][$lightingType]);
+        }
+    }
+
+
+
+    // Owner Cost
+
+    public function toggleOwnAcrylicInput($index, $size)
+    {
+        $selected = (array)($this->ownCost[$index]['ownMaterials'] ?? []);
+
+        if (in_array("acrylic{$size}mm", $selected)) {
+            $this->ownCost[$index]['showAcrylicInput'] = $size;
+        } else {
+            $this->ownCost[$index]['showAcrylicInput'] = null;
+        }
+    }
+
+
+
+    public function toggleOwnBlackAcrylicInput($index, $size)
+    {
+        $selected = $this->ownCost[$index]['ownMaterials'] ?? [];
+
+        if (in_array("black_acrylic{$size}mm", $selected)) {
+            $this->ownCost[$index]['showBlackAcrylicInput'][] = $size;
+        } else {
+            $this->ownCost[$index]['showBlackAcrylicInput'] = array_diff(
+                $this->ownCost[$index]['showBlackAcrylicInput'] ?? [],
+                [$size]
+            );
+            unset($this->ownCost[$index]['blackAcrylicInputs']);
+        }
+    }
+
+    public function toggleOwnPVCInput($index, $size)
+    {
+        $selected = $this->ownCost[$index]['ownMaterials'] ?? [];
+
+        if (in_array("pvc{$size}mm", $selected)) {
+            if (!isset($this->ownCost[$index]['showPVCInput'])) {
+                $this->ownCost[$index]['showPVCInput'] = [];
+            }
+            if (!in_array($size, $this->ownCost[$index]['showPVCInput'])) {
+                $this->ownCost[$index]['showPVCInput'][] = $size;
+            }
+        } else {
+            $this->ownCost[$index]['showPVCInput'] = array_diff(
+                $this->ownCost[$index]['showPVCInput'] ?? [],
+                [$size]
+            );
+            unset($this->ownCost[$index]['pvcInputs']);
+        }
+    }
+
+
+    public function toggleOwnStainlessSteelInput($index, $key)
+    {
+        // Make sure the 'showInputs' array exists
+        if (!isset($this->ownCost[$index]['showInputs']) || !is_array($this->ownCost[$index]['showInputs'])) {
+            $this->ownCost[$index]['showInputs'] = [];
+        }
+
+        if (
+            isset($this->ownCost[$index]['ownMaterials']) &&
+            in_array($key, $this->ownCost[$index]['ownMaterials'])
+        ) {
+            // Add the key if it's not already there
+            if (!in_array($key, $this->ownCost[$index]['showInputs'])) {
+                $this->ownCost[$index]['showInputs'][] = $key;
+            }
+        } else {
+            // Remove the key
+            $this->ownCost[$index]['showInputs'] = array_filter(
+                $this->ownCost[$index]['showInputs'],
+                fn($k) => $k !== $key
+            );
+            $this->ownCost[$index]['showInputs'] = array_values($this->ownCost[$index]['showInputs']);
+        }
+    }
+
+
+
+
+    public function toggleOwnStainlessgoldInput($index, $key)
+    {
+        if (
+            isset($this->ownCost[$index]['ownMaterials']) &&
+            in_array($key, $this->ownCost[$index]['ownMaterials'])
+        ) {
+
+            // Add the key to showInputs so input box appears
+            $this->ownCost[$index]['showInputs'][] = $key;
+            $this->ownCost[$index]['showInputs'] = array_unique($this->ownCost[$index]['showInputs']);
+        } else {
+            // Remove the key so input box disappears
+            if (!empty($this->ownCost[$index]['showInputs'])) {
+                $this->ownCost[$index]['showInputs'] = array_filter(
+                    $this->ownCost[$index]['showInputs'],
+                    fn($k) => $k !== $key
+                );
+                $this->ownCost[$index]['showInputs'] = array_values($this->ownCost[$index]['showInputs']);
+            }
+        }
+    }
+
+
+    public function toggleOwnNeonInput($index, $materialKey)
+    {
+        $selectedLists = [
+            'ownMaterials',
+            'stickerMaterial',
+            'generalMaterial',
+            'others'
+        ];
+
+        $selected = null;
+        foreach ($selectedLists as $list) {
+            if (!empty($this->ownCost[$index][$list]) && in_array($materialKey, $this->ownCost[$index][$list])) {
+                $selected = $this->ownCost[$index][$list];
+                break;
+            }
+        }
+
+        if ($selected && in_array($materialKey, $selected)) {
+            if (!isset($this->ownCost[$index]['showInputs'])) {
+                $this->ownCost[$index]['showInputs'] = [];
+            }
+            if (!in_array($materialKey, $this->ownCost[$index]['showInputs'])) {
+                $this->ownCost[$index]['showInputs'][] = $materialKey;
+            }
+        } else {
+            $this->ownCost[$index]['showInputs'] = array_diff(
+                $this->ownCost[$index]['showInputs'] ?? [],
+                [$materialKey]
+            );
+            unset($this->ownCost[$index]['NeonmaterialInputs'][$materialKey]);
+        }
+    }
+
+
+
+    public function toggleOwnStickerInput($index, $materialKey)
+    {
+        $selected = array_merge(
+            $this->ownCost[$index]['addMaterials'] ?? [],
+            $this->ownCost[$index]['stickerMaterial'] ?? []
+        );
+
+        if (in_array($materialKey, $selected)) {
+            if (!isset($this->ownCost[$index]['showInputs'])) {
+                $this->ownCost[$index]['showInputs'] = [];
+            }
+            if (!in_array($materialKey, $this->ownCost[$index]['showInputs'])) {
+                $this->ownCost[$index]['showInputs'][] = $materialKey;
+            }
+        } else {
+            $this->ownCost[$index]['showInputs'] = array_diff(
+                $this->ownCost[$index]['showInputs'] ?? [],
+                [$materialKey]
+            );
+            unset($this->addCost[$index]['stickermaterialInputs'][$materialKey]);
+        }
+    }
+
+    public function toggleOwnGeneralMaterialInput($index, $materialKey)
+    {
+        $selected = $this->ownCost[$index]['generalMaterial'] ?? [];
+
+        if (in_array($materialKey, $selected)) {
+            if (!isset($this->ownCost[$index]['showGeneralInputs'])) {
+                $this->ownCost[$index]['showGeneralInputs'] = [];
+            }
+            if (!in_array($materialKey, $this->ownCost[$index]['showGeneralInputs'])) {
+                $this->ownCost[$index]['showGeneralInputs'][] = $materialKey;
+            }
+        } else {
+            $this->ownCost[$index]['showGeneralInputs'] = array_diff(
+                $this->ownCost[$index]['showGeneralInputs'] ?? [],
+                [$materialKey]
+            );
+            unset($this->ownCost[$index]['generalMaterialInputs'][$materialKey]);
+        }
+    }
+
+
+
+    public function toggleOwnPaintInput($index, $materialKey)
+    {
+        if (!isset($this->ownCost[$index]['showGeneralInputs'])) {
+            $this->ownCost[$index]['showGeneralInputs'] = [];
+        }
+
+        if (!empty($this->ownCost[$index]['ownPaintHeightWidth'])) {
+            if (!in_array($materialKey, $this->ownCost[$index]['showGeneralInputs'])) {
+                $this->ownCost[$index]['showGeneralInputs'][] = $materialKey;
+            }
+        } else {
+            $this->ownCost[$index]['showGeneralInputs'] = array_diff(
+                $this->ownCost[$index]['showGeneralInputs'],
+                [$materialKey]
+            );
+            unset($this->ownCost[$index]['ownPaintInputs']);
+        }
+    }
+
+
+
+
+    public function toggleOwnOracalMaterialInput($index, $materialKey)
+    {
+        if (!isset($this->ownCost[$index]['showGeneralInputs'])) {
+            $this->ownCost[$index]['showGeneralInputs'] = [];
+        }
+        if (!isset($this->ownCost[$index]['ownOracalInputs'])) {
+            $this->ownCost[$index]['ownOracalInputs'] = [];
+        }
+
+        $isChecked = in_array($materialKey, (array)($this->ownCost[$index]['ownoracalHeightWidth'] ?? []));
+
+        if ($isChecked) {
+            if (!in_array($materialKey, $this->ownCost[$index]['showGeneralInputs'])) {
+                $this->ownCost[$index]['showGeneralInputs'][] = $materialKey;
+            }
+        } else {
+            $this->ownCost[$index]['showGeneralInputs'] = array_values(array_diff(
+                $this->ownCost[$index]['showGeneralInputs'],
+                [$materialKey]
+            ));
+            unset($this->ownCost[$index]['ownOracalInputs'][$materialKey]);
+        }
+    }
+
+
+
+
+    public function toggleownLightingInput($index, $lightingType)
+    {
+        $selectedTypes = (array)($this->ownCost[$index]['ownLightingType'] ?? []);
+
+        if (in_array($lightingType, $selectedTypes)) {
+            if (!isset($this->ownCost[$index]['showLightingInputs'])) {
+                $this->ownCost[$index]['showLightingInputs'] = [];
+            }
+            if (!in_array($lightingType, $this->ownCost[$index]['showLightingInputs'])) {
+                $this->ownCost[$index]['showLightingInputs'][] = $lightingType;
+            }
+        } else {
+            $this->ownCost[$index]['showLightingInputs'] = array_diff(
+                $this->ownCost[$index]['showLightingInputs'] ?? [],
+                [$lightingType]
+            );
+            unset($this->ownCost[$index]['ownLightingInputs'][$lightingType]);
         }
     }
 
@@ -440,6 +1800,8 @@ class ViewCalculation extends Component
             'logoHeight' => '',
             'logoWidth' => '',
             'logoMaterials' => [],
+            'NeonmaterialInputs' => [],
+
             'stickerMaterial' => [],
             'logoStickerHeightWidth' => false,
             'generalMaterial' => [],
@@ -447,8 +1809,8 @@ class ViewCalculation extends Component
             'logooracalHeightWidth' => false,
             'logolightHeightWidth' => false,
             'logoLightingType' => [],
-            'logoPowerSupply' => 'None',
-            'logoPowerSupplyQuantity' => 1,
+            'logoPowerSupply' => '400W',
+            'logoPowerSupplyQuantity' => 0,
         ];
     }
 
@@ -472,8 +1834,8 @@ class ViewCalculation extends Component
             'mainStickerHeightWidth' => false,
             'mainlightHeightWidth' => false,
             'mainLightingType' => [],
-            'mainPowerSupply' => 'None',
-            'mainPowerSupplyQuantity' => 1,
+            'mainPowerSupply' => '400W',
+            'mainPowerSupplyQuantity' => 0,
             'mainPaintHeightWidth' => false,
             'mainoracalHeightWidth' => false,
             'generalMaterial' => [],
@@ -511,8 +1873,8 @@ class ViewCalculation extends Component
             'addStickerHeightWidth' => false,
             'addlightHeightWidth' => false,
             'addLightingType' => [],
-            'addPowerSupply' => 'None',
-            'addPowerSupplyQuantity' => 1,
+            'addPowerSupply' => '400W',
+            'addPowerSupplyQuantity' => 0,
             'addPaintHeightWidth' => false,
             'addoracalHeightWidth' => false,
             'generalMaterial' => [],
@@ -546,7 +1908,7 @@ class ViewCalculation extends Component
             'busStickerHeightWidth' => false,
             'buslightHeightWidth' => false,
             'busLightingType' => [],
-            'busPowerSupply' => 'None',
+            'busPowerSupply' => '400W',
             'busPowerSupplyQuantity' => 1,
             'busPaintHeightWidth' => false,
             'busoracalHeightWidth' => false,
@@ -589,8 +1951,8 @@ class ViewCalculation extends Component
             'ownStickerHeightWidth' => false,
             'ownlightHeightWidth' => false,
             'ownLightingType' => [],
-            'ownPowerSupply' => 'None',
-            'ownPowerSupplyQuantity' => 1,
+            'ownPowerSupply' => '400W',
+            'ownPowerSupplyQuantity' => 0,
             'ownPaintHeightWidth' => false,
             'ownoracalHeightWidth' => false,
             'generalMaterial' => [],
@@ -613,17 +1975,17 @@ class ViewCalculation extends Component
         unset($this->ownCost[$index]);
         $this->ownCost = array_values($this->ownCost);
     }
-    
+
     // calculation
     public function calculateBaseCost()
     {
         $this->isCalculated = true;
 
-        $this->validate([
-            'job_name' => 'required',
-            'date' => 'required',
-            // 'sales_man'=>'required',
-        ]);
+        // $this->validate([
+        //     'job_name' => 'required',
+        //     'date' => 'required',
+        //     'salesperson' => 'required',
+        // ]);
 
         if (!$this->baseType || !$this->baseMember || !$this->baseHeight || !$this->baseWidth) {
             $this->baseCost = 0.00;
@@ -639,7 +2001,7 @@ class ViewCalculation extends Component
             "Lightbox" => ["Agent" => 25.00, "User" => 27.50],
             "Double Sided Lightbox" => ["Agent" => 65.00, "User" => 70.00]
         ];
-      
+
 
 
         if (isset($priceList[$this->baseType]) || isset($priceList[$this->baseType][$this->baseMember])) {
@@ -656,6 +2018,7 @@ class ViewCalculation extends Component
         $this->logoCostResults = [];
 
         foreach ($this->logoCost as $index => $form) {
+
             $cost = $calculator->calculate([
                 'height' => $form['logoHeight'],
                 'width' => $form['logoWidth'],
@@ -675,7 +2038,19 @@ class ViewCalculation extends Component
                 'lightingTypes' => $form['lightingtype'] ?? [],
                 'lightingTypePrices' => $this->lightingtype,
                 'pcs' => $form['logoPcs'] ?? 1,
+                'neonmaterialInputs' => $form['NeonmaterialInputs'] ?? [],
+                'acrylicInput' => $form['acrylicInput'] ?? [],
+                'blackAcrylicInputs' => $form['blackAcrylicInputs'] ?? [],
+                'pvcInputs' => $form['pvcInputs'] ?? [],
+                'stainlessteelsilverInputs' => $form['stainlessteelsilverInputs'] ?? [],
+                'stainlessteelgoldInputs ' => $form['stainlessteelgoldInputs '] ?? [],
+                'logoPaintInputs ' => $form['logoPaintInputs '] ?? [],
+                'generalMaterialInputs ' => $form['generalMaterialInputs '] ?? [],
+
+
+
             ]);
+
 
             $this->logoCostResults["LogoCost " . ($index + 1)] = round($cost, 2);
             $this->logoTotal = array_sum($this->logoCostResults);
@@ -696,7 +2071,7 @@ class ViewCalculation extends Component
                 'stickerPrices' => $this->stickerPrices,
                 'useSticker' => $form['mainStickerHeightWidth'] ?? false,
                 'useLighting' => $form['mainlightHeightWidth'] ?? false,
-                'powerSupply' => $form['mainPowerSupply'] ?? 'None',
+                'powerSupply' => $form['mainPowerSupply'],
                 'powerSupplyQty' => $form['mainPowerSupplyQuantity'],
                 'powerSupplyPrices' => $this->powerSupplyPrices,
                 'usePaint' => $form['mainPaintHeightWidth'] ?? false,
@@ -758,7 +2133,7 @@ class ViewCalculation extends Component
                 'stickerPrices' => $this->stickerPrices,
                 'useSticker' => $form['busStickerHeightWidth'] ?? false,
                 'useLighting' => $form['buslightHeightWidth'] ?? false,
-                'powerSupply' => $form['busPowerSupply'] ?? 'None',
+                'powerSupply' => $form['busPowerSupply'],
                 'powerSupplyQty' => $form['busPowerSupplyQuantity'],
                 'powerSupplyPrices' => $this->powerSupplyPrices,
                 'usePaint' => $form['busPaintHeightWidth'] ?? false,
@@ -816,10 +2191,15 @@ class ViewCalculation extends Component
             'customer_name' => 'required',
             'company_name' => 'required',
             'customer_phone_no' => 'required',
+            'salesperson' => 'required',
+            'qt_inv_umber' => 'required',
+            'remark' => 'required',
+            'image' => 'required',
+
 
         ]);
 
-
+        $imagePath = $this->image ? $this->image->store('uploads', 'public') : null;
         $calculation = Calculation::create([
             'job_name' => $this->job_name,
             'date' => $this->date,
@@ -828,6 +2208,11 @@ class ViewCalculation extends Component
             'customer_name' => $this->customer_name,
             'company_name' => $this->company_name,
             'customer_phone_no' => $this->customer_phone_no,
+            'salesperson' => $this->salesperson,
+            'qt_inv_umber' => $this->qt_inv_umber,
+            'remark' => $this->remark,
+            'image' => $imagePath,
+
         ]);
         // dd(Auth::user()->login_type);
 
@@ -869,6 +2254,7 @@ class ViewCalculation extends Component
                 'logo_general_material_cost' => $logo['logoGeneralMaterialCost'] ?? 0,
                 'logo_lighting_price' => $logo['logoLightingPrice'] ?? 0,
                 'logo_oracal_cost' => $logo['logoOracalCost'] ?? 0,
+
                 'total_logo_cost' => $this->logoCostResults["LogoCost " . ($index + 1)] ?? 0,
             ]);
         }

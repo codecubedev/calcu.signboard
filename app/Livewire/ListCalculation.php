@@ -4,7 +4,8 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Calculation;
-use Auth;
+use Illuminate\Support\Facades\Auth;
+
 class ListCalculation extends Component
 {
     public $listcalculation;
