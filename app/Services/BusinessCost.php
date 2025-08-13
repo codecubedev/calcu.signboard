@@ -18,12 +18,13 @@ class BusinessCost
         $whiteAcrylicCost = 0;
         $blackAcrylicCost = 0;
         $stainlessSteelCost = 0;
+        $neonCost = 0; // ✅ Added neon cost
 
         foreach ($data['materials'] as $material) {
             if (isset($materialPrices[$material])) {
                 $price = (float) $materialPrices[$material];
 
-                if (strpos($material, 'acrylic') !== false && strpos($material, 'black') === false) {
+                if (strpos($material, 'acrylic') !== false && strpos($material, 'black') === false && strpos($material, 'neon') === false) {
                     $acrylicCost += $area * $price;
                 } elseif (strpos($material, 'black_acrylic') !== false) {
                     $blackAcrylicCost += $area * $price;
@@ -31,6 +32,8 @@ class BusinessCost
                     $pvcCost += $area * $price;
                 } elseif (strpos($material, 'mirror') !== false || strpos($material, 'hairline') !== false) {
                     $stainlessSteelCost += $area * $price;
+                } elseif (strpos($material, 'neon') !== false || strpos($material, 'clear acrylic') !== false) {
+                    $neonCost += $area * $price; // ✅ Neon or clear acrylic
                 }
             }
 
@@ -74,9 +77,8 @@ class BusinessCost
             $lightingTypeCost += (float) ($data['lightingTypePrices'][$lighting] ?? 0);
         }
 
-            // dd($blackAcrylicCost,$stainlessSteelCost,$generalMaterialCost);
-
         return $acrylicCost + $blackAcrylicCost + $pvcCost + $whiteAcrylicCost + $stainlessSteelCost
+            + $neonCost 
             + $stickerCost + $lightingCost + $powerSupplyCost + $paintCost + $generalMaterialCost
             + $lightingTypeCost + $orcaleCost;
     }

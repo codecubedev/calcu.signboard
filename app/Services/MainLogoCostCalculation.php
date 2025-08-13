@@ -22,11 +22,12 @@ class MainLogoCostCalculation
         $blackAcrylicCost = 0;
         $stainlessSteelCost = 0;
 
+        $neonCost = 0;
         foreach ($data['materials'] as $material) {
             if (isset($materialPrices[$material])) {
                 $price = (float) $materialPrices[$material];
 
-                if (strpos($material, 'acrylic') !== false && strpos($material, 'black') === false) {
+                if (strpos($material, 'acrylic') !== false && strpos($material, 'black') === false && strpos($material, 'clear') === false) {
                     $acrylicCost += $area * $price;
                 } elseif (strpos($material, 'black_acrylic') !== false) {
                     $blackAcrylicCost += $area * $price;
@@ -34,6 +35,8 @@ class MainLogoCostCalculation
                     $pvcCost += $area * $price;
                 } elseif (strpos($material, 'mirror') !== false || strpos($material, 'hairline') !== false) {
                     $stainlessSteelCost += $area * $price;
+                } elseif (strpos($material, 'clear arcylic') !== false) {
+                    $neonCost += $area * $price;  // ← Neon detected by 'clear arcylic' keyword
                 }
             }
 
@@ -41,6 +44,7 @@ class MainLogoCostCalculation
                 $whiteAcrylicCost += $area * ((float) ($materialPrices['whiteacrylic3mm'] ?? 0));
             }
         }
+
 
         // Sticker Cost
         $stickerArea = $data['useSticker'] ? $area / 144 : 0;
