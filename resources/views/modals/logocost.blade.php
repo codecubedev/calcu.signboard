@@ -13,29 +13,15 @@
             </div>
             <div class="card-body">
                 <div class="row">
-
-                    <div class="row">
-                        <div class="col-6 mb-3">
-                            <label>Logo Text</label>
-                            <input type="text" class="form-control form-control-sm"
-                                wire:model.live="logoCost.{{ $index }}.logoText">
-                        </div>
-                        <div class="col-6 mb-3">
-                            <label>Character Count</label>
-                            <input type="text" class="form-control form-control-sm" readonly
-                                value="{{ $logoCost[$index]['characterCount'] ?? '' }}">
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Logo Height (inches)</label>
+                    <div class="col-6 mb-3">
+                        <label>Logo Text</label>
                         <input type="text" class="form-control form-control-sm"
-                            wire:model="logoCost.{{ $index }}.logoHeight">
+                            wire:model.live="logoCost.{{ $index }}.logoText">
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Logo Width (inches)</label>
-                        <input type="text" class="form-control form-control-sm"
-                            wire:model="logoCost.{{ $index }}.logoWidth">
+                    <div class="col-6 mb-3">
+                        <label>Character Count</label>
+                        <input type="text" class="form-control form-control-sm" readonly
+                            value="{{ $logoCost[$index]['characterCount'] ?? '' }}">
                     </div>
                 </div>
                 <hr>
