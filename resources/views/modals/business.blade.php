@@ -189,11 +189,11 @@
                         </div>
                         @endforeach
                     </div>
-                    <div class="col-md-3" x-data="{ enabled: @entangle('ownCost.' . $index . '.ownStickerHeightWidth') }">
+                    <div class="col-md-3" x-data="{ enabled: @entangle('busCost.' . $index . '.busStickerHeightWidth') }">
                         <strong>Sticker</strong>
                         <div>
                             <input type="checkbox" class="form-check-input" x-model="enabled"
-                                wire:model="busCost.{{ $index }}.addStickerHeightWidth">
+                                wire:model="busCost.{{ $index }}.busStickerHeightWidth">
                             <label>Sticker</label>
                         </div>
 
@@ -222,7 +222,7 @@
                             @if (!empty($busCost[$index]['showInputs']) && in_array($val, $busCost[$index]['showInputs']))
                             <div class="mt-1 ms-4 col-4">
                                 <input type="text" class="form-control form-control-sm"
-                                    wire:model="busCost.{{ $index }}.stickermaterialInputs">
+                                    wire:model="busCost.{{ $index }}.stickermaterialInputs.{{ $val }}">
                             </div>
                             @endif
                         </div>
