@@ -209,7 +209,7 @@
 
 
 
-                    <div class="col-md-3" x-data="{ enabled: @entangle('ownCost.' . $index . '.ownStickerHeightWidth') }">
+                    <div class="col-md-3" x-data="{ enabled: @entangle('mainCost.' . $index . '.mainStickerHeightWidth') }">
                         <strong>Sticker</strong>
                         <div>
                             <input type="checkbox" class="form-check-input" x-model="enabled"

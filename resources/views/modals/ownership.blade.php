@@ -223,7 +223,7 @@
                             @if (!empty($ownCost[$index]['showInputs']) && in_array($val, $ownCost[$index]['showInputs']))
                             <div class="mt-1 ms-4 col-4">
                                 <input type="text" class="form-control form-control-sm"
-                                    wire:model="ownCost.{{ $index }}.ownstickermaterialInputs">
+                                    wire:model="ownCost.{{ $index }}.stickermaterialInputs">
                             </div>
                             @endif
                         </div>
