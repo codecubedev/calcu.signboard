@@ -189,6 +189,7 @@
                         </div>
                         @endforeach
                     </div>
+                    <!--  -->
                     <div class="col-md-3" x-data="{ enabled: @entangle('busCost.' . $index . '.busStickerHeightWidth') }">
                         <strong>Sticker</strong>
                         <div>
