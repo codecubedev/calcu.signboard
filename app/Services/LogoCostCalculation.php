@@ -136,18 +136,6 @@ class LogoCostCalculation
 
 
         // GENERAL MATERIAL COST
-        // $generalMaterialCost = 0;
-        // foreach ($data['generalMaterials'] as $material) {
-        //     if (is_callable($data['generalMaterialCostFunction'])) {
-        //         $generalMaterialCost += call_user_func(
-        //             $data['generalMaterialCostFunction'],
-        //             $material,
-        //             $height,
-        //             $width,
-        //             $pcs
-        //         );
-        //     }
-        // }
         $generalMaterialCost = 0;
 
         foreach ($data['generalMaterials'] as $material) {
