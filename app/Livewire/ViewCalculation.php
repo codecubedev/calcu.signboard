@@ -473,7 +473,6 @@ class ViewCalculation extends Component
                 'logoWidth' => null,
                 'logoMaterials' => [],
                 'NeonmaterialInputs' => [],
-
                 'stickerMaterial' => [],
                 'logoStickerHeightWidth' => false,
                 'logolightHeightWidth' => false,
@@ -1051,9 +1050,6 @@ class ViewCalculation extends Component
                 'stainlessteelgoldInputs ' => $form['stainlessteelgoldInputs '] ?? [],
                 'logoPaintInputs ' => $form['logoPaintInputs '] ?? [],
                 'generalMaterialInputs ' => $form['generalMaterialInputs '] ?? [],
-
-
-
             ]);
 
 
@@ -1086,6 +1082,18 @@ class ViewCalculation extends Component
                 'lightingTypes' => $form['mainLightingType'] ?? [],
                 'lightingTypePrices' => $this->lightingtype,
                 'pcs' => $form['logoPcs'] ?? 1,
+                'mainacrylicInput' => $form['mainacrylicInput'] ?? [],
+                'mainblackAcrylicInputs' => $form['mainblackAcrylicInputs'] ?? [],
+                'mainpvcInputs' => $form['mainpvcInputs'] ?? [],
+                'mainstainlessteelsilverInputs' => $form['mainstainlessteelsilverInputs'] ?? [],
+                'mainstainlessteelgoldInputs' => $form['mainstainlessteelgoldInputs'] ?? [],
+                'neonmaterialInputs' => $form['mainneonmaterialInputs']?? [],
+                'mainstickermaterialInputs' => $form['mainstickermaterialInputs']?? [],
+                'maingeneralMaterialInputs' => $form['maingeneralMaterialInputs']?? [],
+                'mainPaintInputs' => $form['mainPaintInputs']?? [],
+                'mainoracalInputs' => $form['mainoracalInputs']?? [],
+                'mainLightingInputs' => $form['mainLightingInputs']?? [],
+
             ]);
 
             $this->mainCostResults["MainCost " . ($index + 1)] = round($cost, 2);
