@@ -26,7 +26,7 @@
                 </div>
                 <hr>
                 <div class="col-12">
-                    <h5> Row Materials</h5>
+                    <h5> Raw Materials</h5>
                     <div class="row">
                         <div class="col-md-3">
                             <strong>Clear Acrylic</strong>

@@ -807,7 +807,6 @@ class ViewCalculation extends Component
             'logoWidth' => '',
             'logoMaterials' => [],
             'NeonmaterialInputs' => [],
-
             'stickerMaterial' => [],
             'logoStickerHeightWidth' => false,
             'generalMaterial' => [],
@@ -1094,7 +1093,7 @@ class ViewCalculation extends Component
         }
 
 
-        // // add
+         // add
         $addcalculator = new AddLetteringCost;
         $this->addCostResults = [];
 
@@ -1125,10 +1124,11 @@ class ViewCalculation extends Component
         }
 
 
-        // // business
+        $this->busTotal = 0;
+        // business
         $buscalculator = new BusinessCost;
         $this->busCostResults = [];
-
+ 
         foreach ($this->busCost as $index => $form) {
             $cost = $buscalculator->buscalculate([
                 'height' => $form['busHeight'] ?? 0,
@@ -1371,16 +1371,17 @@ class ViewCalculation extends Component
                 'ownership_text' => $own['ownText'] ?? '',
                 'ownership_height' => $own['ownHeight'] ?? 0,
                 'ownership_width' => $own['ownWidth'] ?? 0,
-                'ownership_materials' => implode(',', $own['ownMaterials'] ?? []),
+                'ownership_materials' => implode(',', array: $own['ownMaterials'] ?? []),
                 'ownership_sticker_height_width' => $own['ownStickerHeightWidth'] ? 'yes' : null,
                 'ownership_sticker_material' => implode(',', $own['stickerMaterial'] ?? []),
                 'ownership_general_material' => implode(',', $own['generalMaterial'] ?? []),
                 'ownership_paint_height_width' => $own['ownPaintHeightWidth'] ? 'yes' : null,
                 'ownership_oracal_height_width' => $own['ownoracalHeightWidth'] ? 'yes' : null,
                 'ownership_light_height_width' => $own['ownlightHeightWidth'] ? 'yes' : null,
-                'ownership_lighting_type' => implode(',', $own['lightingtype'] ?? []),
+                'ownership_lighting_type' => implode(',', $own['ownLightingType'] ?? []),
                 'ownership_power_supply' => $own['ownPowerSupply'],
                 'ownership_power_supply_quantity' => $own['ownPowerSupplyQuantity'],
+                
                 'ownership_acrylic_cost' => $own['ownerAcrylicCost'] ?? 0,
                 'ownership_pvc_cost' => $own['ownerPVCCost'] ?? 0,
                 'ownership_sticker_cost' => $own['ownerStickerCost'] ?? 0,

@@ -168,8 +168,8 @@
                     <div class="col-md-3">
                         <h6>Neon</h6>
                         @foreach ([
-                        '5mm clear arcylic' => '5mm Clear Acrylic',
-                        '10mm clear arcylic' => '10mm Clear Acrylic',
+                        '5mm_clear_arcylic' => '5mm Clear Acrylic',
+                        '10mm_clear_arcylic' => '10mm Clear Acrylic',
                         ] as $key => $label)
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input"
@@ -222,7 +222,7 @@
                             @if (!empty($busCost[$index]['showInputs']) && in_array($val, $busCost[$index]['showInputs']))
                             <div class="mt-1 ms-4 col-4">
                                 <input type="text" class="form-control form-control-sm"
-                                    wire:model="busCost.{{ $index }}.stickermaterialInputs.{{ $val }}">
+                                    wire:model="busCost.{{ $index }}.stickermaterialInputs">
                             </div>
                             @endif
                         </div>
@@ -254,7 +254,7 @@
                             @if (!empty($busCost[$index]['showGeneralInputs']) && in_array($val, $busCost[$index]['showGeneralInputs']))
                             <div class="mt-1 ms-4 col-4">
                                 <input type="text" class="form-control form-control-sm"
-                                    wire:model="busCost.{{ $index }}.generalMaterialInputs">
+                                    wire:model="busCost.{{ $index }}.generalMaterialInput">
                             </div>
                             @endif
                         </div>
@@ -285,7 +285,7 @@
                             <div class="mt-1 ms-4 col-4">
                                 <input type="text"
                                     class="form-control form-control-sm"
-                                    wire:model="busCost.{{ $index }}.busOracalInputs.oracal">
+                                    wire:model="busCost.{{ $index }}.busOracalInputs">
                             </div>
                             @endif
                         </div>
@@ -319,7 +319,7 @@
                         <div class="mt-1 ms-4 col-4">
                             <input type="text"
                                 class="form-control form-control-sm"
-                                wire:model="busCost.{{ $index }}.addLightingInputs.{{ $type }}">
+                                wire:model="busCost.{{ $index }}.busLightingDetails">
                         </div>
                         @endif
                     </div>
