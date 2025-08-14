@@ -17,14 +17,14 @@
                 <div class="col-6 mb-3">
                     <label>Main Text</label>
                     <input type="text" class="form-control form-control-sm"
-                        wire:model.defer="mainCost.{{ $index }}.mainText">
+                        wire:model.live="mainCost.{{ $index }}.mainText">
                 </div>
 
                 <!-- Character Count -->
                 <div class="col-6 mb-3">
                     <label>Character Count</label>
                     <input type="text" class="form-control form-control-sm" readonly
-                        value="{{ $form['characterCount'] ?? '' }}">
+                        value="{{ $mainCost[$index]['characterCount'] ?? '' }}">
                 </div>
 
                 <!-- Dimensions -->
