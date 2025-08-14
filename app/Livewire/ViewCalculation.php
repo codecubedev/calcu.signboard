@@ -932,6 +932,11 @@ class ViewCalculation extends Component
             $index = $matches[1];
             $this->ownCost[$index]['characterCount'] = strlen($value);
         }
+
+        if (preg_match('/^busCost\.(\d+)\.busText$/', $property, $matches)) {
+            $index = $matches[1];
+            $this->busCost[$index]['characterCount'] = strlen($value);
+        }
     }
 
 
