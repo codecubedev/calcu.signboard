@@ -183,6 +183,7 @@ class AddLetteringCost
 
 
 
+
         // POWER SUPPLY COST
         $powerSupplyCost = 0;
         if (!empty($data['powerSupply'])) {
