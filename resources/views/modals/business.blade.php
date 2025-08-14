@@ -78,7 +78,7 @@
                             <div class="col-4">
                                 <div class="mt-1 ms-4">
                                     <input type="text" class="form-control form-control-sm"
-                                        wire:model="busCost.{{ $index }}.blackAcrylicInputs">
+                                        wire:model="busCost.{{ $index }}.busblackAcrylicInputs">
                                 </div>
                             </div>
                             @endif
@@ -101,7 +101,7 @@
 
                                 <div class="mt-1 ms-4">
                                     <input type="text" class="form-control form-control-sm"
-                                        wire:model="busCost.{{ $index }}.pvcInputs">
+                                        wire:model="busCost.{{ $index }}.buspvcInputs">
                                 </div>
                             </div>
                             @endif
@@ -129,7 +129,7 @@
                             <div class="mt-1 ms-4">
                                 <div class="col-4">
                                     <input type="text" class="form-control form-control-sm"
-                                        wire:model="busCost.{{ $index }}.stainlessteelsilverInputs">
+                                        wire:model="busCost.{{ $index }}.busstainlessteelsilverInputs">
                                 </div>
                             </div>
                             @endif
@@ -156,7 +156,7 @@
                             <div class="mt-1 ms-4">
                                 <div class="col-4">
                                     <input type="text" class="form-control form-control-sm"
-                                        wire:model="busCost.{{ $index }}.stainlessteelgoldInputs">
+                                        wire:model="busCost.{{ $index }}.busstainlessteelgoldInputs">
 
                                 </div>
 
@@ -182,7 +182,7 @@
                             <div class="mt-1 ms-4">
                                 <div class="col-4">
                                     <input type="text" class="form-control form-control-sm"
-                                        wire:model="busCost.{{ $index }}.NeonmaterialInputs">
+                                        wire:model="busCost.{{ $index }}.buseonmaterialInputs">
                                 </div>
                             </div>
                             @endif
@@ -193,7 +193,7 @@
                         <strong>Sticker</strong>
                         <div>
                             <input type="checkbox" class="form-check-input" x-model="enabled"
-                                wire:model="busCost.{{ $index }}.addStickerHeightWidth">
+                                wire:model="busCost.{{ $index }}.busStickerHeightWidth">
                             <label>Sticker</label>
                         </div>
 
@@ -222,7 +222,7 @@
                             @if (!empty($busCost[$index]['showInputs']) && in_array($val, $busCost[$index]['showInputs']))
                             <div class="mt-1 ms-4 col-4">
                                 <input type="text" class="form-control form-control-sm"
-                                    wire:model="busCost.{{ $index }}.stickermaterialInputs">
+                                    wire:model="busCost.{{ $index }}.busstickermaterialInputs">
                             </div>
                             @endif
                         </div>
@@ -254,7 +254,7 @@
                             @if (!empty($busCost[$index]['showGeneralInputs']) && in_array($val, $busCost[$index]['showGeneralInputs']))
                             <div class="mt-1 ms-4 col-4">
                                 <input type="text" class="form-control form-control-sm"
-                                    wire:model="busCost.{{ $index }}.generalMaterialInput">
+                                    wire:model="busCost.{{ $index }}.busgeneralMaterialInput">
                             </div>
                             @endif
                         </div>
@@ -271,7 +271,7 @@
                             @if (!empty($busCost[$index]['showGeneralInputs']) && in_array($val, $busCost[$index]['showGeneralInputs']))
                             <div class="mt-1 ms-4 col-4">
                                 <input type="text" class="form-control form-control-sm"
-                                    wire:model="busCost.{{ $index }}.busPaintInputs">
+                                    wire:model="busCost.{{ $index }}.buspaintInputs">
                             </div>
                             @endif
                         </div>
@@ -285,7 +285,7 @@
                             <div class="mt-1 ms-4 col-4">
                                 <input type="text"
                                     class="form-control form-control-sm"
-                                    wire:model="busCost.{{ $index }}.busOracalInputs">
+                                    wire:model="busCost.{{ $index }}.busoracalInputs">
                             </div>
                             @endif
                         </div>

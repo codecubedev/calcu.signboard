@@ -1087,12 +1087,12 @@ class ViewCalculation extends Component
                 'mainpvcInputs' => $form['mainpvcInputs'] ?? [],
                 'mainstainlessteelsilverInputs' => $form['mainstainlessteelsilverInputs'] ?? [],
                 'mainstainlessteelgoldInputs' => $form['mainstainlessteelgoldInputs'] ?? [],
-                'neonmaterialInputs' => $form['mainneonmaterialInputs']?? [],
-                'mainstickermaterialInputs' => $form['mainstickermaterialInputs']?? [],
-                'maingeneralMaterialInputs' => $form['maingeneralMaterialInputs']?? [],
-                'mainPaintInputs' => $form['mainPaintInputs']?? [],
-                'mainoracalInputs' => $form['mainoracalInputs']?? [],
-                'mainLightingInputs' => $form['mainLightingInputs']?? [],
+                'neonmaterialInputs' => $form['mainneonmaterialInputs'] ?? [],
+                'mainstickermaterialInputs' => $form['mainstickermaterialInputs'] ?? [],
+                'maingeneralMaterialInputs' => $form['maingeneralMaterialInputs'] ?? [],
+                'mainPaintInputs' => $form['mainPaintInputs'] ?? [],
+                'mainoracalInputs' => $form['mainoracalInputs'] ?? [],
+                'mainLightingInputs' => $form['mainLightingInputs'] ?? [],
 
             ]);
 
@@ -1101,7 +1101,7 @@ class ViewCalculation extends Component
         }
 
 
-         // add
+        // add
         $addcalculator = new AddLetteringCost;
         $this->addCostResults = [];
 
@@ -1125,6 +1125,17 @@ class ViewCalculation extends Component
                 'lightingTypes' => $form['lightingtype'] ?? [],
                 'lightingTypePrices' => $this->lightingtype,
                 'pcs' => $form['addPcs'] ?? 1,
+                'addacrylicInput' => $form['addacrylicInput'] ?? [],
+                'addblackAcrylicInputs' => $form['addblackAcrylicInputs'] ?? [],
+                'addpvcInputs' => $form['addpvcInputs'] ?? [],
+                'addstainlessteelsilverInputs' => $form['addstainlessteelsilverInputs'] ?? [],
+                'addstainlessteelgoldInputs' => $form['addstainlessteelgoldInputs'] ?? [],
+                'addneonmaterialInputs' => $form['addneonmaterialInputs'] ?? [],
+                'addstickermaterialInputs' => $form['addstickermaterialInputs'] ?? [],
+                'addgeneralMaterialInputs' => $form['addgeneralMaterialInputs'] ?? [],
+                'addpaintInputs' => $form['addpaintInputs'] ?? [],
+                'addoracalInputs' => $form['addoracalInputs'] ?? [],
+                'addLightingInputs' => $form['addLightingInputs'] ?? [],
             ]);
 
             $this->addCostResults["Addittional Cost " . ($index + 1)] = round($cost, 2);
@@ -1136,11 +1147,11 @@ class ViewCalculation extends Component
         // business
         $buscalculator = new BusinessCost;
         $this->busCostResults = [];
- 
+
         foreach ($this->busCost as $index => $form) {
             $cost = $buscalculator->buscalculate([
-                'height' => $form['busHeight'] ?? 0,
-                'width' => $form['busWidth'] ?? 0,
+                'height' => $form['busHeight'] ?? [],
+                'width' => $form['busWidth'] ?? [],
                 'materials' => $form['busMaterials'] ?? [],
                 'materialPrices' => $this->materialPrices,
                 'stickers' => $form['stickerMaterial'] ?? [],
@@ -1157,6 +1168,18 @@ class ViewCalculation extends Component
                 'lightingTypes' => $form['lightingtype'] ?? [],
                 'lightingTypePrices' => $this->lightingtype,
                 'pcs' => $form['busPcs'] ?? 1,
+                'busacrylicInput' => $form['busacrylicInput'] ?? [],
+                'busblackAcrylicInputs' => $form['busblackAcrylicInputs'] ?? [],
+                'buspvcInputs' => $form['buspvcInputs'] ?? [],
+                'busstainlessteelsilverInputs' => $form['busstainlessteelsilverInputs'] ?? [],
+                'busstainlessteelgoldInputs' => $form['busstainlessteelgoldInputs'] ?? [],
+                'busneonmaterialInputs' => $form['busneonmaterialInputs'] ?? [],
+                'busstickermaterialInputs' => $form['busstickermaterialInputs'] ?? [],
+                'busgeneralMaterialInputs' => $form['busgeneralMaterialInputs'] ?? [],
+                'buspaintInputs' => $form['buspaintInputs'] ?? [],
+                'busoracalInputs' => $form['busoracalInputs'] ?? [],
+                'busLightingInputs' => $form['busLightingInputs'] ?? [],
+
             ]);
 
             $this->busCostResults["BusinessCost " . ($index + 1)] = round($cost, 2);
@@ -1187,6 +1210,17 @@ class ViewCalculation extends Component
                 'lightingTypes' => $form['lightingtype'] ?? [],
                 'lightingTypePrices' => $this->lightingtype,
                 'pcs' => $form['ownPcs'] ?? 1,
+                'ownacrylicInput' => $form['ownacrylicInput'] ?? [],
+                'ownblackAcrylicInputs' => $form['ownblackAcrylicInputs'] ?? [],
+                'ownpvcInputs' => $form['ownpvcInputs'] ?? [],
+                'ownstainlessteelsilverInputs' => $form['ownstainlessteelsilverInputs'] ?? [],
+                'ownstainlessteelgoldInputs' => $form['ownstainlessteelgoldInputs'] ?? [],
+                'ownneonmaterialInputs' => $form['ownneonmaterialInputs'] ?? [],
+                'ownstickermaterialInputs' => $form['ownstickermaterialInputs'] ?? [],
+                'owngeneralMaterialInputs' => $form['owngeneralMaterialInputs'] ?? [],
+                'ownpaintInputs' => $form['ownpaintInputs'] ?? [],
+                'ownoracalInputs' => $form['ownoracalInputs'] ?? [],
+                'ownLightingInputs' => $form['ownLightingInputs'] ?? [],
             ]);
             $this->ownerCostResults["OwnerCost " . ($index + 1)] = round($cost, 2);
 
@@ -1389,7 +1423,7 @@ class ViewCalculation extends Component
                 'ownership_lighting_type' => implode(',', $own['ownLightingType'] ?? []),
                 'ownership_power_supply' => $own['ownPowerSupply'],
                 'ownership_power_supply_quantity' => $own['ownPowerSupplyQuantity'],
-                
+
                 'ownership_acrylic_cost' => $own['ownerAcrylicCost'] ?? 0,
                 'ownership_pvc_cost' => $own['ownerPVCCost'] ?? 0,
                 'ownership_sticker_cost' => $own['ownerStickerCost'] ?? 0,
