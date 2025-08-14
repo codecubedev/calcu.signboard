@@ -198,7 +198,7 @@
 
                         </div>
 
-                        <div class="col-md-3" x-data="{ enabled: @entangle('ownCost.' . $index . '.ownStickerHeightWidth') }">
+                        <div class="col-md-3" x-data="{ enabled: @entangle('logoCost.' . $index . '.logoStickerHeightWidth') }">
                             <strong>Sticker</strong>
                             <div>
                                 <input type="checkbox" class="form-check-input" x-model="enabled"
@@ -227,7 +227,7 @@
                                     @if (!empty($logoCost[$index]['showInputs']) && in_array($val, $logoCost[$index]['showInputs']))
                                         <div class="mt-1 ms-4 col-4">
                                             <input type="text" class="form-control form-control-sm"
-                                                wire:model="logoCost.{{ $index }}.stickermaterialInputs">
+                                                wire:model="logoCost.{{ $index }}.stickermaterialInputs.{{ $val }}">
                                         </div>
                                     @endif
                                 </div>
