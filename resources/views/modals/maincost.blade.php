@@ -63,7 +63,7 @@
                             <div class="col-4">
                                 <div class="mt-1 ms-4">
                                     <input type="text"
-                                        class="form-control form-control-sm" wire:model="mainCost.{{ $index }}.acrylicInput">
+                                        class="form-control form-control-sm" wire:model="mainCost.{{ $index }}.mainacrylicInput">
                                 </div>
                             </div>
                             @endif
@@ -87,7 +87,7 @@
                                 <div class="mt-1 ms-4">
                                     <input type="text"
                                         class="form-control form-control-sm"
-                                        wire:model="mainCost.{{ $index }}.blackAcrylicInputs.{{ $size }}">
+                                        wire:model="mainCost.{{ $index }}.mainblackAcrylicInputs.{{ $size }}">
                                 </div>
                             </div>
                             @endif
@@ -110,7 +110,7 @@
 
                                 <div class="mt-1 ms-4">
                                     <input type="text" class="form-control form-control-sm"
-                                        wire:model="mainCost.{{ $index }}.pvcInputs">
+                                        wire:model="mainCost.{{ $index }}.mainpvcInputs">
                                 </div>
                             </div>
                             @endif
@@ -139,7 +139,7 @@
                             <div class="mt-1 ms-4">
                                 <div class="col-4">
                                     <input type="text" class="form-control form-control-sm"
-                                        wire:model="mainCost.{{ $index }}.stainlessteelsilverInputs">
+                                        wire:model="mainCost.{{ $index }}.mainstainlessteelsilverInputs">
                                 </div>
                             </div>
                             @endif
@@ -169,7 +169,7 @@
                             <div class="mt-1 ms-4">
                                 <div class="col-4">
                                     <input type="text" class="form-control form-control-sm"
-                                        wire:model="mainCost.{{ $index }}.stainlessteelgoldInputs">
+                                        wire:model="mainCost.{{ $index }}.mainstainlessteelgoldInputs">
 
                                 </div>
 
@@ -182,26 +182,30 @@
                     <div class="col-md-3">
                         <h6>Neon</h6>
                         @foreach ([
-                        '5mm clear arcylic' => '5mm Clear Acrylic',
-                        '10mm clear arcylic' => '10mm Clear Acrylic',
+                           '5mm_clear_arcylic' => '5mm Clear Acrylic',
+                            '10mm_clear_arcylic' => '10mm Clear Acrylic',
                         ] as $key => $label)
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input"
-                                wire:model="mainCost.{{ $index }}.mainMaterials"
-                                wire:change="toggleMainNeonMaterialInput({{ $index }}, '{{ $key }}')"
-                                value="{{ $key }}">
-                            <label class="form-check-label">{{ $label }}</label>
-                            @if (!empty($mainCost[$index]['showInputs']) && in_array($key, $mainCost[$index]['showInputs']))
-                            <div class="mt-1 ms-4">
-                                <div class="col-4">
-                                    <input type="text" class="form-control form-control-sm"
-                                        wire:model="mainCost.{{ $index }}.NeonmaterialInputs">
-                                </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input"
+                                    wire:model="mainCost.{{ $index }}.mainMaterials"
+                                    wire:change="toggleMainNeonMaterialInput({{ $index }}, '{{ $key }}')"
+                                    value="{{ $key }}">
+                                <label class="form-check-label">{{ $label }}</label>
+
+                                @if (!empty($mainCost[$index]['showInputs']) && in_array($key, $mainCost[$index]['showInputs']))
+                                    <div class="mt-1 ms-4">
+                                        <div class="col-4">
+                                            <input type="text" class="form-control form-control-sm"
+                                                wire:model="mainCost.{{ $index }}.mainneonmaterialInputs">
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
-                            @endif
-                        </div>
                         @endforeach
                     </div>
+
+
+                        
 
 
 
@@ -235,7 +239,7 @@
                             @if (!empty($mainCost[$index]['showInputs']) && in_array($val, $mainCost[$index]['showInputs']))
                             <div class="mt-1 ms-4 col-4">
                                 <input type="text" class="form-control form-control-sm"
-                                    wire:model="mainCost.{{ $index }}.stickermaterialInputs.{{ $val }}">
+                                    wire:model="mainCost.{{ $index }}.mainstickermaterialInputs.{{ $val }}">
                             </div>
 
                             @endif
@@ -266,7 +270,7 @@
                             @if (!empty($mainCost[$index]['showGeneralInputs']) && in_array($key, $mainCost[$index]['showGeneralInputs']))
                             <div class="mt-1 ms-4 col-4">
                                 <input type="text" class="form-control form-control-sm"
-                                    wire:model="mainCost.{{ $index }}.generalMaterialInputs.{{ $key }}">
+                                    wire:model="mainCost.{{ $index }}.maingeneralMaterialInputs.{{ $key }}">
                             </div>
                             @endif
                         </div>
@@ -290,7 +294,7 @@
                             @if (!empty($mainCost[$index]['showGeneralInputs']) && in_array('paint', $mainCost[$index]['showGeneralInputs']))
                             <div class="mt-1 ms-4 col-4">
                                 <input type="text" class="form-control form-control-sm"
-                                    wire:model="mainCost.{{ $index }}.MainPaintInputs">
+                                    wire:model="mainCost.{{ $index }}.mainPaintInputs">
                             </div>
                             @endif
                         </div>
@@ -307,7 +311,7 @@
                             <div class="mt-1 ms-4 col-4">
                                 <input type="text"
                                     class="form-control form-control-sm"
-                                    wire:model="mainCost.{{ $index }}.mainOracalInputs.{{ $key }}">
+                                    wire:model="mainCost.{{ $index }}.mainoracalInputs.{{ $key }}">
                             </div>
                             @endif
                         </div>
