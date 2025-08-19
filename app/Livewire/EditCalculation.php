@@ -12,15 +12,50 @@ use App\Models\MainCalculation;
 use App\Models\AddCalculation;
 use App\Models\BusinessCalculation;
 use App\Models\OwnershipCalculation;
+use Livewire\WithFileUploads;
 
 class EditCalculation extends Component
 {
+    use WithFileUploads;
+
+    public $edit_job_name, $edit_date, $edit_totalcost, $edit_company_name, $edit_customer_name, $edit_customer_phone_no;
+
+    public $edit_logoText, $edit_characterCount, $edit_baseType, $edit_baseMember, $edit_baseHeight, $edit_baseWidth, $edit_baseCost = 0;
+
+    public $edit_logoHeight, $edit_logoWidth, $edit_logoTotal = 0, $edit_logoStickerHeightWidth, $edit_logooracalHeightWidth, $edit_acrylicCost, $edit_pvcCost;
+    public $edit_stickerCost, $edit_lightingCost, $edit_powerSupplyCost, $edit_paintCost, $edit_generalMaterialCost, $edit_stickerArea, $edit_addwhiteacryliccost, $edit_lightingprice, $edit_orcaleCost;
+
+    public $edit_logoLightingTypes;
+    public $edit_logolightHeightWidth = [], $edit_logoPowerSupply, $edit_logoPowerSupplyQuantity = 0;
+
+    public $edit_logoPcs = 1, $edit_logoPaintHeightWidth, $edit_logoStickerHeight, $edit_logoStickerWidth, $edit_logoLightingWidth, $edit_logoLightingHeight;
+
+    public $edit_logoMaterials = [], $edit_stickerMaterial = [], $edit_generalMaterial = [];
+    public $edit_logoLightingType = [];
+    public $edit_aluminium_channel_border = [];
+
+    public $edit_qt_inv_number, $edit_salesperson, $edit_remark;
+
+    public $edit_image = [];
+    public $editlogocost;
+
+    public $edit_clearacrylic;
+
+
+    // others
+
     public $calculation;
     public $editbaseHeight, $editbaseWidth, $editbasecost;
-    public $editlogoHeight, $editlogoWidth, $editlogocost;
     public $editmainHeight, $editmainWidth, $editmaincost;
     public $editaddHeight, $editaddWidth, $editaddcost;
     public $editbuscost, $editowncost, $edittotalcost;
+
+
+
+
+
+
+
 
     public $editLogos = [];
     public $editMains = [];
@@ -204,6 +239,18 @@ class EditCalculation extends Component
 
         return redirect(Auth::user()->login_type == '1' ? 'dashboard' : 'salesman-data_calculation')
             ->with('message', 'Calculation saved successfully.');
+    }
+
+
+    // Remove specific image
+    public function removeImage($index)
+    {
+        if (isset($this->image[$index])) {
+
+            unset($this->image[$index]);
+
+            $this->image = array_values($this->image);
+        }
     }
 
     public function render()
