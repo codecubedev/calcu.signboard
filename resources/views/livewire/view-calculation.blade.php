@@ -12,7 +12,7 @@
                             placeholder="Job Name">
                     </div>
                     @error('job_name')
-                        <span class="text-danger">{{ $message }}</span>
+                    <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="col-4">
@@ -21,20 +21,20 @@
                         <input type="date" class="form-control form-control-sm" wire:model="date">
                     </div>
                     @error('date')
-                        <span class="text-danger">{{ $message }}</span>
+                    <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="col-4">
                     <div class="mb-3">
                         <label>Salesperson </label>
-                        <select class="form-select form-select-sm" wire:model='salesperson '>
+                        <select class="form-select form-select-sm" wire:model='salesperson'>
                             <option>Select</option>
-                            <option value=""></option>
-                            <option value=""></option>
+                            <option value="Paul">Paul</option>
+                            <option value="Kelly">Kelly</option>
                         </select>
                     </div>
                     @error('salesperson')
-                        <span class="text-danger">{{ $message }}</span>
+                    <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
 
@@ -48,7 +48,7 @@
                         <input type="text" class="form-control form-control-sm" wire:model="company_name">
                     </div>
                     @error('company_name')
-                        <span class="text-danger">{{ $message }}</span>
+                    <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="col-4">
@@ -57,7 +57,7 @@
                         <input type="text" class="form-control form-control-sm" wire:model="customer_name">
                     </div>
                     @error('customer_name')
-                        <span class="text-danger">{{ $message }}</span>
+                    <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
 
@@ -68,41 +68,22 @@
 
                     </div>
                     @error('customer_phone_no')
-                        <span class="text-danger">{{ $message }}</span>
+                    <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
 
             </div>
             <div class="row">
 
+
                 <div class="col-4">
                     <div class="mb-3">
                         <label>QT/Inv Number</label>
-                        <input type="text" class="form-control form-control-sm" wire:model="qt_inv_umber">
+                        <input type="text" class="form-control form-control-sm" wire:model="qt_inv_number">
                     </div>
                     @error('qt_inv_umber')
-                        <span class="text-danger">{{ $message }}</span>
+                    <span class="text-danger">{{ $message }}</span>
                     @enderror
-                </div>
-
-
-                <div class="col-4">
-                    <div class="mb-3">
-                        <label for="baseHeight">Image</label>
-                        <input type="file" class="form-control form-control-sm" wire:model="image">
-                    </div>
-
-                    @error('image')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
-
-                    {{-- Preview after choosing --}}
-                    @if ($image)
-                        <div class="mt-2">
-                            <img src="{{ $image->temporaryUrl() }}" alt="Preview" class="img-fluid rounded border"
-                                style="max-height: 150px;">
-                        </div>
-                    @endif
                 </div>
 
                 <div class="col-4">
@@ -111,12 +92,66 @@
                         <textarea wire:model="remark" rows="2" class="form-control"></textarea>
                     </div>
                     @error('remark')
-                        <span class="text-danger">{{ $message }}</span>
+                    <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
 
             </div>
-            <div class="row">
+
+            <div class="bg-white p-3 my-3">
+
+                <div class="col-4">
+                    <div class="mb-3">
+                        <label for="baseHeight">Upload Images</label>
+                        <input type="file" class="form-control form-control-sm" wire:model="image" multiple>
+                    </div>
+
+                    @error('image')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <!-- Image Preview -->
+                @if($image && count($image) > 0)
+                <h6 class="mt-3">Preview Images</h6>
+                <div class="row g-2">
+                    @foreach ($image as $index => $img)
+                    <div class="col-4 col-md-3 col-lg-2 position-relative">
+
+                        <!-- Delete Button on Top Right -->
+                        <button type="button"
+                            class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle"
+                            wire:click="removeImage({{ $index }})">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-trash">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path
+                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                </path>
+                            </svg>
+                        </button>
+
+                        <!-- Preview Image -->
+                        <img src="{{ $img->temporaryUrl() }}"
+                            alt="Preview"
+                            class="img-fluid rounded border"
+                            style="max-height: 150px; cursor: pointer;"
+                            data-bs-toggle="modal"
+                            data-bs-target="#previewModal"
+                            onclick="showPreview('{{ $img->temporaryUrl() }}')">
+                    </div>
+                    @endforeach
+                </div>
+                @endif
+
+            </div>
+
+
+            {{-- Base Cost --}}
+
+            <div class="row mt-3">
                 <h2>Base Cost :</h2>
                 <div class="col-6">
                     <div class="mb-3">
@@ -190,6 +225,8 @@
                     Save
                 </button>
             </div>
+
+
         </div>
 
         <div class="col-12 mt-2">
@@ -207,8 +244,8 @@
                         <h4>Logo</h4>
 
                         @foreach ($logoCostResults as $label => $cost)
-                            <strong>{{ $label }}: </strong>
-                            <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
+                        <strong>{{ $label }}: </strong>
+                        <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
                         @endforeach
 
                         <strong>Total Logo Cost:</strong>
@@ -218,8 +255,8 @@
                         <h4>Main Cost</h4>
 
                         @foreach ($mainCostResults as $label => $cost)
-                            <strong>{{ $label }}: </strong>
-                            <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
+                        <strong>{{ $label }}: </strong>
+                        <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
                         @endforeach
 
                         <strong>Total Main Cost:</strong>
@@ -229,8 +266,8 @@
                         <h4>Additional Cost </h4>
 
                         @foreach ($addCostResults as $label => $cost)
-                            <strong>{{ $label }}: </strong>
-                            <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
+                        <strong>{{ $label }}: </strong>
+                        <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
                         @endforeach
 
                         <strong>Total Additional Cost:</strong>
@@ -240,8 +277,8 @@
                         <h4>Type of Business</h4>
 
                         @foreach ($busCostResults as $label => $cost)
-                            <strong>{{ $label }}: </strong>
-                            <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
+                        <strong>{{ $label }}: </strong>
+                        <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
                         @endforeach
 
                         <strong>Total Business Cost:</strong>
@@ -251,8 +288,8 @@
                         <h4>Ownership Sticker</h4>
 
                         @foreach ($ownerCostResults as $label => $cost)
-                            <strong>{{ $label }}: </strong>
-                            <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
+                        <strong>{{ $label }}: </strong>
+                        <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
                         @endforeach
 
                         <strong>Total Ownership Sticker Cost:</strong>
@@ -262,36 +299,76 @@
                         <h4>Total Costs</h4>
                         <label class="form-label">Total Cost:</label>
                         <div id="totalCostDisplay" class="alert alert-success">
-                            {{ $logoTotal + $mainTotal + $addTotal + $busTotal + $ownTotal }}</div>
+                            {{ $logoTotal + $mainTotal + $addTotal + $busTotal + $ownTotal }}
+                        </div>
                     </div>
 
                     {{-- <div class="mb-3">
                         <h4>Main</h4>
                         <strong>Main Cost: </strong>
-                        <div class="alert alert-warning">{{ $mainCost ?? 0 }}</div>
-                    </div> --}}
-                    {{-- <div class="mb-3">
+                        <div class="alert alert-warning">{{ $mainCost ?? 0 }}
+                </div>
+            </div> --}}
+            {{-- <div class="mb-3">
                         <h4>Additional</h4>
                         <strong>Additional Cost: </strong>
-                        <div class="alert alert-danger">{{ $addCost ?? 0 }}</div>
-                    </div> --}}
-                    {{-- <div class="mb-3">
+                        <div class="alert alert-danger">{{ $addCost ?? 0 }}
+        </div>
+    </div> --}}
+    {{-- <div class="mb-3">
                         <h4>Type of Business</h4>
                         <strong>Type of Business Cost: </strong>
-                        <div class="alert alert-secondary">{{ $busCost ?? 0 }}</div>
-                    </div> --}}
-                    {{-- <div class="mb-3">
+                        <div class="alert alert-secondary">{{ $busCost ?? 0 }}
+</div>
+</div> --}}
+{{-- <div class="mb-3">
                         <h4>Ownership Sticker</h4>
                         <strong>Ownership Sticker Cost: </strong>
                         <div class="alert alert-info">{{ $ownCost ?? 0 }}</div>
-                    </div> --}}
+</div> --}}
 
 
-                </div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+{{-- image preview --}}
+<div class="modal fade" id="previewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img id="previewImage" src="" class="img-fluid rounded shadow">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
+</div>
+
+
+
+
+
+
+
+
+{{-- Script to preview image --}}
+<script>
+    function showPreview(src) {
+        document.getElementById('previewImage').src = src;
+    }
+</script>
+
+
+
+
+
+
 <script>
     function toggleMainStickerOptions() {
         let mainStickerCheckbox = document.getElementById("mainStickerCheckbox");

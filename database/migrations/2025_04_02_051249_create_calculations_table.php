@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+
         Schema::create('calculations', function (Blueprint $table) {
             $table->id();
             $table->string('job_name')->nullable();
@@ -19,9 +20,9 @@ return new class extends Migration
             $table->string('login_type')->nullable();
             $table->string('customer_name')->nullable();
             $table->string('customer_phone_no')->nullable();
-            $table->string('qt_inv_umber')->nullable();
+            $table->string('qt_inv_number')->nullable();
             $table->string('remark')->nullable();
-            $table->string('image')->nullable();
+            $table->text('image')->nullable();
             $table->string('company_name')->nullable();
             $table->string('total_base_cost')->nullable();
             $table->string('total_logo_cost')->nullable();

@@ -34,8 +34,9 @@ class ViewCalculation extends Component
     public $logoLightingType = [];
     public $aluminium_channel_border = [];
 
-    public $qt_inv_umber, $salesperson, $image, $remark;
+    public $qt_inv_number, $salesperson, $remark;
 
+    public $image = [];
     public $logoCost = [];
 
     public $clearacrylic;
@@ -1245,26 +1246,47 @@ class ViewCalculation extends Component
             'company_name' => 'required',
             'customer_phone_no' => 'required',
             'salesperson' => 'required',
-            'qt_inv_umber' => 'required',
+            'qt_inv_number' => 'required',
             'remark' => 'required',
-            'image' => 'required',
+            'image' => 'required|array',
+            'image.*' => 'image|max:1024',
+
 
 
         ]);
 
-        $imagePath = $this->image ? $this->image->store('uploads', 'public') : null;
+        $imagePath = [];
+        if ($this->image) {
+            foreach ($this->image as $img) {
+                $imagePath[] = $img->store('uploads', 'public');
+            }
+        }
+
+        // $imagePath = $this->image ? $this->image->store('uploads', 'public') : null;
+
+
         $calculation = Calculation::create([
             'job_name' => $this->job_name,
             'date' => $this->date,
-            'sales_man' => Auth::user()->name,
+            // 'sales_man' => Auth::user()->name,
             'login_type' => Auth::user()->login_type,
             'customer_name' => $this->customer_name,
             'company_name' => $this->company_name,
             'customer_phone_no' => $this->customer_phone_no,
             'salesperson' => $this->salesperson,
-            'qt_inv_umber' => $this->qt_inv_umber,
+            'qt_inv_number' => $this->qt_inv_number,
             'remark' => $this->remark,
             'image' => $imagePath,
+            'total_base_cost' => $this->baseCost,
+            'total_logo_cost' => $this->logoTotal,
+            'total_main_cost' => $this->mainTotal,
+            'total_add_cost' => $this->addTotal,
+            'total_business_cost' => $this->busTotal,
+            'total_ownership_cost' => $this->ownTotal,
+            'total_cost' => $this->baseCost + $this->logoTotal + $this->mainTotal + $this->addTotal + $this->busTotal + $this->ownTotal,
+
+
+
 
         ]);
         // dd(Auth::user()->login_type);
@@ -2439,6 +2461,18 @@ class ViewCalculation extends Component
                 [$lightingType]
             );
             unset($this->ownCost[$index]['ownLightingInputs'][$lightingType]);
+        }
+    }
+
+
+    // Remove specific image
+    public function removeImage($index)
+    {
+        if (isset($this->image[$index])) {
+           
+            unset($this->image[$index]);
+
+            $this->image = array_values($this->image);
         }
     }
 
