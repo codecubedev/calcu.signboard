@@ -26,7 +26,7 @@ class ViewCalculation extends Component
 
     public $logoText, $characterCount, $baseType, $baseMember, $baseHeight, $baseWidth, $baseCost = 0;
 
-    public $logoHeight, $logoWidth, $logoTotal = 0, $logoStickerHeightWidth,  $logooracalHeightWidth, $logoAcrylicCost,$logoBlackAcrylicCost $logoPVCCost;
+    public $logoHeight, $logoWidth, $logoTotal = 0, $logoStickerHeightWidth,  $logooracalHeightWidth, $logoAcrylicCost;
     public  $stickerCost, $logoLightingCost, $powerSupplyCost, $paintCost, $generalMaterialCost, $stickerArea, $addwhiteacryliccost, $lightingprice, $orcaleCost;
     public $logolightHeightWidth = [], $logoPowerSupply, $logoPowerSupplyQuantity = 0;
     public $logoPcs = 1, $logoPaintHeightWidth, $logoStickerHeight, $logoStickerWidth, $logoLightingWidth, $logoLightingHeight;

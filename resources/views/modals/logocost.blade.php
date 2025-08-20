@@ -314,11 +314,11 @@
                             @foreach (['frontlit', 'backlit', 'sidelit', 'nolight'] as $type)
                                 <div class="mb-2">
                                     <input type="checkbox" class="form-check-input" value="{{ $type }}"
-                                        wire:model="logoCost.{{ $index }}.logolightingtype"
+                                        wire:model="logoCost.{{ $index }}.lightingtype"
                                     wire:change="toggleLightingInput({{ $index }}, '{{ $val }}')">
                                     <label>{{ ucfirst($type) }}</label>
 
-                                    @if (in_array($type, $logoCost[$index]['logolightingtype'] ?? []))
+                                    @if (in_array($type, $logoCost[$index]['lightingtype'] ?? []))
                                     <div class="mt-1 ms-4 col-4">
                                         <input type="text" class="form-control mt-1"
                                             wire:model="logoCost.{{ $index }}.logoLightingCost">
