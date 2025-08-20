@@ -11,6 +11,11 @@
             <h5 class="mb-0">Logo Cost {{ $index + 1 }}</h5>
             <button class="btn btn-sm btn-danger" wire:click="removeForm({{ $index }})">Remove</button>
         </div>
+
+
+
+
+
         <div class="card-body">
             <div class="row">
 
@@ -46,6 +51,9 @@
             <div class="col-12">
                 <h5> Raw Materials</h5>
                 <div class="row">
+
+
+
                     <div class="col-md-3">
                         <strong>Clear Acrylic</strong>
 
@@ -55,21 +63,28 @@
                                 wire:model="editLogos.{{ $index }}.materials"
                                 wire:change="toggleAcrylicInput({{ $index }}, {{ $size }})"
                                 value="acrylic{{ $size }}mm">
+
                             <label>Acrylic {{ $size }}MM</label>
 
-                            @if (!empty($logoCost[$index]['showAcrylicInput']) && $logoCost[$index]['showAcrylicInput'] == $size)
+                            @if(
+                            ($editLogos[$index]['showAcrylicInput'] ?? null) === $size
+                            || !empty($editLogos[$index]['acrylic_cost']) && in_array("acrylic{$size}mm", (array)($editLogos[$index]['materials'] ?? []))
+                            )
                             <div class="col-4">
                                 <div class="mt-1 ms-4">
-                                    <input type="text" class="form-control form-control-sm"
-                                        wire:model="editLogos.{{ $index }}.acrylic_cost">
+                                    <input type="text"
+                                        class="form-control form-control-sm"
+                                        wire:model="editLogos.{{ $index }}.acrylic_cost.{{ $size }}">
                                 </div>
                             </div>
                             @endif
-
-
                         </div>
                         @endforeach
+
                     </div>
+
+
+
 
 
                     <div class="col-md-3">
@@ -95,6 +110,8 @@
                         </div>
                         @endforeach
                     </div>
+
+
                     <div class="col-md-3">
                         <strong>PVC</strong>
 
@@ -111,7 +128,7 @@
 
                                 <div class="mt-1 ms-4">
                                     <input type="text" class="form-control form-control-sm"
-                                        wire:model="logoCost.{{ $index }}.pvcInputs">
+                                        wire:model="logoCost.{{ $index }}.pvcInputs.{{ $size }}">
                                 </div>
                             </div>
                             @endif

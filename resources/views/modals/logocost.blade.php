@@ -319,7 +319,7 @@
                                     <label>{{ ucfirst($type) }}</label>
 
                                     @if (in_array($type, $logoCost[$index]['lightingtype'] ?? []))
-                                    <div class="mt-1 ms-4 col-4">
+                                    <div class="mt-1 ms-4 col-4">D
                                         <input type="text" class="form-control mt-1"
                                             wire:model="logoCost.{{ $index }}.logoLightingCost">
                                     </div>
