@@ -23,16 +23,16 @@ class ViewCalculation extends Component
     use WithFileUploads;
 
     public $job_name, $date, $sales_man, $totalcost, $company_name, $customer_name, $customer_phone_no;
-    
+
     public $logoText, $characterCount, $baseType, $baseMember, $baseHeight, $baseWidth, $baseCost = 0;
 
-    public $logoHeight, $logoWidth, $logoTotal = 0, $logoStickerHeightWidth,  $logooracalHeightWidth, $acrylicCost, $pvcCost;
-    public  $stickerCost, $lightingCost, $powerSupplyCost, $paintCost, $generalMaterialCost, $stickerArea, $addwhiteacryliccost, $lightingprice, $orcaleCost;
-    public $logoLightingTypes;
+    public $logoHeight, $logoWidth, $logoTotal = 0, $logoStickerHeightWidth,  $logooracalHeightWidth, $logoAcrylicCost,$logoBlackAcrylicCost $logoPVCCost;
+    public  $stickerCost, $logoLightingCost, $powerSupplyCost, $paintCost, $generalMaterialCost, $stickerArea, $addwhiteacryliccost, $lightingprice, $orcaleCost;
     public $logolightHeightWidth = [], $logoPowerSupply, $logoPowerSupplyQuantity = 0;
     public $logoPcs = 1, $logoPaintHeightWidth, $logoStickerHeight, $logoStickerWidth, $logoLightingWidth, $logoLightingHeight;
     public $logoMaterials = [], $stickerMaterial = [], $generalMaterial = [];
-    public $logoLightingType = [];
+
+     public $logoLightingType = [];
     public $aluminium_channel_border = [];
 
     public $qt_inv_number, $salesperson, $remark;
@@ -42,10 +42,10 @@ class ViewCalculation extends Component
 
     public $clearacrylic;
 
+    //main
 
     public $mainText = '', $mainHeight, $mainTotal = 0, $mainWidth, $mainStickerHeightWidth, $mainoracalHeightWidth, $mainacrylicCost, $mainpvcCost;
     public  $mainstickerCost, $mainlightingCost, $mainpowerSupplyCost, $mainpaintCost, $maingeneralMaterialCost, $mainlightingprice, $mainorcaleCost;
-    //main
 
     public $mainLightingTypes;
     public $mainlightHeightWidth, $mainPowerSupply, $mainPowerSupplyQuantity = 0;
@@ -806,17 +806,53 @@ class ViewCalculation extends Component
             'characterCount' => 0,
             'logoHeight' => '',
             'logoWidth' => '',
+
+            // Materials
             'logoMaterials' => [],
-            'NeonmaterialInputs' => [],
-            'stickerMaterial' => [],
+            'acrylicInput' => 0,
+            'blackAcrylicInputs' => 0,
+            'pvcInputs' => 0,
+            'stainlessteelsilverInputs' => 0,
+            'stainlessteelgoldInputs' => 0,
+            'NeonmaterialInputs' => 0,
+
+            // Sticker
             'logoStickerHeightWidth' => false,
+            'stickerMaterial' => [],
+            'stickermaterialInputs' => 0,
+            'logoStickerCost' => 0,
+
+            // General
             'generalMaterial' => [],
+            'generalMaterialInput' => 0,
+            'logoGeneralMaterialCost' => 0,
+
+            // Others
             'logoPaintHeightWidth' => false,
+            'logoPaintInputs' => null,
+            'logoPaintCost' => 0,
             'logooracalHeightWidth' => false,
+            'logoOracalInputs' => null,
+            'logoOracalCost' => 0,
+
+            // Lighting
             'logolightHeightWidth' => false,
-            'logoLightingType' => [],
+            'lightingtype' => [],   // ✅ consistent with Blade
+            'logoLightingDetails' => 0,
+            'logoLightingCost' => 0,
+            'logoLightingPrice' => 0,
+
+            // Power
             'logoPowerSupply' => '400W',
             'logoPowerSupplyQuantity' => 0,
+            'logoPowerSupplyCost' => 0,
+
+            // Cost fields
+            'logoAcrylicCost' => 0,
+            'logoPVCCost' => 0,
+
+            // Final
+            'total_logo_cost' => 0,
         ];
     }
 
@@ -1303,37 +1339,47 @@ class ViewCalculation extends Component
                 'total_base_cost' => $this->baseCost,
             ]);
         }
-
         foreach ($this->logoCost as $index => $logo) {
             LogoCalculation::create([
                 'calculation_id' => $calculation->id,
                 'logo_order' => $index + 1,
                 'logo_text' => $logo['logoText'] ?? '',
-                'logo_height' => $logo['logoHeight'] ?? 0,
-                'logo_width' => $logo['logoWidth'] ?? 0,
-                'logo_materials' => implode(',', $logo['logoMaterials'] ?? []),
-                'logo_sticker_height_width' => $logo['logoStickerHeightWidth'] ? 'yes' : null,
-                'logo_sticker_material' => implode(',', $logo['stickerMaterial'] ?? []),
-                'logo_general_material' => implode(',', $logo['generalMaterial'] ?? []),
-                'logo_paint_height_width' => $logo['logoPaintHeightWidth'] ? 'yes' : null,
-                'logo_oracal_height_width' => $logo['logooracalHeightWidth'] ? 'yes' : null,
-                'logo_light_height_width' => $logo['logolightHeightWidth'] ? 'yes' : null,
-                'logo_lighting_type' => implode(',', $logo['lightingtype'] ?? []),
-                'logo_power_supply' => $logo['logoPowerSupply'],
-                'logo_power_supply_quantity' => $logo['logoPowerSupplyQuantity'],
-                'logo_acrylic_cost' => $logo['logoAcrylicCost'] ?? 0,
-                'logo_pvc_cost' => $logo['logoPVCCost'] ?? 0,
-                'logo_sticker_cost' => $logo['logoStickerCost'] ?? 0,
-                'logo_lighting_cost' => $logo['logoLightingCost'] ?? 0,
-                'logo_power_supply_cost' => $logo['logoPowerSupplyCost'] ?? 0,
-                'logo_paint_cost' => $logo['logoPaintCost'] ?? 0,
-                'logo_general_material_cost' => $logo['logoGeneralMaterialCost'] ?? 0,
-                'logo_lighting_price' => $logo['logoLightingPrice'] ?? 0,
-                'logo_oracal_cost' => $logo['logoOracalCost'] ?? 0,
 
-                'total_logo_cost' => $this->logoCostResults["LogoCost " . ($index + 1)] ?? 0,
+                // Numeric fields (cast to float or int)
+                'logo_height' => (float) ($logo['logoHeight'] ?? 0),
+                'logo_width'  => (float) ($logo['logoWidth'] ?? 0),
+
+                'logo_power_supply_quantity' => (int) ($logo['logoPowerSupplyQuantity'] ?? 0),
+
+                'logo_acrylic_cost'          => (float) ($logo['logoAcrylicCost'] ?? 0),
+                'logo_black_acrylic_cost'          => (float) ($logo['logoBlackAcrylicCost'] ?? 0),
+                'logo_pvc_cost'              => (float) ($logo['logoPVCCost'] ?? 0),
+                'logo_stainless_steel_cost' => (float) ($logo['logoStainlessSteelCost'] ?? 0),
+                'logo_stainless_gold_cost' => (float) ($logo['logoStainlessGoldCost'] ?? 0),
+                'logo_neon_cost' => (float) ($logo['logoNeonCost'] ?? 0),
+                'logo_sticker_cost'          => (float) ($logo['logoStickerCost'] ?? 0),
+                'logo_lighting_cost'         => (float) ($logo['logoLightingCost'] ?? 0),
+                'logo_power_supply_cost'     => (float) ($logo['logoPowerSupplyCost'] ?? 0),
+                'logo_paint_cost'            => (float) ($logo['logoPaintCost'] ?? 0),
+                'logo_general_material_cost' => (float) ($logo['logoGeneralMaterialCost'] ?? 0),
+                'logo_lighting_price'        => (float) ($logo['logoLightingPrice'] ?? 0),
+                'logo_oracal_cost'           => (float) ($logo['logoOracalCost'] ?? 0),
+                'total_logo_cost'            => (float) ($this->logoCostResults["LogoCost " . ($index + 1)] ?? 0),
+
+                // String / text fields
+                'logo_materials'            => !empty($logo['logoMaterials']) ? implode(',', $logo['logoMaterials']) : null,
+                'logo_sticker_height_width' => !empty($logo['logoStickerHeightWidth']) ? 'yes' : null,
+                'logo_sticker_material'     => !empty($logo['stickerMaterial']) ? implode(',', $logo['stickerMaterial']) : null,
+                'logo_general_material'     => !empty($logo['generalMaterial']) ? implode(',', $logo['generalMaterial']) : null,
+                'logo_paint_height_width'   => !empty($logo['logoPaintHeightWidth']) ? 'yes' : null,
+                'logo_oracal_height_width'  => !empty($logo['logooracalHeightWidth']) ? 'yes' : null,
+                'logo_light_height_width'   => !empty($logo['logolightHeightWidth']) ? 'yes' : null,
+                'logo_lighting_type'        => !empty($logo['lightingtype']) ? implode(',', $logo['lightingtype']) : null,
+                'logo_power_supply'         => $logo['logoPowerSupply'] ?? null,
             ]);
         }
+
+
 
 
         // Save Main
@@ -1406,8 +1452,12 @@ class ViewCalculation extends Component
                 'calculation_id' => $calculation->id,
                 'business_order' => $index + 1,
                 'business_text' => $bus['busText'] ?? '',
-                'business_height' => $bus['busHeight'] ?? 0,
-                'business_width' => $bus['busWidth'] ?? 0,
+                // 'business_height' => $bus['busHeight'] ?? 0,
+                // 'business_width' => $bus['busWidth'] ?? 0,
+
+                'business_height' => !empty($bus['businessHeight']) ? (float) $bus['businessHeight'] : 0,
+                'business_width' => !empty($bus['businessWidth']) ? (float) $bus['businessWidth'] : 0,
+
                 'business_materials' => implode(',', $bus['busMaterials'] ?? []),
                 'business_sticker_height_width' => $bus['busStickerHeightWidth'] ? 'yes' : null,
                 'business_sticker_material' => implode(',', $bus['stickerMaterial'] ?? []),
@@ -2470,7 +2520,7 @@ class ViewCalculation extends Component
     public function removeImage($index)
     {
         if (isset($this->image[$index])) {
-           
+
             unset($this->image[$index]);
 
             $this->image = array_values($this->image);

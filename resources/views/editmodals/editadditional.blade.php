@@ -5,7 +5,7 @@
         <button wire:click="additionalForm" class="btn btn-primary">Update</button>
     </div>
 
-    @foreach ($addCost as $index => $form)
+    @foreach ($editAdditionals as $index => $form)
     <div class="border p-3 mb-4 rounded">
         <div class="d-flex justify-content-between">
             <h4>Additional Cost {{ $index + 1 }}</h4>
@@ -16,23 +16,23 @@
             <div class="col-6 mb-3">
                 <label>Additional Text</label>
                 <input type="text" class="form-control form-control-sm logo-text-input"
-                    wire:model="addCost.{{ $index }}.addText" data-index="{{ $index }}">
+                    wire:model="editaddcost.{{ $index }}.edit_addText" data-index="{{ $index }}">
             </div>
             <div class="col-6 mb-3">
                 <label>Character Count</label>
                 <input type="text" class="form-control form-control-sm" readonly
-                    id="char-count-{{ $index }}" value="{{ $addCost[$index]['characterCount'] ?? '' }}">
+                    id="char-count-{{ $index }}" value="{{ $editaddcost[$index]['characterCount'] ?? '' }}">
             </div>
 
             <div class="col-6 mb-3">
                 <label>Additional Height (inches)</label>
                 <input type="text" class="form-control form-control-sm"
-                    wire:model="addCost.{{ $index }}.addHeight">
+                    wire:model="editaddcost.{{ $index }}.edit_addHeight">
             </div>
             <div class="col-6 mb-3">
                 <label>Additional Width (inches)</label>
                 <input type="text" class="form-control form-control-sm"
-                    wire:model="addCost.{{ $index }}.addWidth">
+                    wire:model="editaddcost.{{ $index }}.edit_addWidth">
             </div>
 
             <div class="col-12">
@@ -44,15 +44,15 @@
                         @foreach ([3, 5, 10, 15, 20, 25] as $size)
                         <div>
                             <input type="checkbox" class="form-check-input"
-                                wire:model="addCost.{{ $index }}.addMaterials"
+                                wire:model="editaddcost.{{ $index }}.edit_addMaterials"
                                 wire:change="toggleAddAcrylicInput({{ $index }}, {{ $size }})"
                                 value="acrylic{{ $size }}mm">
                             <label>Acrylic {{ $size }}MM</label>
-                            @if (!empty($addCost[$index]['showAcrylicInput']) && $addCost[$index]['showAcrylicInput'] == $size)
+                            @if (!empty($editaddcost[$index]['showAcrylicInput']) && $editaddcost[$index]['showAcrylicInput'] == $size)
                             <div class="col-4">
                                 <div class="mt-1 ms-4">
                                     <input type="text"
-                                        class="form-control form-control-sm" wire:model="addCost.{{ $index }}.addacrylicInput">
+                                        class="form-control form-control-sm" wire:model="editaddcost.{{ $index }}.edit_addacrylicInput">
                                 </div>
                             </div>
                             @endif
@@ -66,17 +66,17 @@
                         @foreach ([3, 5, 10, 15, 20, 25] as $size)
                         <div>
                             <input type="checkbox" class="form-check-input"
-                                wire:model="addCost.{{ $index }}.addMaterials"
+                                wire:model="editaddcost.{{ $index }}.edit_addMaterials"
                                 wire:change="toggleAddBlackAcrylicInput({{ $index }}, {{ $size }})"
                                 value="black_acrylic{{ $size }}mm">
                             <label>Black Acrylic {{ $size }}MM</label>
 
-                            @if (!empty($addCost[$index]['showBlackAcrylicInput']) && in_array($size, $addCost[$index]['showBlackAcrylicInput']))
+                            @if (!empty($editaddcost[$index]['showBlackAcrylicInput']) && in_array($size, $editaddcost[$index]['showBlackAcrylicInput']))
                             <div class="col-4">
                                 <div class="mt-1 ms-4">
                                     <input type="text"
                                         class="form-control form-control-sm"
-                                        wire:model="addCost.{{ $index }}.addblackAcrylicInputs">
+                                        wire:model="editaddcost.{{ $index }}.edit_addblackAcrylicInputs">
                                 </div>
                             </div>
                             @endif
@@ -90,16 +90,16 @@
                         @foreach ([3, 5, 10, 15, 20, 25] as $size)
                         <div>
                             <input type="checkbox" class="form-check-input"
-                                wire:model="addCost.{{ $index }}.addMaterials"
+                                wire:model="editaddcost.{{ $index }}.edit_addMaterials"
                                 wire:change="toggleAddPVCInput({{ $index }}, {{ $size }})"
                                 value="pvc{{ $size }}mm">
                             <label>PVC {{ $size }}MM</label>
-                            @if (!empty($addCost[$index]['showPVCInput']) && in_array($size, $addCost[$index]['showPVCInput']))
+                            @if (!empty($editaddcost[$index]['showPVCInput']) && in_array($size, $editaddcost[$index]['showPVCInput']))
                             <div class="col-4">
 
                                 <div class="mt-1 ms-4">
                                     <input type="text" class="form-control form-control-sm"
-                                        wire:model="addCost.{{ $index }}.addpvcInputs">
+                                        wire:model="editaddcost.{{ $index }}.edit_addpvcInputs">
                                 </div>
                             </div>
                             @endif
@@ -120,17 +120,17 @@
                         ] as $key => $label)
                         <div class="form-check mb-1">
                             <input type="checkbox" class="form-check-input"
-                                wire:model="addCost.{{ $index }}.addMaterials"
+                                wire:model="editaddcost.{{ $index }}.edit_addMaterials"
                                 wire:change="toggleAddStainlessSteelInput
                                                     ({{ $index }}, '{{ $key }}')"
                                 value="{{ $key }}">
                             <label class="form-check-label">{{ $label }}</label>
 
-                            @if (!empty($addCost[$index]['showInputs']) && in_array($key, $addCost[$index]['showInputs']))
+                            @if (!empty($editaddcost[$index]['showInputs']) && in_array($key, $editaddcost[$index]['showInputs']))
                             <div class="mt-1 ms-4">
                                 <div class="col-4">
                                     <input type="text" class="form-control form-control-sm"
-                                        wire:model="addCost.{{ $index }}.addstainlessteelsilverInputs">
+                                        wire:model="editaddcost.{{ $index }}.edit_addstainlessteelsilverInputs">
                                 </div>
                             </div>
                             @endif
@@ -153,16 +153,16 @@
                         ] as $key => $label)
                         <div class="form-check mb-1">
                             <input type="checkbox" class="form-check-input"
-                                wire:model="addCost.{{ $index }}.addMaterials"
+                                wire:model="editaddcost.{{ $index }}.edit_addMaterials"
                                 wire:change="toggleAddStainlessgoldInput({{ $index }}, '{{ $key }}')"
                                 value="{{ $key }}">
                             <label class="form-check-label">{{ $label }}</label>
 
-                            @if (isset($addCost[$index]['showInputs']) && in_array($key, $addCost[$index]['showInputs']))
+                            @if (isset($editaddcost[$index]['showInputs']) && in_array($key, $editaddcost[$index]['showInputs']))
                             <div class="mt-1 ms-4">
                                 <div class="col-4">
                                     <input type="text" class="form-control form-control-sm"
-                                        wire:model="addCost.{{ $index }}.addstainlessteelgoldInputs">
+                                        wire:model="editaddcost.{{ $index }}.edit_addstainlessteelgoldInputs">
 
                                 </div>
 
@@ -180,15 +180,15 @@
                         ] as $key => $label)
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input"
-                                wire:model="addCost.{{ $index }}.addMaterials"
+                                wire:model="editaddcost.{{ $index }}.edit_addMaterials"
                                 wire:change="toggleAddNeonInput({{ $index }}, '{{ $key }}')"
                                 value="{{ $key }}">
                             <label class="form-check-label">{{ $label }}</label>
-                            @if (!empty($addCost[$index]['showInputs']) && in_array($key, $addCost[$index]['showInputs']))
+                            @if (!empty($editaddcost[$index]['showInputs']) && in_array($key, $editaddcost[$index]['showInputs']))
                             <div class="mt-1 ms-4">
                                 <div class="col-4">
                                     <input type="text" class="form-control form-control-sm"
-                                        wire:model="addCost.{{ $index }}.addneonmaterialInputs">
+                                        wire:model="editaddcost.{{ $index }}.edit_addneonmaterialInputs">
                                 </div>
                             </div>
                             @endif
@@ -196,11 +196,11 @@
                         @endforeach
                     </div>
 
-                    <div class="col-md-3" x-data="{ enabled: @entangle('addCost.' . $index . '.addStickerHeightWidth') }">
+                    <div class="col-md-3" x-data="{ enabled: @entangle('editaddcost.' . $index . '.addStickerHeightWidth') }">
                         <strong>Sticker</strong>
                         <div>
                             <input type="checkbox" class="form-check-input" x-model="enabled"
-                                wire:model="addCost.{{ $index }}.addStickerHeightWidth">
+                                wire:model="editaddcost.{{ $index }}.edit_addStickerHeightWidth">
                             <label>Sticker</label>
                         </div>
 
@@ -220,16 +220,16 @@
                         @foreach ($stickers as $val => $label)
                         <div>
                             <input type="checkbox" class="form-check-input"
-                                wire:model="addCost.{{ $index }}.stickerMaterial"
+                                wire:model="editaddcost.{{ $index }}.edit_stickerMaterial"
                                 wire:change="toggleAddStickerInput({{ $index }}, '{{ $val }}')"
                                 value="{{ $val }}" :disabled="!enabled">
                             <label>{{ $label }}</label>
 
 
-                            @if (!empty($addCost[$index]['showInputs']) && in_array($val, $addCost[$index]['showInputs']))
+                            @if (!empty($editaddcost[$index]['showInputs']) && in_array($val, $editaddcost[$index]['showInputs']))
                             <div class="mt-1 ms-4 col-4">
                                 <input type="text" class="form-control form-control-sm"
-                                    wire:model="addCost.{{ $index }}.stickermaterialInputs">
+                                    wire:model="editaddcost.{{ $index }}.edit_stickermaterialInputs">
                             </div>
                             @endif
                         </div>
@@ -250,60 +250,60 @@
                         ] as $key => $label)
                         <div>
                             <input type="checkbox" class="form-check-input"
-                                wire:model="addCost.{{ $index }}.generalMaterial"
+                                wire:model="editaddcost.{{ $index }}.edit_generalMaterial"
                                 wire:change="toggleAddGeneralMaterialInput({{ $index }}, '{{ $key }}')"
                                 value="{{ $key }}">
                             <label>{{ $label }}</label>
 
-                            @if (!empty($addCost[$index]['showGeneralInputs']) && in_array($key, $addCost[$index]['showGeneralInputs']))
+                            @if (!empty($editaddcost[$index]['showGeneralInputs']) && in_array($key, $editaddcost[$index]['showGeneralInputs']))
                             <div class="mt-1 ms-4 col-4">
                                 <input type="text" class="form-control form-control-sm"
-                                    wire:model="addCost.{{ $index }}.addgeneralMaterialInput">
+                                    wire:model="editaddcost.{{ $index }}.edit_addgeneralMaterialInput">
                             </div>
                             @endif
                         </div>
                         @endforeach
                     </div>
 
-                    
+
                     <div class="col-md-4">
                         <strong>Others</strong>
-                       
-                       
+
+
                         <div>
                             <input type="checkbox" class="form-check-input"
-                                wire:model="addCost.{{ $index }}.addPaintHeightWidth"
+                                wire:model="editaddcost.{{ $index }}.edit_addPaintHeightWidth"
                                 wire:change="toggleAddPaintInput({{ $index }}, 'paint')"
                                 value="{{ $key }}">
                             <label>Paint</label>
 
-                            @if (!empty($addCost[$index]['showGeneralInputs']) && in_array('paint', $addCost[$index]['showGeneralInputs']))
+                            @if (!empty($editaddcost[$index]['showGeneralInputs']) && in_array('paint', $editaddcost[$index]['showGeneralInputs']))
                             <div class="mt-1 ms-4 col-4">
                                 <input type="text" class="form-control form-control-sm"
-                                    wire:model="addCost.{{ $index }}.addpaintInputs">
+                                    wire:model="editaddcost.{{ $index }}.edit_addpaintInputs">
                             </div>
                             @endif
                         </div>
 
                         <div>
                             <input type="checkbox" class="form-check-input"
-                                wire:model="addCost.{{ $index }}.addOracalHeightWidth.{{ $key }}"
+                                wire:model="editaddcost.{{ $index }}.edit_addOracalHeightWidth.{{ $key }}"
                                 wire:change="toggleAddOrcalMaterialInput({{ $index }}, '{{ $key }}')"
                                 value="{{ $key }}">
                             <label>Oracal</label>
 
-                            @if (!empty($addCost[$index]['showGeneralInputs']) && in_array($key, $addCost[$index]['showGeneralInputs']))
+                            @if (!empty($editaddcost[$index]['showGeneralInputs']) && in_array($key, $editaddcost[$index]['showGeneralInputs']))
                             <div class="mt-1 ms-4 col-4">
                                 <input type="text"
                                     class="form-control form-control-sm"
-                                    wire:model="addCost.{{ $index }}.addoracalInputs">
+                                    wire:model="editaddcost.{{ $index }}.edit_addoracalInputs">
                             </div>
                             @endif
                         </div>
 
                         <div>
                             <input type="checkbox" class="form-check-input"
-                                wire:model.defer="addCost.{{ $index }}.addlightHeightWidth"
+                                wire:model.defer="editaddcost.{{ $index }}.edit_addlightHeightWidth"
                                 wire:change="$refresh">
                             <label>Lighting</label>
 
@@ -313,25 +313,24 @@
             </div>
             <hr>
 
-
-            @if ($form['addlightHeightWidth'])
+            @if (!empty($form['edit_addlightHeightWidth']))
             <div class="row mt-3">
                 <div class="col-4">
                     <label>Lighting Type</label>
                     @foreach (['frontlit', 'backlit', 'sidelit', 'nolight'] as $type)
                     <div>
                         <input type="checkbox" class="form-check-input"
-                            wire:model="addCost.{{ $index }}.addLightingType"
+                            wire:model="editaddcost.{{ $index }}.edit_addLightingType"
                             wire:click="addcheckpowersupply({{ $index }})"
                             wire:change="toggleAddLightingInput({{ $index }}, '{{ $type }}')"
                             value="{{ $type }}">
                         <label>{{ ucfirst($type) }}</label>
 
-                        @if (!empty($addCost[$index]['showLightingInputs']) && in_array($type, $addCost[$index]['showLightingInputs']))
+                        @if (!empty($editaddcost[$index]['showLightingInputs']) && in_array($type, $editaddcost[$index]['showLightingInputs']))
                         <div class="mt-1 ms-4 col-4">
                             <input type="text"
                                 class="form-control form-control-sm"
-                                wire:model="addCost.{{ $index }}.addLightingDetails">
+                                wire:model="editaddcost.{{ $index }}.edit_addLightingDetails">
                         </div>
                         @endif
                     </div>
@@ -339,7 +338,7 @@
                 </div>
                 <div class="col-4">
                     <label>Power Supply</label>
-                    <select class="form-select" wire:model="addCost.{{ $index }}.addPowerSupply">
+                    <select class="form-select" wire:model="editaddcost.{{ $index }}.edit_addPowerSupply">
                         {{-- <option value="None">None</option>
                                 <option value="120W">120W</option>
                                 <option value="200W">200W</option> --}}
@@ -349,7 +348,7 @@
                 <div class="col-4">
                     <label>Power Supply Quantity</label>
                     <input type="number" min="0" class="form-control form-control-sm"
-                        wire:model="addCost.{{ $index }}.addPowerSupplyQuantity" readonly
+                        wire:model="editaddcost.{{ $index }}.edit_addPowerSupplyQuantity" readonly
                         style="font-weight: bold; background-color: #f0f0f0; color: #000;">
                 </div>
             </div>

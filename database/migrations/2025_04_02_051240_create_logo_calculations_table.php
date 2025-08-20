@@ -21,6 +21,7 @@ return new class extends Migration
 
             $table->text('logo_materials')->nullable();
             $table->string('logo_sticker_height_width')->nullable();
+
             $table->text('logo_sticker_material')->nullable();
             $table->text('logo_general_material')->nullable();
             $table->string('logo_paint_height_width')->nullable();
@@ -32,15 +33,18 @@ return new class extends Migration
 
             // Individual cost breakdowns
             $table->decimal('logo_acrylic_cost', 10, 2)->nullable();
+            $table->decimal('logo_black_acrylic_cost', 10, 2)->nullable();
             $table->decimal('logo_pvc_cost', 10, 2)->nullable();
+            $table->decimal('logo_stainless_steel_cost', 10, 2)->nullable();
+            $table->decimal('logo_stainless_gold_cost', 10, 2)->nullable();
+            $table->decimal('logo_neon_cost', 10, 2)->nullable();
             $table->decimal('logo_sticker_cost', 10, 2)->nullable();
+            $table->decimal('logo_general_material_cost', 10, 2)->nullable();
+            $table->decimal('logo_paint_cost', 10, 2)->nullable();
+            $table->decimal('logo_oracal_cost', 10, 2)->nullable();
             $table->decimal('logo_lighting_cost', 10, 2)->nullable();
             $table->decimal('logo_power_supply_cost', 10, 2)->nullable();
-            $table->decimal('logo_paint_cost', 10, 2)->nullable();
-            $table->decimal('logo_general_material_cost', 10, 2)->nullable();
             $table->decimal('logo_lighting_price', 10, 2)->nullable();
-            $table->decimal('logo_oracal_cost', 10, 2)->nullable();
-
             $table->decimal('total_logo_cost', 12, 2)->nullable();
 
             $table->timestamps();

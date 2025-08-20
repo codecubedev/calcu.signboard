@@ -1,5 +1,6 @@
-
 <div>
+
+
 
     <div class="mt-3">
         <div class="p-4">
@@ -9,13 +10,16 @@
                 <div class="col-4">
                     <div class="mb-3">
                         <label>Job Name</label>
-                        <input type="text" class="form-control form-control-sm" wire:model="edit_job_name"
-                            placeholder="Job Name">
+                        <input type="text" class="form-control form-control-sm" wire:model="edit_job_name">
                     </div>
                     @error('job_name')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
+
+
+
+
                 <div class="col-4">
                     <div class="mb-3">
                         <label>Date</label>
@@ -113,12 +117,14 @@
                 </div>
 
                 <!-- Image Preview -->
-                @if($edit_image && count($edit_image) > 0)
+                <!-- Image Preview -->
+                @if(!empty($edit_image) && count($edit_image) > 0)
                 <h6 class="mt-3">Preview Images</h6>
                 <div class="row g-2">
                     @foreach ($edit_image as $index => $img)
                     <div class="col-4 col-md-3 col-lg-2 position-relative">
 
+                        <!-- Remove Button -->
                         <button type="button"
                             class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle"
                             wire:click="removeImage({{ $index }})">
@@ -133,6 +139,9 @@
                             </svg>
                         </button>
 
+                        <!-- Preview -->
+                        @if(is_object($img) && method_exists($img, 'temporaryUrl'))
+                        {{-- New uploaded image --}}
                         <img src="{{ $img->temporaryUrl() }}"
                             alt="Preview"
                             class="img-fluid rounded border"
@@ -140,192 +149,203 @@
                             data-bs-toggle="modal"
                             data-bs-target="#previewModal"
                             onclick="showPreview('{{ $img->temporaryUrl() }}')">
+                        @elseif(is_string($img))
+                        {{-- Existing DB image --}}
+                        <img src="{{ Storage::url($img) }}"
+                            alt="Preview"
+                            class="img-fluid rounded border"
+                            style="max-height: 150px; cursor: pointer;"
+                            data-bs-toggle="modal"
+                            data-bs-target="#previewModal"
+                            onclick="showPreview('{{ Storage::url($img) }}')">
+                        @endif
                     </div>
                     @endforeach
                 </div>
                 @endif
 
-            </div>
 
 
-            {{-- Base Cost --}}
+                {{-- Base Cost --}}
 
-            <div class="row mt-3">
-                <h2>Base Cost :</h2>
-                <div class="col-6">
-                    <div class="mb-3">
-                        <label for="baseType">Choose Base</label>
-                        <select class="form-select" id="baseType" wire:model="edit_baseType">
-                            <option value="">Select Base</option>
-                            <option value="Aluminium Strip - Vertical">Aluminium Strip - Vertical</option>
-                            <option value="Aluminium Strip - Vertical Woodgrain">Aluminium Strip - Vertical Woodgrain
-                            </option>
-                            <option value="Aluminium Strip - Horizontal">Aluminium Strip - Horizontal</option>
-                            <option value="colorbond">Colorbond</option>
-                            <option value="Alu Coil + Iron Frame + Tarpaulin (No UV Print)">Alu Coil + Iron Frame +
-                                Tarpaulin (No UV Print)</option>
-                            <option value="Alu Coil + Iron Frame + Tarpaulin (With UV Print)">Alu Coil + Iron Frame +
-                                Tarpaulin (With UV Print)</option>
-                            <option value="Lightbox">Lightbox</option>
-                            <option value="Double Sided Lightbox">Double Sided Lightbox</option>
-                        </select>
+                <div class="row mt-3">
+                    <h2>Base Cost :</h2>
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="baseType">Choose Base</label>
+                            <select class="form-select" id="baseType" wire:model="edit_baseType">
+                                <option value="">Select Base</option>
+                                <option value="Aluminium Strip - Vertical">Aluminium Strip - Vertical</option>
+                                <option value="Aluminium Strip - Vertical Woodgrain">Aluminium Strip - Vertical Woodgrain
+                                </option>
+                                <option value="Aluminium Strip - Horizontal">Aluminium Strip - Horizontal</option>
+                                <option value="colorbond">Colorbond</option>
+                                <option value="Alu Coil + Iron Frame + Tarpaulin (No UV Print)">Alu Coil + Iron Frame +
+                                    Tarpaulin (No UV Print)</option>
+                                <option value="Alu Coil + Iron Frame + Tarpaulin (With UV Print)">Alu Coil + Iron Frame +
+                                    Tarpaulin (With UV Print)</option>
+                                <option value="Lightbox">Lightbox</option>
+                                <option value="Double Sided Lightbox">Double Sided Lightbox</option>
+                            </select>
+                        </div>
+
                     </div>
-
-                </div>
-                <div class="col-6">
-                    <div class="mb-3">
-                        <label for="baseMember">Member</label>
-                        <select class="form-select" id="baseMember" wire:model="edit_baseMember">
-                            <option value="">Select Member</option>
-                            <option value="Agent">Agent</option>
-                            <option value="User">User</option>
-                        </select>
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="baseMember">Member</label>
+                            <select class="form-select" id="baseMember" wire:model="edit_baseMember">
+                                <option value="">Select Member</option>
+                                <option value="Agent">Agent</option>
+                                <option value="User">User</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="col-6">
-                    <div class="mb-3">
-                        <label for="baseHeight">Base Height (inches)</label>
-                        <input type="number" class="form-control form-control-sm" id="baseHeight"
-                            wire:model="edit_baseHeight">
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="baseHeight">Base Height (inches)</label>
+                            <input type="number" class="form-control form-control-sm" id="baseHeight"
+                                wire:model="edit_baseHeight">
+                        </div>
                     </div>
-                </div>
-                <div class="col-6">
+                    <div class="col-6">
 
-                    <div class="mb-3">
-                        <label for="baseWidth">Base Width (inches)</label>
-                        <input type="number" class="form-control form-control-sm" id="baseWidth"
-                            wire:model="edit_baseWidth">
-                    </div>
-                </div>
-
-
-            </div>
-
-
-
-            {{-- logo --}}
-            @include('editmodals.editlogocost')
-            {{-- main --}}
-            @include('editmodals.editmain')
-            {{-- Additional Lettering Text --}}
-            @include('editmodals.editadditional')
-            {{-- Type of Business Text --}}
-            @include('editmodals.editbusiness')
-            {{-- Ownership Sticker Text --}}
-            @include('editmodals.editownership')
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-auto">
-                <div class="col-auto">
-                    <button type="button" wire:click="updateCalculation" class="btn btn-primary">Update</button>
-                </div>
-            </div>
-
-            <div class="col-auto">
-                <button type="button" class="btn btn-success">Cancel</button>
-            </div>
-
-
-        </div>
-
-
-
-
-
-
-
-
-        <div class="col-12 mt-2">
-            <div id="calculationResults" class="col-12"
-                style="height: 1000px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;">
-                <div class="mb-5">
-                    <h2 class="text-center mb-4">Calculation Results</h2>
-                    <div class="mb-3">
-                        <h4>Base</h4>
-                        <label class="form-label">Base Cost:</label>
-                        <div id="baseCostDisplay" class="alert alert-info">{{ $baseCost ?? 0 }}</div>
-                    </div>
-
-                    <div class="mb-3">
-                        <h4>Logo</h4>
-
-                        @foreach ($logoCostResults as $label => $cost)
-                        <strong>{{ $label }}: </strong>
-                        <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
-                        @endforeach
-
-                        <strong>Total Logo Cost:</strong>
-                        <div class="alert alert-danger">{{ $logoTotal }}</div>
-                    </div>
-                    <div class="mb-3">
-                        <h4>Main Cost</h4>
-
-                        @foreach ($mainCostResults as $label => $cost)
-                        <strong>{{ $label }}: </strong>
-                        <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
-                        @endforeach
-
-                        <strong>Total Main Cost:</strong>
-                        <div class="alert alert-primary">{{ $mainTotal }}</div>
-                    </div>
-                    <div class="mb-3">
-                        <h4>Additional Cost </h4>
-
-                        @foreach ($addCostResults as $label => $cost)
-                        <strong>{{ $label }}: </strong>
-                        <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
-                        @endforeach
-
-                        <strong>Total Additional Cost:</strong>
-                        <div class="alert alert-warning">{{ $addTotal }}</div>
-                    </div>
-                    <div class="mb-3">
-                        <h4>Type of Business</h4>
-
-                        @foreach ($busCostResults as $label => $cost)
-                        <strong>{{ $label }}: </strong>
-                        <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
-                        @endforeach
-
-                        <strong>Total Business Cost:</strong>
-                        <div class="alert alert-success">{{ $busTotal }}</div>
-                    </div>
-                    <div class="mb-3">
-                        <h4>Ownership Sticker</h4>
-
-                        @foreach ($ownerCostResults as $label => $cost)
-                        <strong>{{ $label }}: </strong>
-                        <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
-                        @endforeach
-
-                        <strong>Total Ownership Sticker Cost:</strong>
-                        <div class="alert alert-danger">{{ $ownTotal }}</div>
-                    </div>
-                    <div class="mb-3">
-                        <h4>Total Costs</h4>
-                        <label class="form-label">Total Cost:</label>
-                        <div id="totalCostDisplay" class="alert alert-success">
-                            {{ $logoTotal + $mainTotal + $addTotal + $busTotal + $ownTotal }}
+                        <div class="mb-3">
+                            <label for="baseWidth">Base Width (inches)</label>
+                            <input type="number" class="form-control form-control-sm" id="baseWidth"
+                                wire:model="edit_baseWidth">
                         </div>
                     </div>
 
-                    {{-- <div class="mb-3">
+
+                </div>
+
+
+
+                {{-- logo --}}
+                @include('editmodals.editlogocost')
+                {{-- main --}}
+                @include('editmodals.editmain')
+                {{-- Additional Lettering Text --}}
+                @include('editmodals.editadditional')
+                {{-- Type of Business Text --}}
+                @include('editmodals.editbusiness')
+                {{-- Ownership Sticker Text --}}
+                @include('editmodals.editownership')
+
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-auto">
+                    <div class="col-auto">
+                        <button type="button" wire:click="updateCalculation" class="btn btn-primary">Update</button>
+                    </div>
+                </div>
+
+                <div class="col-auto">
+                    <button type="button" class="btn btn-success">Cancel</button>
+                </div>
+
+
+            </div>
+
+
+
+
+
+
+
+
+            <div class="col-12 mt-2">
+                <div id="calculationResults" class="col-12"
+                    style="height: 1000px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;">
+                    <div class="mb-5">
+                        <h2 class="text-center mb-4">Calculation Results</h2>
+                        <div class="mb-3">
+                            <h4>Base</h4>
+                            <label class="form-label">Base Cost:</label>
+                            <div id="baseCostDisplay" class="alert alert-info">{{ $edit_baseCost ?? 0 }}</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <h4>Logo</h4>
+
+                            @foreach ($editLogoCostResults as $label => $cost)
+                            <strong>{{ $label }}: </strong>
+                            <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
+                            @endforeach
+
+                            <strong>Total Logo Cost:</strong>
+                            <div class="alert alert-danger">{{ $edit_logoTotal }}</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <h4>Main Cost</h4>
+
+                            @foreach ($editMainCostResults as $label => $cost)
+                            <strong>{{ $label }}: </strong>
+                            <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
+                            @endforeach
+
+                            <strong>Total Main Cost:</strong>
+                            <div class="alert alert-primary">{{ $edit_mainTotal }}</div>
+                        </div>
+                        <div class="mb-3">
+                            <h4>Additional Cost </h4>
+
+                            @foreach ($editAddCostResults as $label => $cost)
+                            <strong>{{ $label }}: </strong>
+                            <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
+                            @endforeach
+
+                            <strong>Total Additional Cost:</strong>
+                            <div class="alert alert-warning">{{ $edit_addTotal }}</div>
+                        </div>
+                        <div class="mb-3">
+                            <h4>Type of Business</h4>
+
+                            @foreach ($editBusCostResults as $label => $cost)
+                            <strong>{{ $label }}: </strong>
+                            <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
+                            @endforeach
+
+                            <strong>Total Business Cost:</strong>
+                            <div class="alert alert-success">{{ $edit_busTotal }}</div>
+                        </div>
+                        <div class="mb-3">
+                            <h4>Ownership Sticker</h4>
+
+                            @foreach ($editOwnerCostResults as $label => $cost)
+                            <strong>{{ $label }}: </strong>
+                            <div class="alert alert-secondary">{{ $cost ?? 0 }}</div>
+                            @endforeach
+
+                            <strong>Total Ownership Sticker Cost:</strong>
+                            <div class="alert alert-danger">{{ $edit_ownTotal }}</div>
+                        </div>
+                        <div class="mb-3">
+                            <h4>Total Costs</h4>
+                            <label class="form-label">Total Cost:</label>
+                            <div id="totalCostDisplay" class="alert alert-success">
+                                {{ $edit_logoTotal + $edit_mainTotal + $edit_addTotal + $edit_busTotal + $edit_ownTotal }}
+                            </div>
+                                      
+                        </div>
+                        {{-- <div class="mb-3">
                         <h4>Main</h4>
                         <strong>Main Cost: </strong>
                         <div class="alert alert-warning">{{ $mainCost ?? 0 }}
-                </div>
-            </div> --}}
-            {{-- <div class="mb-3">
+                    </div>
+                </div> --}}
+                {{-- <div class="mb-3">
                         <h4>Additional</h4>
                         <strong>Additional Cost: </strong>
                         <div class="alert alert-danger">{{ $addCost ?? 0 }}
-        </div>
-    </div> --}}
-    {{-- <div class="mb-3">
+            </div>
+        </div> --}}
+        {{-- <div class="mb-3">
                         <h4>Type of Business</h4>
                         <strong>Type of Business Cost: </strong>
                         <div class="alert alert-secondary">{{ $busCost ?? 0 }}
-</div>
+    </div>
 </div> --}}
 {{-- <div class="mb-3">
                         <h4>Ownership Sticker</h4>

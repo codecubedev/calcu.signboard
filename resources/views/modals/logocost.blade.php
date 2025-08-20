@@ -57,7 +57,7 @@
                                         <div class="col-4">
                                             <div class="mt-1 ms-4">
                                                 <input type="text" class="form-control form-control-sm"
-                                                    wire:model="logoCost.{{ $index }}.acrylicInput">
+                                                    wire:model="logoCost.{{ $index }}.logoAcrylicCost">
                                             </div>
                                         </div>
                                     @endif
@@ -80,7 +80,7 @@
                                         <div class="col-4">
                                             <div class="mt-1 ms-4">
                                                 <input type="text" class="form-control form-control-sm"
-                                                    wire:model="logoCost.{{ $index }}.blackAcrylicInputs">
+                                                    wire:model="logoCost.{{ $index }}.logoBlackAcrylicCost">
                                             </div>
                                         </div>
                                     @endif
@@ -103,7 +103,7 @@
 
                                             <div class="mt-1 ms-4">
                                                 <input type="text" class="form-control form-control-sm"
-                                                    wire:model="logoCost.{{ $index }}.pvcInputs">
+                                                    wire:model="logoCost.{{ $index }}.logoPVCCost">
                                             </div>
                                         </div>
                                     @endif
@@ -133,7 +133,7 @@
                                         <div class="mt-1 ms-4">
                                             <div class="col-4">
                                                 <input type="text" class="form-control form-control-sm"
-                                                    wire:model="logoCost.{{ $index }}.stainlessteelsilverInputs">
+                                                    wire:model="logoCost.{{ $index }}.logoStainlessSteelCost">
                                             </div>
                                         </div>
                                     @endif
@@ -162,7 +162,7 @@
                                         <div class="mt-1 ms-4">
                                             <div class="col-4">
                                                 <input type="text" class="form-control form-control-sm"
-                                                    wire:model="logoCost.{{ $index }}.stainlessteelgoldInputs">
+                                                    wire:model="logoCost.{{ $index }}.logoStainlessGoldCost">
 
                                             </div>
 
@@ -189,7 +189,7 @@
                                         <div class="mt-1 ms-4">
                                             <div class="col-4">
                                                 <input type="text" class="form-control form-control-sm"
-                                                    wire:model="logoCost.{{ $index }}.NeonmaterialInputs">
+                                                    wire:model="logoCost.{{ $index }}.logoNeonCost">
                                             </div>
                                         </div>
                                     @endif
@@ -227,7 +227,7 @@
                                     @if (!empty($logoCost[$index]['showInputs']) && in_array($val, $logoCost[$index]['showInputs']))
                                         <div class="mt-1 ms-4 col-4">
                                             <input type="text" class="form-control form-control-sm"
-                                                wire:model="logoCost.{{ $index }}.stickermaterialInputs.{{ $val }}">
+                                                wire:model="logoCost.{{ $index }}.logoStickerCost">
                                         </div>
                                     @endif
                                 </div>
@@ -258,7 +258,7 @@
                                         <div class="mt-1 ms-4 col-4">
 
                                             <input type="text" class="form-control form-control-sm"
-                                                wire:model="logoCost.{{ $index }}.generalMaterialInput">
+                                                wire:model="logoCost.{{ $index }}.logoGeneralMaterialCost">
 
                                         </div>
                                     @endif
@@ -276,7 +276,7 @@
                                 @if (!empty($logoCost[$index]['showGeneralInputs']) && in_array($val, $logoCost[$index]['showGeneralInputs']))
                                     <div class="mt-1 ms-4 col-4">
                                         <input type="text" class="form-control form-control-sm"
-                                            wire:model="logoCost.{{ $index }}.logoPaintInputs">
+                                            wire:model="logoCost.{{ $index }}.logoPaintCost">
                                     </div>
                                 @endif
                             </div>
@@ -290,7 +290,7 @@
                                 @if (!empty($logoCost[$index]['showGeneralInputs']) && in_array('oracal', $logoCost[$index]['showGeneralInputs']))
                                     <div class="mt-1 ms-4 col-4">
                                         <input type="text" class="form-control form-control-sm"
-                                            wire:model="logoCost.{{ $index }}.logoOracalInputs">
+                                            wire:model="logoCost.{{ $index }}.logoOracalCost">
                                     </div>
                                 @endif
                             </div>
@@ -314,14 +314,14 @@
                             @foreach (['frontlit', 'backlit', 'sidelit', 'nolight'] as $type)
                                 <div class="mb-2">
                                     <input type="checkbox" class="form-check-input" value="{{ $type }}"
-                                        wire:model="logoCost.{{ $index }}.lightingtype"
+                                        wire:model="logoCost.{{ $index }}.logolightingtype"
                                     wire:change="toggleLightingInput({{ $index }}, '{{ $val }}')">
                                     <label>{{ ucfirst($type) }}</label>
 
-                                    @if (in_array($type, $logoCost[$index]['lightingtype'] ?? []))
+                                    @if (in_array($type, $logoCost[$index]['logolightingtype'] ?? []))
                                     <div class="mt-1 ms-4 col-4">
                                         <input type="text" class="form-control mt-1"
-                                            wire:model="logoCost.{{ $index }}.logoLightingDetails">
+                                            wire:model="logoCost.{{ $index }}.logoLightingCost">
                                     </div>
                                        
                                     @endif
