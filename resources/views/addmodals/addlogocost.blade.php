@@ -1,34 +1,34 @@
 <div>
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="mb-0">Additional Lettering Cost</h2>
-        <button wire:click="addForm" class="btn btn-primary">Add Additional</button>
+        <h2 class="mb-0">Logo Cost</h2>
+        <button wire:click="addForm" class="btn btn-primary">Add Logo</button>
     </div>
 
 
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Additional Cost 1</h5>
+            <h5 class="mb-0">Logo Cost 1</h5>
             <button class="btn btn-sm btn-danger">Remove</button>
         </div>
         <div class="card-body">
             <div class="row">
-                <!-- Additional Text -->
+                <!-- Logo Text -->
                 <div class="col-6 mb-3">
-                    <label>Additional Text</label>
-                    <input type="text" class="form-control form-control-sm" wire:model="addText">
+                    <label>Logo Text</label>
+                    <input type="text" class="form-control form-control-sm" wire:model="logoText">
                 </div>
                 <div class="col-6 mb-3">
                     <label>Character Count</label>
-                    <input type="text" class="form-control form-control-sm" readonly value="{{ strlen($addText ?? '') }}">
+                    <input type="text" class="form-control form-control-sm" readonly value="{{ strlen($logoText ?? '') }}">
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label>Additional Height (inches)</label>
-                    <input type="text" class="form-control form-control-sm" wire:model="addHeight">
+                    <label>Logo Height (inches)</label>
+                    <input type="text" class="form-control form-control-sm" wire:model="logoHeight">
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label>Additional Width (inches)</label>
-                    <input type="text" class="form-control form-control-sm" wire:model="addWidth">
+                    <label>Logo Width (inches)</label>
+                    <input type="text" class="form-control form-control-sm" wire:model="logoWidth">
                 </div>
             </div>
 
@@ -38,7 +38,7 @@
                 <!-- Clear Acrylic -->
                 <div class="col-md-3 mb-3">
                     <label>Clear Acrylic</label>
-                    <select class="form-select form-select-sm" wire:model="addAcrylicSize">
+                    <select class="form-select form-select-sm" wire:model="logoAcrylicSize">
                         <option value="">-- Select Size --</option>
                         <option value="3">3MM</option>
                         <option value="5">5MM</option>
@@ -47,8 +47,10 @@
                         <option value="20">20MM</option>
                         <option value="25">25MM</option>
                     </select>
-                    @if(!empty($addAcrylicSize))
-                    <input type="text" class="form-control form-control-sm mt-2" placeholder="Enter Cost" wire:model="addAcrylicCost">
+
+
+                    @if(!empty($logoAcrylicSize))
+                    <input type="text" class="form-control form-control-sm mt-2" placeholder="Enter Cost" wire:model="logoAcrylicCost">
                     @endif
                 </div>
 
@@ -56,7 +58,7 @@
                 <!-- Black Acrylic  -->
                 <div class="col-md-3 mb-3">
                     <label>Black Acrylic</label>
-                    <select class="form-select form-select-sm" wire:model="addBlackAcrylicSize">
+                    <select class="form-select form-select-sm" wire:model="logoBlackAcrylicSize">
                         <option value="">-- Select Size --</option>
                         <option value="3">3MM</option>
                         <option value="5">5MM</option>
@@ -65,8 +67,8 @@
                         <option value="20">20MM</option>
                         <option value="25">25MM</option>
                     </select>
-                    @if(!empty($addBlackAcrylicSize))
-                    <input type="text" class="form-control form-control-sm mt-2" placeholder="Enter Cost" wire:model="addBlackAcrylicCost">
+                    @if(!empty($logoBlackAcrylicSize))
+                    <input type="text" class="form-control form-control-sm mt-2" placeholder="Enter Cost" wire:model="logoBlackAcrylicCost">
                     @endif
                 </div>
 
@@ -75,7 +77,7 @@
                 <!-- PVC  -->
                 <div class="col-md-3 mb-3">
                     <label>PVC</label>
-                    <select class="form-select form-select-sm" wire:model="addPvcSize">
+                    <select class="form-select form-select-sm" wire:model="logoPvcSize">
                         <option value="">-- Select Size --</option>
                         <option value="3">3MM</option>
                         <option value="5">5MM</option>
@@ -84,15 +86,15 @@
                         <option value="20">20MM</option>
                         <option value="25">25MM</option>
                     </select>
-                    @if(!empty($addPvcSize))
-                    <input type="text" class="form-control form-control-sm mt-2" placeholder="Enter Cost" wire:model="addPVCCost">
+                    @if(!empty($logoPvcSize))
+                    <input type="text" class="form-control form-control-sm mt-2" placeholder="Enter Cost" wire:model="logoPVCCost">
                     @endif
                 </div>
 
                 <!-- Stainless Steel Silver -->
                 <div class="col-md-3 mb-3">
                     <label>Stainless Steel (Silver)</label>
-                    <select class="form-select form-select-sm" wire:model="addStainlessSteelSilverType">
+                    <select class="form-select form-select-sm" wire:model="logoStainlessSteelSilverType">
                         <option value="">-- Select Type --</option>
                         <option value="mirror_frontlit">Mirror Frontlit</option>
                         <option value="mirror_backlit">Mirror Backlit</option>
@@ -101,8 +103,8 @@
                         <option value="hairline_backlit">Hairline Backlit</option>
                         <option value="hairline_boxup">Hairline BoxUp</option>
                     </select>
-                    @if(!empty($addStainlessSteelSilverType))
-                    <input type="text" class="form-control form-control-sm mt-2" placeholder="Enter Cost" wire:model="addStainlessSteelCost">
+                    @if(!empty($logoStainlessSteelSilverType))
+                    <input type="text" class="form-control form-control-sm mt-2" placeholder="Enter Cost" wire:model="logoStainlessSteelCost">
                     @endif
                 </div>
 
@@ -110,7 +112,7 @@
                 <!-- Stainless Steel Gold -->
                 <div class="col-md-3 mb-3">
                     <label>Stainless Steel (Gold)</label>
-                    <select class="form-select form-select-sm" wire:model="addStainlessSteelGoldType">
+                    <select class="form-select form-select-sm" wire:model="logoStainlessSteelGoldType">
                         <option value="">-- Select Type --</option>
                         <option value="mirror_frontlit">Mirror Frontlit</option>
                         <option value="mirror_backlit">Mirror Backlit</option>
@@ -120,8 +122,8 @@
                         <option value="hairline_boxup">Hairline BoxUp</option>
                     </select>
 
-                    @if(!empty($addStainlessSteelGoldType))
-                    <input type="text" class="form-control form-control-sm mt-2" placeholder="Enter Cost" wire:model="addStainlessGoldCost">
+                    @if(!empty($logoStainlessSteelGoldType))
+                    <input type="text" class="form-control form-control-sm mt-2" placeholder="Enter Cost" wire:model="logoStainlessGoldCost">
                     @endif
                 </div>
 
@@ -136,7 +138,7 @@
                         <option value="10">10MM Clear Acrylic</option>
                     </select>
                     @if(!empty($neonSize))
-                    <input type="text" class="form-control form-control-sm mt-2" placeholder="Enter Cost" wire:model="addNeonCost">
+                    <input type="text" class="form-control form-control-sm mt-2" placeholder="Enter Cost" wire:model="logoNeonCost">
                     @endif
                 </div>
 
@@ -144,7 +146,7 @@
                 <!-- Sticker -->
                 <div class="col-md-3 mb-3">
                     <label>Sticker</label>
-                    <select class="form-select form-select-sm" wire:model="addStickerType">
+                    <select class="form-select form-select-sm" wire:model="logoStickerType">
                         <option value="">-- Select Sticker --</option>
                         <option value="whiteStickerMattLamm">White Sticker Matt Lamm</option>
                         <option value="greyBase">Grey Base</option>
@@ -157,8 +159,8 @@
 
                     </select>
 
-                    @if(!empty($addStickerType))
-                    <input type="text" class="form-control form-control-sm mt-2" placeholder="Enter Cost" wire:model="addStickerCost">
+                    @if(!empty($logoStickerType))
+                    <input type="text" class="form-control form-control-sm mt-2" placeholder="Enter Cost" wire:model="logoStickerCost">
                     @endif
                 </div>
 
@@ -169,7 +171,7 @@
                 <!-- General Material -->
                 <div class="col-md-3 mb-3">
                     <label>General Material</label>
-                    <select class="form-select form-select-sm" wire:model="addGeneralStickerType">
+                    <select class="form-select form-select-sm" wire:model="logoGeneralStickerType">
                         <option value="">-- Select General Material --</option>
                         <option value="3dChannels"> 3D Channel</option>
                         <option value="aluminiumBoxup">Aluminium Box Up</option>
@@ -181,8 +183,8 @@
 
                     </select>
 
-                    @if(!empty($addGeneralStickerType))
-                    <input type="text" class="form-control form-control-sm mt-2" placeholder="Enter Cost" wire:model="addGeneralMaterialCost">
+                    @if(!empty($logoGeneralStickerType))
+                    <input type="text" class="form-control form-control-sm mt-2" placeholder="Enter Cost" wire:model="logoGeneralMaterialCost">
                     @endif
                 </div>
 
@@ -199,7 +201,7 @@
                         @if(!empty($showPaint))
                         <input type="text" class="form-control form-control-sm mt-2"
                             placeholder="Enter Cost"
-                            wire:model="addPaintCost">
+                            wire:model="logoPaintCost">
                         @endif
                     </div>
 
@@ -212,7 +214,7 @@
                         @if(!empty($showOracal))
                         <input type="text" class="form-control form-control-sm mt-2"
                             placeholder="Enter Cost"
-                            wire:model="addOracalCost">
+                            wire:model="logoOracalCost">
                         @endif
                     </div>
 
@@ -235,7 +237,7 @@
                     <div class="mb-3">
                         <h6>Lighting Type</h6>
 
-                        <select class="form-select form-select-sm mt-2" wire:model="addLightingType">
+                        <select class="form-select form-select-sm mt-2" wire:model="logoLightingType">
                             <option value="">-- Select Lighting --</option>
                             <option value="frontlit">Frontlit</option>
                             <option value="backlit">Backlit</option>
@@ -243,10 +245,10 @@
                             <option value="nolight">No Light</option>
                         </select>
 
-                        @if(!empty($addLightingType))
+                        @if(!empty($logoLightingType))
                         <input type="text" class="form-control form-control-sm mt-2"
                             placeholder="Enter Lighting Cost"
-                            wire:model="addLightingCost">
+                            wire:model="logoLightingCost">
 
                         @endif
                     </div>
@@ -256,7 +258,7 @@
 
                 <div class="col-md-4">
                     <label class="form-label mt-2">Power Supply</label>
-                    <select class="form-select form-select-sm" wire:model="addPowerSupply">
+                    <select class="form-select form-select-sm" wire:model="logoPowerSupply">
                         <option value="400W">400W</option>
                     </select>
 
@@ -265,7 +267,7 @@
                 <div class="col-md-4">
                     <label class="form-label mt-2">Power Supply Quantity</label>
                     <input type="number" min="1" class="form-control form-control-sm"
-                        wire:model="addPowerSupplyQuantity">
+                        wire:model="logoPowerSupplyQuantity">
 
                 </div>
 
