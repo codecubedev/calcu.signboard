@@ -185,8 +185,7 @@ class AddLetteringCost
 
 
 
-        // ✅ POWER SUPPLY COST
-        if (!empty($data['powerSupply'])) {
+           if (!empty($data['powerSupply'])) {
             $powerSupplyPrice = (float) ($data['powerSupplyPrices'][$data['powerSupply']] ?? 0);
             $powerSupplyQty = (int) ($data['powerSupplyQty'] ?? 0);
             $powerSupplyCost = $powerSupplyPrice * $powerSupplyQty;

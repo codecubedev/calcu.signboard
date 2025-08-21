@@ -22,7 +22,7 @@ class ViewCalculation extends Component
 {
     use WithFileUploads;
 
-    public $job_name, $date, $sales_man, $totalcost, $company_name, $customer_name, $customer_phone_no;
+    public $job_name, $date,$acrylicCost,$pvcCost, $sales_man, $totalcost, $company_name, $customer_name, $customer_phone_no;
 
     public $logoText, $characterCount, $baseType, $baseMember, $baseHeight, $baseWidth, $baseCost = 0;
 

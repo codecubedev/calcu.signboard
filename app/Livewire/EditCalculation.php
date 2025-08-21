@@ -18,11 +18,11 @@ class EditCalculation extends Component
 {
     use WithFileUploads;
 
-    public $calculation;
+    public $calculation, $logoCost;
 
     public $edit_job_name, $edit_date, $edit_totalcost, $edit_company_name, $edit_customer_name, $edit_customer_phone_no;
 
-    public $edit_logoText, $edit_characterCount, $edit_baseType, $edit_baseMember, $edit_baseHeight, $edit_baseWidth, $edit_baseCost = 0;
+    public $edit_logoText, $edit_characterCount, $image, $edit_baseType, $edit_baseMember, $edit_baseHeight, $edit_baseWidth, $edit_baseCost = 0;
 
     public $edit_logoHeight, $edit_logoWidth, $edit_logoTotal = 0, $edit_logoStickerHeightWidth, $edit_logooracalHeightWidth, $edit_acrylicCost, $edit_pvcCost;
     public $edit_stickerCost, $edit_lightingCost, $edit_powerSupplyCost, $edit_paintCost, $edit_generalMaterialCost, $edit_stickerArea, $edit_addwhiteacryliccost, $edit_lightingprice, $edit_orcaleCost;
@@ -167,36 +167,18 @@ class EditCalculation extends Component
             $this->edit_baseHeight = $base->base_height;
             $this->edit_baseWidth = $base->base_width;
         }
+        $logo = LogoCalculation::where('calculation_id', $id)->first();
 
-        $this->editLogos = LogoCalculation::where('calculation_id', $id)->get()->map(function ($item) {
-            return [
-                'id' => $item->id,
-                'text' => $item->logo_text,
-                'height' => $item->logo_height,
-                'width' => $item->logo_width,
-                'materials' => $item->logo_materials,
-                'sticker_height_width' => $item->logo_sticker_height_width,
-                'sticker_material' => $item->logo_sticker_material,
-                'general_material' => $item->logo_general_material,
-                'paint_height_width' => $item->logo_paint_height_width,
-                'oracal_height_width' => $item->logo_oracal_height_width,
-                'light_height_width' => $item->logo_light_height_width,
-                'lighting_type' => $item->logo_lighting_type,
-                'power_supply' => $item->logo_power_supply,
-                'power_supply_quantity' => $item->logo_power_supply_quantity,
-                'acrylic_cost' => $item->logo_acrylic_cost,
-                'pvc_cost' => $item->logo_pvc_cost,
-                'sticker_cost' => $item->logo_sticker_cost,
-                'lighting_cost' => $item->logo_lighting_cost,
-                'power_supply_cost' => $item->logo_power_supply_cost,
-                'paint_cost' => $item->logo_paint_cost,
-                'general_material_cost' => $item->logo_general_material_cost,
-                'lighting_price' => $item->logo_lighting_price,
-                'oracal_cost' => $item->logo_oracal_cost,
-                'cost' => $item->total_logo_cost,
+        $this->editLogos[] = [
+            'acrylic'       => $logo->logo_materials ? explode(',', $logo->logo_materials) : [],
+            'black_acrylic' => $logo->black_acrylic ? explode(',', $logo->black_acrylic) : [],
+            'pvc'           => $logo->pvc ? explode(',', $logo->pvc) : [],
+            'stainless'     => $logo->stainless ? explode(',', $logo->stainless) : [],
+            'sticker'       => $logo->logo_sticker_material ? explode(',', $logo->logo_sticker_material) : [],
+            'general'       => $logo->logo_general_material ? explode(',', $logo->logo_general_material) : [],
+        ];
 
-            ];
-        })->toArray();
+
 
         $this->editMains = MainCalculation::where('calculation_id', $id)->get()->map(function ($item) {
             return [
