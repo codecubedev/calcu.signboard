@@ -215,6 +215,35 @@
                         @endif
                     </div>
 
+                    <!-- Spotlight -->
+
+                    <div class="mb-3">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input" wire:model="logoSpotlight"> Spotlight + Bracket (1 set)
+                        </label>
+
+                        @if(!empty($logoSpotlight))
+                        <input type="text" class="form-control form-control-sm mt-2"
+                            placeholder="Enter Cost"
+                            wire:model="logoSpotlightCost">
+                        @endif
+                    </div>
+
+
+                    <!-- Dimmer -->
+
+                    <div class="mb-3">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input" wire:model="logoDimmer"> Dimmer
+                        </label>
+
+                        @if(!empty($logoDimmer))
+                        <input type="text" class="form-control form-control-sm mt-2"
+                            placeholder="Enter Cost"
+                            wire:model="logoDimmerCost">
+                        @endif
+                    </div>
+
                     <!-- Lighting -->
 
                     <div class="mb-3">
