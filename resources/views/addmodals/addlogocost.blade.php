@@ -132,12 +132,12 @@
                 <!-- Neon -->
                 <div class="col-md-3 mb-3">
                     <label>Neon</label>
-                    <select class="form-select form-select-sm" wire:model="neonSize">
+                    <select class="form-select form-select-sm" wire:model="logoNeonSize">
                         <option value="">-- Select Size --</option>
                         <option value="5">5MM Clear Acrylic</option>
                         <option value="10">10MM Clear Acrylic</option>
                     </select>
-                    @if(!empty($neonSize))
+                    @if(!empty($logoNeonSize))
                     <input type="text" class="form-control form-control-sm mt-2" placeholder="Enter Cost" wire:model="logoNeonCost">
                     @endif
                 </div>
@@ -175,10 +175,7 @@
                         <option value="">-- Select General Material --</option>
                         <option value="3dChannels"> 3D Channel</option>
                         <option value="aluminiumBoxup">Aluminium Box Up</option>
-                        <option value="ironHollow20mm"> Iron Hollow 20mm</option>
-                        <option value="ironHollow10mm"> Iron Hollow 10mm</option>
-                        <option value="spotlightBracket1set"> Spotlight + Bracket (1 set)</option>
-                        <option value="dimmer"> Dimmer</option>
+
 
 
                     </select>
@@ -195,10 +192,10 @@
                     <!-- Paint -->
                     <div class="mb-3">
                         <label class="form-check-label">
-                            <input type="checkbox" class="form-check-input" wire:model="showPaint"> Paint
+                            <input type="checkbox" class="form-check-input" wire:model="logoPaint"> Paint
                         </label>
 
-                        @if(!empty($showPaint))
+                        @if(!empty($logoPaint))
                         <input type="text" class="form-control form-control-sm mt-2"
                             placeholder="Enter Cost"
                             wire:model="logoPaintCost">
@@ -208,10 +205,10 @@
                     <!-- Oracal -->
                     <div class="mb-3">
                         <label class="form-check-label">
-                            <input type="checkbox" class="form-check-input" wire:model="showOracal"> Oracal
+                            <input type="checkbox" class="form-check-input" wire:model="logoOracal"> Oracal
                         </label>
 
-                        @if(!empty($showOracal))
+                        @if(!empty($logoOracal))
                         <input type="text" class="form-control form-control-sm mt-2"
                             placeholder="Enter Cost"
                             wire:model="logoOracalCost">
@@ -222,7 +219,7 @@
 
                     <div class="mb-3">
                         <label class="form-check-label">
-                            <input type="checkbox" class="form-check-input" wire:model="showLighting"> Lighting
+                            <input type="checkbox" class="form-check-input" wire:model="logoLighting"> Lighting
                         </label>
 
                     </div>
@@ -231,7 +228,7 @@
 
                 <hr>
 
-                @if(!empty($showLighting))
+                @if(!empty($logoLighting))
                 <!-- Lighting -->
                 <div class="col-md-3">
                     <div class="mb-3">

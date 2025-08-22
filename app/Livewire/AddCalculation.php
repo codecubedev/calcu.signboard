@@ -30,7 +30,7 @@ class AddCalculation extends Component
 
     // Base Cost
 
-    public $baseType, $baseMember, $baseHeight, $baseWidth;
+    public $baseType, $baseMember, $baseHeight, $baseWidth,$baseCost = 0;
 
 
     // Logo Cost
@@ -39,14 +39,75 @@ class AddCalculation extends Component
     public $logoText, $logoHeight, $logoWidth, $logoAcrylicSize = '', $logoAcrylicCost = '', $logoBlackAcrylicSize, $logoBlackAcrylicCost, $logoPvcSize, $logoPVCCost;
 
     // Stainless Steel Silver
-    public $logoStainlessSteelSilverType, $logoStainlessSteelCost, $logoStainlessSteelGoldType, $logoStainlessGoldCost, $neonSize, $logoNeonCost;
+    public $logoStainlessSteelSilverType, $logoStainlessSteelCost, $logoStainlessSteelGoldType, $logoStainlessGoldCost, $logoNeonSize, $logoNeonCost;
 
     // Sticker
-    public $logoStickerType, $logoStickerCost, $logoGeneralStickerType, $logoGeneralMaterialCost, $showPaint = false, $logoPaintCost, $showOracal = false, $logoOracalCost, $showLighting = false, $logoLightingType, $logoLightingCost, $logoPowerSupply, $logoPowerSupplyQuantity;
+    public $logoStickerType, $logoStickerCost, $logoGeneralStickerType, $logoGeneralMaterialCost, $logoPaint = false, $logoPaintCost, $logoOracal = false, $logoOracalCost, $logoLighting = false, $logoLightingType, $logoLightingCost, $logoPowerSupply, $logoPowerSupplyQuantity;
     public $logoPowerSupplyCost, $logoPaintHeightWidth, $logoOracalHeightWidth, $logoLightHeightWidth, $logoLightingPrice;
 
+    public  $logoTotal = 0;
+    public $logoCost = [];
+
+    // Main Cost
+
+    public $mainText, $mainHeight, $mainWidth, $mainAcrylicSize = '', $mainAcrylicCost = '', $mainBlackAcrylicSize, $mainBlackAcrylicCost, $mainPvcSize, $mainPVCCost;
+
+    // Stainless Steel Silver
+    public $mainStainlessSteelSilverType, $mainStainlessSteelCost, $mainStainlessSteelGoldType, $mainStainlessGoldCost, $mainNeonSize, $mainNeonCost;
+
+    // Sticker
+    public $mainStickerType, $mainStickerCost, $mainGeneralStickerType, $mainGeneralMaterialCost, $mainPaint = false, $mainPaintCost, $mainOracal = false, $mainOracalCost, $mainLighting = false, $mainLightingType, $mainLightingCost, $mainPowerSupply, $mainPowerSupplyQuantity;
+    public $mainPowerSupplyCost, $mainPaintHeightWidth, $mainOracalHeightWidth, $mainLightHeightWidth, $mainLightingPrice;
+
+    public $mainTotal = 0;
+    public $mainCost = [];
+
+    //Businness cost
 
 
+    public $busText, $busHeight, $busWidth, $busAcrylicSize = '', $busAcrylicCost = '', $busBlackAcrylicSize, $busBlackAcrylicCost, $busPvcSize, $busPVCCost;
+
+    // Stainless Steel Silver
+    public $busStainlessSteelSilverType, $busStainlessSteelCost, $busStainlessSteelGoldType, $busStainlessGoldCost, $busNeonSize, $busNeonCost;
+
+    // Sticker
+    public $busStickerType, $busStickerCost, $busGeneralStickerType, $busGeneralMaterialCost, $busPaint = false, $busPaintCost, $busOracal = false, $busOracalCost, $busLighting = false, $busLightingType, $busLightingCost, $busPowerSupply, $busPowerSupplyQuantity;
+    public $busPowerSupplyCost, $busPaintHeightWidth, $busOracalHeightWidth, $busLightHeightWidth, $busLightingPrice;
+
+    public  $busTotal = 0;
+    public $busCost = [];
+
+    //Addional Cost
+
+    public $addText, $addHeight, $addWidth, $addAcrylicSize = '', $addAcrylicCost = '', $addBlackAcrylicSize, $addBlackAcrylicCost, $addPvcSize, $addPVCCost;
+
+    // Stainless Steel Silver
+    public $addStainlessSteelSilverType, $addStainlessSteelCost, $addStainlessSteelGoldType, $addStainlessGoldCost, $addNeonSize, $addNeonCost;
+
+    // Sticker
+    public $addStickerType, $addStickerCost, $addGeneralStickerType, $addGeneralMaterialCost, $addPaint = false, $addPaintCost, $addOracal = false, $addOracalCost, $addLighting = false, $addLightingType, $addLightingCost, $addPowerSupply, $addPowerSupplyQuantity;
+    public $addPowerSupplyCost, $addPaintHeightWidth, $addOracalHeightWidth, $addLightHeightWidth, $addLightingPrice;
+
+    public $addTotal = 0;
+    public $addCost = [];
+
+
+    // Owner ship cost
+
+
+    public $ownText, $ownHeight, $ownWidth, $ownAcrylicSize = '', $ownAcrylicCost = '', $ownBlackAcrylicSize, $ownBlackAcrylicCost, $ownPvcSize, $ownPVCCost;
+
+    // Stainless Steel Silver
+    public $ownStainlessSteelSilverType, $ownStainlessSteelCost, $ownStainlessSteelGoldType, $ownStainlessGoldCost, $ownNeonSize, $ownNeonCost;
+
+    // Sticker
+    public $ownStickerType, $ownStickerCost, $ownGeneralStickerType, $ownGeneralMaterialCost, $ownPaint = false, $ownPaintCost, $ownOracal = false, $ownOracalCost, $ownLighting = false, $ownLightingType, $ownLightingCost, $ownPowerSupply, $ownPowerSupplyQuantity;
+    public $ownPowerSupplyCost, $ownPaintHeightWidth, $ownOracalHeightWidth, $ownLightHeightWidth, $ownLightingPrice;
+
+    public $ownTotal = 0;
+    public $ownCost = [];
+
+    public $maincharacterCount;
     public $isCalculated = false;
 
     public $logoCostResults = [], $mainCostResults = [], $addCostResults = [], $busCostResults = [], $ownerCostResults = [];
@@ -417,7 +478,7 @@ class AddCalculation extends Component
 
 
 
- 
+
 
 
     public function updatedLogoCost($value, $key)
@@ -696,8 +757,8 @@ class AddCalculation extends Component
         }
 
         //logo cost
-        $this->acrylicCost = 0;
-        $this->pvcCost = 0;
+        $this->logoAcrylicCost = 0;
+        $this->logoPVCCost = 0;
 
         $calculator = new LogoCostCalculation;
         $this->logoCostResults = [];

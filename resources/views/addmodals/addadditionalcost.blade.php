@@ -193,10 +193,10 @@
                     <!-- Paint -->
                     <div class="mb-3">
                         <label class="form-check-label">
-                            <input type="checkbox" class="form-check-input" wire:model="showPaint"> Paint
+                            <input type="checkbox" class="form-check-input" wire:model="addPaint"> Paint
                         </label>
 
-                        @if(!empty($showPaint))
+                        @if(!empty($addPaint))
                         <input type="text" class="form-control form-control-sm mt-2"
                             placeholder="Enter Cost"
                             wire:model="addPaintCost">
@@ -206,10 +206,10 @@
                     <!-- Oracal -->
                     <div class="mb-3">
                         <label class="form-check-label">
-                            <input type="checkbox" class="form-check-input" wire:model="showOracal"> Oracal
+                            <input type="checkbox" class="form-check-input" wire:model="addOracal"> Oracal
                         </label>
 
-                        @if(!empty($showOracal))
+                        @if(!empty($addOracal))
                         <input type="text" class="form-control form-control-sm mt-2"
                             placeholder="Enter Cost"
                             wire:model="addOracalCost">
@@ -220,7 +220,7 @@
 
                     <div class="mb-3">
                         <label class="form-check-label">
-                            <input type="checkbox" class="form-check-input" wire:model="showLighting"> Lighting
+                            <input type="checkbox" class="form-check-input" wire:model="addLighting"> Lighting
                         </label>
 
                     </div>
@@ -229,7 +229,7 @@
 
                 <hr>
 
-                @if(!empty($showLighting))
+                @if(!empty($addLighting))
                 <!-- Lighting -->
                 <div class="col-md-3">
                     <div class="mb-3">
