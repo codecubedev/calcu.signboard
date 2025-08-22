@@ -173,10 +173,7 @@
                         <option value="">-- Select General Material --</option>
                         <option value="3dChannels"> 3D Channel</option>
                         <option value="aluminiumBoxup">Aluminium Box Up</option>
-                        <option value="ironHollow20mm"> Iron Hollow 20mm</option>
-                        <option value="ironHollow10mm"> Iron Hollow 10mm</option>
-                        <option value="spotlightBracket1set"> Spotlight + Bracket (1 set)</option>
-                        <option value="dimmer"> Dimmer</option>
+                      
 
 
                     </select>
@@ -215,6 +212,63 @@
                             wire:model="busOracalCost">
                         @endif
                     </div>
+
+
+                    <!-- Iron Hollow 10mm -->
+                    <div class="mb-3">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input" wire:model="busIronHollow10mm"> Iron Hollow 10 MM
+                        </label>
+
+                        @if(!empty($busIronHollow10mm))
+                        <input type="text" class="form-control form-control-sm mt-2"
+                            placeholder="Enter Cost"
+                            wire:model="busIronHollow10mmCost">
+                        @endif
+                    </div>
+
+                    <!-- Iron Hollow 20mm -->
+                    <div class="mb-3">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input" wire:model="busIronHollow20mm"> Iron Hollow 20 MM
+                        </label>
+
+                        @if(!empty($busIronHollow20mm))
+                        <input type="text" class="form-control form-control-sm mt-2"
+                            placeholder="Enter Cost"
+                            wire:model="busIronHollow20mmCost">
+                        @endif
+                    </div>
+
+                    <!-- Spotlight -->
+
+                    <div class="mb-3">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input" wire:model="busSpotlight"> Spotlight + Bracket (1 set)
+                        </label>
+
+                        @if(!empty($busSpotlight))
+                        <input type="text" class="form-control form-control-sm mt-2"
+                            placeholder="Enter Cost"
+                            wire:model="busSpotlightCost">
+                        @endif
+                    </div>
+
+
+                    <!-- Dimmer -->
+
+                    <div class="mb-3">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input" wire:model="busDimmer"> Dimmer
+                        </label>
+
+                        @if(!empty($busDimmer))
+                        <input type="text" class="form-control form-control-sm mt-2"
+                            placeholder="Enter Cost"
+                            wire:model="busDimmerCost">
+                        @endif
+                    </div>
+
 
                     <!-- Lighting -->
 

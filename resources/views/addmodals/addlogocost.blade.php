@@ -215,6 +215,33 @@
                         @endif
                     </div>
 
+                    <!-- Iron Hollow 10mm -->
+                    <div class="mb-3">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input" wire:model="logoIronHollow10mm"> Iron Hollow 10 MM
+                        </label>
+
+                        @if(!empty($logoIronHollow10mm))
+                        <input type="text" class="form-control form-control-sm mt-2"
+                            placeholder="Enter Cost"
+                            wire:model="logoIronHollow10mmCost">
+                        @endif
+                    </div>
+
+
+                    <!-- Iron Hollow 20mm -->
+                    <div class="mb-3">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input" wire:model="logoIronHollow20mm"> Iron Hollow 20 MM
+                        </label>
+
+                        @if(!empty($logoIronHollow20mm))
+                        <input type="text" class="form-control form-control-sm mt-2"
+                            placeholder="Enter Cost"
+                            wire:model="logoIronHollow20mmCost">
+                        @endif
+                    </div>
+
                     <!-- Spotlight -->
 
                     <div class="mb-3">

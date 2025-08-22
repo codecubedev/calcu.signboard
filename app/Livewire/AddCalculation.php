@@ -30,7 +30,7 @@ class AddCalculation extends Component
 
     // Base Cost
 
-    public $baseType, $baseMember, $baseHeight, $baseWidth,$baseCost = 0;
+    public $baseType, $baseMember, $baseHeight, $baseWidth, $baseCost = 0;
 
 
     // Logo Cost
@@ -43,6 +43,7 @@ class AddCalculation extends Component
 
     // Sticker
     public $logoStickerType, $logoStickerCost, $logoGeneralStickerType, $logoGeneralMaterialCost, $logoPaint = false, $logoPaintCost, $logoOracal = false, $logoOracalCost, $logoLighting = false, $logoLightingType, $logoLightingCost, $logoPowerSupply, $logoPowerSupplyQuantity;
+
     public $logoPowerSupplyCost, $logoPaintHeightWidth, $logoOracalHeightWidth, $logoLightHeightWidth, $logoLightingPrice;
 
     public  $logoTotal = 0;
@@ -59,8 +60,11 @@ class AddCalculation extends Component
     public $mainStickerType, $mainStickerCost, $mainGeneralStickerType, $mainGeneralMaterialCost, $mainPaint = false, $mainPaintCost, $mainOracal = false, $mainOracalCost, $mainLighting = false, $mainLightingType, $mainLightingCost, $mainPowerSupply, $mainPowerSupplyQuantity;
     public $mainPowerSupplyCost, $mainPaintHeightWidth, $mainOracalHeightWidth, $mainLightHeightWidth, $mainLightingPrice;
 
+
+    public $mainIronHollow10mm, $mainIronHollow10mmCost, $mainIronHollow20mm, $mainIronHollow20mmCost, $mainSpotlight, $mainSpotlightCost, $mainDimmer, $mainDimmerCost;
     public $mainTotal = 0;
     public $mainCost = [];
+
 
     //Businness cost
 
@@ -74,6 +78,7 @@ class AddCalculation extends Component
     public $busStickerType, $busStickerCost, $busGeneralStickerType, $busGeneralMaterialCost, $busPaint = false, $busPaintCost, $busOracal = false, $busOracalCost, $busLighting = false, $busLightingType, $busLightingCost, $busPowerSupply, $busPowerSupplyQuantity;
     public $busPowerSupplyCost, $busPaintHeightWidth, $busOracalHeightWidth, $busLightHeightWidth, $busLightingPrice;
 
+    public $busIronHollow10mm, $busIronHollow10mmCost, $busIronHollow20mm, $busIronHollow20mmCost, $busSpotlight, $busSpotlightCost, $busDimmer, $busDimmerCost;
     public  $busTotal = 0;
     public $busCost = [];
 
@@ -88,10 +93,10 @@ class AddCalculation extends Component
     public $addStickerType, $addStickerCost, $addGeneralStickerType, $addGeneralMaterialCost, $addPaint = false, $addPaintCost, $addOracal = false, $addOracalCost, $addLighting = false, $addLightingType, $addLightingCost, $addPowerSupply, $addPowerSupplyQuantity;
     public $addPowerSupplyCost, $addPaintHeightWidth, $addOracalHeightWidth, $addLightHeightWidth, $addLightingPrice;
 
+    public $addIronHollow10mm, $addIronHollow10mmCost, $addIronHollow20mm, $addIronHollow20mmCost, $addSpotlight, $addSpotlightCost, $addDimmer, $addDimmerCost;
+
     public $addTotal = 0;
     public $addCost = [];
-
-
     // Owner ship cost
 
 
@@ -103,6 +108,8 @@ class AddCalculation extends Component
     // Sticker
     public $ownStickerType, $ownStickerCost, $ownGeneralStickerType, $ownGeneralMaterialCost, $ownPaint = false, $ownPaintCost, $ownOracal = false, $ownOracalCost, $ownLighting = false, $ownLightingType, $ownLightingCost, $ownPowerSupply, $ownPowerSupplyQuantity;
     public $ownPowerSupplyCost, $ownPaintHeightWidth, $ownOracalHeightWidth, $ownLightHeightWidth, $ownLightingPrice;
+
+    public $ownIronHollow10mm, $ownIronHollow10mmCost, $ownIronHollow20mm, $ownIronHollow20mmCost, $ownSpotlight, $ownSpotlightCost, $ownDimmer, $ownDimmerCost;
 
     public $ownTotal = 0;
     public $ownCost = [];
@@ -1235,8 +1242,6 @@ class AddCalculation extends Component
             $this->image = array_values($this->image);
         }
     }
-
-
 
 
     public function render()
