@@ -231,30 +231,27 @@
 
                 </div>
 
-                <hr>
+            @if (!empty($form['edit_logolightHeightWidth']))
+            <hr>
+            <div class="row">
+                <div class="col-md-4">
+                    <h6>Lighting Type</h6>
+                    @foreach (['frontlit', 'backlit', 'sidelit', 'nolight'] as $type)
+                    <div class="mb-2">
+                        <input type="checkbox" class="form-check-input" value="{{ $type }}"
+                            wire:model="logoCost.{{ $index }}.lightingtype"
+                            wire:change="toggleLightingInput({{ $index }}, '{{ $val }}')">
+                        <label>{{ ucfirst($type) }}</label>
 
-                @if(!empty($showLighting))
-                <!-- Lighting -->
-                <div class="col-md-3">
-                    <div class="mb-3">
-                        <h6>Lighting Type</h6>
-
-                        <select class="form-select form-select-sm mt-2" wire:model="logoLightingType">
-                            <option value="">-- Select Lighting --</option>
-                            <option value="frontlit">Frontlit</option>
-                            <option value="backlit">Backlit</option>
-                            <option value="sidelit">Sidelit</option>
-                            <option value="nolight">No Light</option>
-                        </select>
-
-                        @if(!empty($logoLightingType))
-                        <input type="text" class="form-control form-control-sm mt-2"
-                            placeholder="Enter Lighting Cost"
-                            wire:model="logoLightingCost">
+                        @if (in_array($type, $logoCost[$index]['lightingtype'] ?? []))
+                        <div class="mt-1 ms-4 col-4">
+                            <input type="text" class="form-control mt-1"
+                                wire:model="logoCost.{{ $index }}.logoLightingDetails">
+                        </div>
 
                         @endif
                     </div>
-
+                    @endforeach
                 </div>
 
 

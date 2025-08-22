@@ -20,7 +20,7 @@
                         <label>Date</label>
                         <input type="date" class="form-control form-control-sm" wire:model="edit_date">
                     </div>
-                    @error('date')
+                    @error('edit_date')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
